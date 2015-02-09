@@ -14,7 +14,7 @@
  P0 = SDA      Pin 5
  P1 = LED      Pin 6
  P2 = DS18B20/SCL      Pin 7
- P3 =  FEAT    Pin 2
+ P3 =  FEET    Pin 2
  P4 =  SEAT    Pin 3
  P5 =          Pin 1
  
@@ -31,9 +31,9 @@ float T_weather_on = 14;     // seat heating turn on
 float T_seat_max   = 65;     // seat heating turn off
 boolean ON_seat = false;
 
-int pin_feat = 3;
-float T_feat_on = 10;        // feat heating turn on
-boolean ON_feat = false;
+int pin_feet = 3;
+float T_feet_on = 10;        // feet heating turn on
+boolean ON_feet = false;
 
 
 //DS18S20 temperature senor MAC address
@@ -51,11 +51,11 @@ byte addr1[8]={0x28, 0xC0, 0x10, 0x8F, 0x04, 0x00, 0x00, 0x20};//Short sensor ca
 void setup(void) {
   // initialize the digital pin as an output.
   pinMode(pin_led,  OUTPUT);
-  pinMode(pin_feat, OUTPUT);     
+  pinMode(pin_feet, OUTPUT);     
   pinMode(pin_seat, OUTPUT);    
  
   digitalWrite(pin_seat, LOW);
-  digitalWrite(pin_feat, LOW); 
+  digitalWrite(pin_feet, LOW); 
   
   digitalWrite(pin_led, HIGH);
   delay(1000);
@@ -85,23 +85,23 @@ void loop(void) {
       ON_seat = false;
     }
     
-    // feat heating settings
-    if ( temp_out < T_feat_on ) {
-      if ( ON_feat == false ) {
-        digitalWrite(pin_feat, HIGH);
-        ON_feat = true;
+    // feet heating settings
+    if ( temp_out < T_feet_on ) {
+      if ( ON_feet == false ) {
+        digitalWrite(pin_feet, HIGH);
+        ON_feet = true;
       }   
     } else {
-      digitalWrite(pin_feat, LOW);
-      ON_feat = false;
+      digitalWrite(pin_feet, LOW);
+      ON_feet = false;
     }
 
   } else {
     digitalWrite(pin_led,  LOW);
     digitalWrite(pin_seat, LOW);
-    digitalWrite(pin_feat, LOW);
+    digitalWrite(pin_feet, LOW);
     ON_seat = false;
-    ON_feat = false;   
+    ON_feet = false;   
   }
   
   delay(3000);
