@@ -142,6 +142,11 @@ float sensorRead(byte* _addr)
   //// default is 12 bit resolution, 750 ms conversion time
   float celsius = (float)raw / 16.0;
   //int dec = (celsius - (int)celsius)*100;
+  
+  // CRC problem
+  if ( celsius == 85.0 ) {   // or CRC = 21h
+    celsius = 0.0;
+  }
 
   return celsius;
 } 
