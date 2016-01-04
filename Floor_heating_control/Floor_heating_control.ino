@@ -48,7 +48,7 @@ void setup() {
   
   pinMode(ledPin, OUTPUT);      // sets the digital pin as output
 
-  initEEPOM();
+  initEEPROM();
     
   Serial.print("End setup function");
 
@@ -59,7 +59,7 @@ void loop() {
 
 }
 
-void initEEPOM() {
+void initEEPROM() {
 
   int eeAddress = 0; //EEPROM address to start reading from
   for (int i=0; i<rooms; i++) {
