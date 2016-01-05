@@ -66,12 +66,12 @@ void setHeatingSensors() {
 }
 
 void setExtraSensors() {
-  int eeAddress = 0;
+  int eeAddress;
   int offset = sizeof(bool)+rooms*sizeof(TempSensorData);
   TempSensor* currentSensor;
   for (int i=rooms; i<all_sensors; i++) {
       // get() can be used with custom structures too.
-      eeAddress = offset+i*sizeof(TempSensor);
+      eeAddress = offset+(i-rooms)*sizeof(TempSensor);
       TempSensor SensorData; //Variable to store custom object read from EEPROM.
     
       switch (i) {
@@ -104,5 +104,42 @@ void setExtraSensors() {
 
 }
 
+void setAlarm(int index, float value) {
+  if ( index < rooms ) {
+  int eeAddress = sizeof(bool)+index*sizeof(TempSensorData);
+  eeAddress += sizeof(byte[8]);  //addr
+  eeAddress += sizeof(char[20]);  //name
+  
+  EEPROM.put(eeAddress, value);
+  }
+}
+
+int getSensorAddress(int index) {
+  int eeAddress = sizeof(bool);
+  if ( index < rooms ) {
+    eeAddress += index*sizeof(TempSensorData);
+  } else if (index < all_sensors) {
+    eeAddress += rooms*sizeof(TempSensorData);
+    eeAddress += (index-rooms)*sizeof(TempSensor);
+  }
+  return eeAddress;
+}
+
+void dataCheck() {
+  for(int i=0; i<all_sensors; i++) {
+    int index = getSensorAddress(i);
+    Serial.println(index);
+    if ( i < rooms) {
+      TempSensorData value;
+      EEPROM.get(index, value);
+      Serial.println(value.name);
+    } else {
+      TempSensor value;
+      EEPROM.get(index, value);
+      Serial.println(value.name);
+    }
+  }
+  
+}
 
 

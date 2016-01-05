@@ -14,7 +14,8 @@ void setup() {
 
   //setReset();
   initEEPROM();
-    
+  dataCheck();
+  
   Serial.print("End setup function");
 
 }
