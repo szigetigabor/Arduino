@@ -9,33 +9,87 @@ void initEEPROM() {
   if ( reset ) {
     EEPROM.put( eeAddress, false );
     Serial.println("reset set to false");
-    TempSensorData* currentSensor;
-    for (int i=0; i<rooms; i++) {
     
-      digitalWrite(ledPin, HIGH);   // sets the LED on
+    setHeatingSensors();
+    setExtraSensors();
+  }
+}
+
+void setReset() {
+  EEPROM.put( 0, true );
+  Serial.println("reset set to true");
+}
+
+void setHeatingSensors() {
+  int eeAddress;
+  TempSensorData* currentSensor;
+  for (int i=0; i<rooms; i++) {
+  
+    digitalWrite(ledPin, HIGH);   // sets the LED on
     
+    // get() can be used with custom structures too.
+    eeAddress = sizeof(bool)+i*sizeof(TempSensorData); //Move address to the next byte after float 'f'.
+    TempSensorData SensorData; //Variable to store custom object read from EEPROM.
+    
+    switch (i) {
+      case 0:
+        currentSensor = &sensor0;
+        break;
+      case 1:
+        currentSensor = &sensor1;
+        break;
+      case 2:
+        currentSensor = &sensor2;
+        break;
+      case 3:
+        currentSensor = &sensor3;
+        break;
+    }
+
+    memcpy ( SensorData.addr, currentSensor->addr, sizeof(currentSensor->addr)+1 );   //SensorData.addr = sensor3.addr;
+    SensorData.alarm = currentSensor->alarm;
+    SensorData.delta = currentSensor->delta;
+    strcpy (SensorData.name,currentSensor->name);
+   
+
+    Serial.print(SensorData.addr[0]);
+    Serial.print(" ");
+    Serial.print(SensorData.name);
+    Serial.print(" write");
+    EEPROM.put(eeAddress, SensorData);
+      
+    Serial.println("");
+    delay(1000);                  // waits for a second
+    digitalWrite(ledPin, LOW);    // sets the LED off
+    delay(1000);
+  }
+}
+
+void setExtraSensors() {
+  int eeAddress = 0;
+  int offset = sizeof(bool)+rooms*sizeof(TempSensorData);
+  TempSensor* currentSensor;
+  for (int i=rooms; i<all_sensors; i++) {
       // get() can be used with custom structures too.
-      eeAddress = sizeof(reset)+i*sizeof(TempSensorData); //Move address to the next byte after float 'f'.
-      TempSensorData SensorData; //Variable to store custom object read from EEPROM.
+      eeAddress = offset+i*sizeof(TempSensor);
+      TempSensor SensorData; //Variable to store custom object read from EEPROM.
     
       switch (i) {
-        case 0:
-          currentSensor = &sensor0;
+        case 4:
+          currentSensor = &sensor4;
           break;
-        case 1:
-          currentSensor = &sensor1;
+        case 5:
+          currentSensor = &sensor5;
           break;
-        case 2:
-          currentSensor = &sensor2;
+        case 6:
+          currentSensor = &sensor6;
           break;
-        case 3:
-          currentSensor = &sensor3;
+        case 7:
+          currentSensor = &sensor7;
           break;
       }
 
       memcpy ( SensorData.addr, currentSensor->addr, sizeof(currentSensor->addr)+1 );   //SensorData.addr = sensor3.addr;
-      SensorData.alarm = currentSensor->alarm;
-      SensorData.delta = currentSensor->delta;
       strcpy (SensorData.name,currentSensor->name);
      
 
@@ -46,16 +100,9 @@ void initEEPROM() {
       EEPROM.put(eeAddress, SensorData);
       
       Serial.println("");
-      delay(1000);                  // waits for a second
-      digitalWrite(ledPin, LOW);    // sets the LED off
-      delay(1000);
     }  
-  }
+
 }
 
-void setReset() {
-  EEPROM.put( 0, true );
-  Serial.println("reset set to true");
-}
 
 
