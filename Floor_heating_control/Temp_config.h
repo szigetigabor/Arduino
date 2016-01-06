@@ -1,5 +1,5 @@
-int rooms  = 4;
-int all_sensors = 8;
+#define ROOMS 4
+#define ALL_SENSORS 8
 
 struct TempSensor {
   byte addr[8];
@@ -66,3 +66,4 @@ TempSensor sensor7 = {
       {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
       "külső"
 };
+
