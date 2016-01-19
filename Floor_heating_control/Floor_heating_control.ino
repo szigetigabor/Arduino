@@ -1,5 +1,6 @@
 //#include "EEPROM_control.h"
-#include "alarmGUI.h"
+#include "Temp_config.h"
+
 
 int ledPin = 13;                 // LED connected to digital pin 13
 float last_temp[ALL_SENSORS];

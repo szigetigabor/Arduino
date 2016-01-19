@@ -9,6 +9,17 @@
 word DEFAULT_BACKGROUND = VGA_BLACK;
 word DEFAULT_FONT_COLOR = VGA_WHITE;
 
+int current_page;
+
+#define PAGE_MAIN           1
+#define PAGE_TEMPERATURE    2
+#define PAGE_SETTINGS       3
+#define PAGE_DATE           4
+#define PAGE_REQ_TEMP       5
+#define PAGE_REQ_NIGHT_TEMP 6
+#define PAGE_MODE_TIMING    7
+#define PAGE_DISPLAY        8
+
 #include <UTFT_Buttons.h>
 extern UTFT          myGLCD;
 extern UTFT_Buttons  myButtons;
@@ -37,7 +48,7 @@ void showTitle( char title[20], int offset ) {
 }
 
 int showBackButton() {
-//back button
+  //back button
   int but_back = myButtons.addButton( 1, 1, 50,  50, "9", BUTTON_SYMBOL);
   myButtons.drawButton(but_back);
   return but_back;  

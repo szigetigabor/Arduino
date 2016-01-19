@@ -1,7 +1,7 @@
 #include "Display_includes.h"
+#include "mainGUI.h"
+#include "alarmGUI.h"
 
-
-int current_page;
 int i; //TODO remove
 
 //UTFT          myGLCD(HX8357B,38,39,40,41);
@@ -53,8 +53,27 @@ void initDisplay(){
 }
 
 void showGUI(){
-  if ( current_page == 1 ) {
-    showAlarmSettingGUI(i,true);
+  switch( current_page) {
+    case 1:
+      showMainGUI();
+      break;
+    case 2:
+      break;
+    case 3:
+      break;
+    case 4:
+      break;
+    case 5:
+      showAlarmSettingGUI(i);
+      break;
+    case 6:
+      showAlarmSettingGUI(i,true);
+      break;
+    case 7:
+      break;
+    default:
+    break;
+
   }
   delay(2000);
   i = (i+1) % 4;
