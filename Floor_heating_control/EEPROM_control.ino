@@ -1,18 +1,8 @@
-#include <EEPROM.h>
-#include "Temp_config.h"
 
-#define BACKLIGHT 20 
-#define SLEEP 2 
-/*
- * EEPROM map:
- *  1. reset
- *  2. blacklight
- *  3. sleep time
- *  4-x. room infos
- *  x-y. extra temperature sensors
- */
-#define BASE_OFFSET 3
- 
+
+#include "EEPROM_control.h"
+
+
 void initEEPROM() {
 
   int eeAddress = 0; //EEPROM address to start reading from
@@ -37,6 +27,12 @@ void setReset() {
 void setBacklight(int value) {
   EEPROM.put( 1, value );
   Serial.println("stored backlight value");
+}
+
+int getSleep() {
+  int value;
+  EEPROM.get( 2, value );
+  return value;
 }
 
 void setSleep(int value) {
@@ -76,7 +72,7 @@ void setHeatingSensors() {
     strcpy (SensorData.name,currentSensor->name);
    
 
-    Serial.print(SensorData.addr[0]);
+    Serial.print(SensorData.addr[0], HEX);
     Serial.print(" ");
     Serial.print(SensorData.name);
     Serial.print(" write");
@@ -138,6 +134,7 @@ void setAlarm(int index, float value) {
   }
 }
 
+/*
 int getSensorAddress(int index) {
   int eeAddress = BASE_OFFSET;
   if ( index < ROOMS ) {
@@ -145,9 +142,12 @@ int getSensorAddress(int index) {
   } else if (index < ALL_SENSORS) {
     eeAddress += ROOMS*sizeof(TempSensorData);
     eeAddress += (index-ROOMS)*sizeof(TempSensor);
+  } else if (index == ALL_SENSORS) {
+    eeAddress += ROOMS*sizeof(TempSensorData);
+    eeAddress += (index-ROOMS+1)*sizeof(TempSensor);
   }
   return eeAddress;
-}
+}*/
 
 void dataCheck() {
   for(int i=0; i<ALL_SENSORS; i++) {
@@ -163,8 +163,18 @@ void dataCheck() {
       Serial.println(value.name);
     }
   }
-  
+  EEPROMUsage();
 }
 
-
+void EEPROMUsage() {
+  Serial.print("Usage: ");
+  int used = getSensorAddress(ALL_SENSORS);
+  Serial.print(used, DEC );
+  Serial.print("/");
+  Serial.print(EEPROM.length());
+  Serial.print(" = ");
+  float percent =(float)used*100/(float)EEPROM.length();
+  Serial.print(percent, 2);
+  Serial.println(" %");
+}
 
