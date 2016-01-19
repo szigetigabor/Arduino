@@ -4,8 +4,6 @@
 int current_page;
 int i; //TODO remove
 
-
-
 //UTFT          myGLCD(HX8357B,38,39,40,41);
 //UTFT          myGLCD(QDM320B,38,39,40,41);
 UTFT          myGLCD(CTE32HR,38,39,40,41);
@@ -45,8 +43,8 @@ void initDisplay(){
   myGLCD.setBrightness(1);
   myGLCD.setContrast(1);
 
-  //myTouch.InitTouch(PORTRAIT);
-  //myTouch.setPrecision(PREC_MEDIUM);
+  myTouch.InitTouch(PORTRAIT);
+  myTouch.setPrecision(PREC_MEDIUM);
   
   myButtons.setTextFont(hungarian_font_16x16);
   myButtons.setSymbolFont(Dingbats1_XL);
