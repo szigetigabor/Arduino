@@ -1,6 +1,8 @@
-
+//#include "EEPROM_control.h"
+#include "alarmGUI.h"
 
 int ledPin = 13;                 // LED connected to digital pin 13
+float last_temp[ALL_SENSORS];
 
 void setup() {
   // put your setup code here, to run once:
@@ -15,14 +17,16 @@ void setup() {
   //setReset();
   initEEPROM();
   dataCheck();
-  
+
+  initDisplay();
   Serial.print("End setup function");
 
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-
+  showGUI();
 }
+
 
 
