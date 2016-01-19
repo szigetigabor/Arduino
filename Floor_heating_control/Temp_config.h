@@ -4,6 +4,10 @@
 #define ROOMS 4
 #define ALL_SENSORS 12
 
+#define ALARM_OFFSET sizeof(byte[8])+sizeof(char[20])
+#define DELTA_OFFSET ALARM_OFFSET+sizeof(float)
+#define NIGHT_OFFSET DELTA_OFFSET+sizeof(float)
+
 struct TempSensor {
   byte addr[8];
   char name[20];

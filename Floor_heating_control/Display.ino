@@ -54,7 +54,7 @@ void initDisplay(){
 
 void showGUI(){
   if ( current_page == 1 ) {
-    showAlarmSettingGUI(i);
+    showAlarmSettingGUI(i,true);
   }
   delay(2000);
   i = (i+1) % 4;
