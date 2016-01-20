@@ -2,6 +2,7 @@
 #include "mainGUI.h"
 #include "dateTimeGUI.h"
 #include "alarmGUI.h"
+#include "settingsGUI.h"
 
 int i; //TODO remove
 
@@ -49,7 +50,7 @@ void initDisplay(){
   myButtons.setTextFont(DEFAULT_FONT);
   myButtons.setSymbolFont(DEFAULT_BUTTON_SYMBOL);
 
-  current_page = 4;
+  current_page = 3;
 }
 
 void showGUI(){
@@ -58,8 +59,10 @@ void showGUI(){
       showMainGUI();
       break;
     case 2:
+      //showTemperatures();
       break;
     case 3:
+      showSettingsGUI();
       break;
     case 4:
       showDateTimeSettingGUI();
@@ -71,6 +74,10 @@ void showGUI(){
       showAlarmSettingGUI(i,true);
       break;
     case 7:
+      //showScheduleSettingGUI();
+      break;
+    case 8:
+      //showDisplaySettingGUI();
       break;
     default:
     break;
