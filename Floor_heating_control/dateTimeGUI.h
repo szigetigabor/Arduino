@@ -53,7 +53,7 @@ void showTime() {
   myButtons.drawButton(but_minutes_m);
 
   myButtons.setTextFont(DEFAULT_FONT);
-  myGLCD.setColor(DEFAULT_FONT_COLOR );
+  myGLCD.setColor(VGA_GRAY);
   myGLCD.setFont(GroteskBold32x64);
   
   //print hour
@@ -79,6 +79,7 @@ void showTime() {
   myGLCD.print("   ", TEXT_MIN_X, TEXT_PLACE_Y);
   myGLCD.print(char1, TEXT_MIN_X, TEXT_PLACE_Y);
   myGLCD.setFont(DEFAULT_FONT);
+  myGLCD.setColor(DEFAULT_FONT_COLOR);
 }
 
 void showDateSetting() {
