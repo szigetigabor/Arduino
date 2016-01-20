@@ -8,8 +8,11 @@
 
 word DEFAULT_BACKGROUND = VGA_BLACK;
 word DEFAULT_FONT_COLOR = VGA_WHITE;
+#define DEFAULT_FONT hungarian_font_16x16
+#define DEFAULT_BUTTON_SYMBOL Dingbats1_XL
 
 int current_page;
+int but_back, pressed_button;
 
 #define PAGE_MAIN           1
 #define PAGE_TEMPERATURE    2
@@ -31,15 +34,18 @@ extern uint8_t BigFont[];
 extern uint8_t Dingbats1_XL[];
 extern uint8_t franklingothic_normal[];
 //extern uint8_t SevenSegNumFontPlusPlus[];
+extern uint8_t GroteskBold16x32[];
 extern uint8_t GroteskBold32x64[];
+extern uint8_t GroteskBoldOwn32x64[];
 extern uint8_t hungarian_font_16x16[];
 
 void showTitle( char title[20], int offset ) {
-  myGLCD.setColor(VGA_BLUE);
+  myGLCD.setColor(VGA_RED);
   myGLCD.fillRect(0, 0, 480, 35);
   myGLCD.setColor(VGA_WHITE);
-  myGLCD.setBackColor(VGA_BLUE);
+  myGLCD.setBackColor(VGA_RED);
   myGLCD.print(title, 240-offset, 10);
+  myGLCD.setColor(VGA_BLUE);
 
   //set default color
   myGLCD.setColor(DEFAULT_FONT_COLOR);

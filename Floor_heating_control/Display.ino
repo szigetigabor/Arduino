@@ -1,5 +1,6 @@
 #include "Display_includes.h"
 #include "mainGUI.h"
+#include "dateTimeGUI.h"
 #include "alarmGUI.h"
 
 int i; //TODO remove
@@ -18,7 +19,7 @@ UTFT_Buttons  myButtons(&myGLCD, &myTouch);
 void initDisplay(){
   myGLCD.InitLCD();//PORTRAIT);
   myGLCD.clrScr();
-  myGLCD.setFont(hungarian_font_16x16);
+  myGLCD.setFont(DEFAULT_FONT);
   myGLCD.setBackColor(DEFAULT_BACKGROUND);
   //myGLCD.setBackColor(VGA_WHITE);
  // myGLCD.setBackColor(VGA_RED);
@@ -37,8 +38,7 @@ void initDisplay(){
   //myGLCD.setBackColor(VGA_PURPLE);
   //myGLCD.setBackColor(VGA_TRANSPARENT);
 
-  //myGLCD.fillScr(255,255,255);
-  myGLCD.fillScr(VGA_BLACK);
+  myGLCD.fillScr(DEFAULT_BACKGROUND);
 
   myGLCD.setBrightness(1);
   myGLCD.setContrast(1);
@@ -46,10 +46,10 @@ void initDisplay(){
   myTouch.InitTouch(PORTRAIT);
   myTouch.setPrecision(PREC_MEDIUM);
   
-  myButtons.setTextFont(hungarian_font_16x16);
-  myButtons.setSymbolFont(Dingbats1_XL);
+  myButtons.setTextFont(DEFAULT_FONT);
+  myButtons.setSymbolFont(DEFAULT_BUTTON_SYMBOL);
 
-  current_page = 1;
+  current_page = 4;
 }
 
 void showGUI(){
@@ -62,6 +62,7 @@ void showGUI(){
     case 3:
       break;
     case 4:
+      showDateTimeSettingGUI();
       break;
     case 5:
       showAlarmSettingGUI(i);
@@ -75,8 +76,8 @@ void showGUI(){
     break;
 
   }
-  delay(2000);
-  i = (i+1) % 4;
-  Serial.println(i);
+  delay(20000);
+ // i = (i+1) % 4;
+  //Serial.println(i);
 }
 

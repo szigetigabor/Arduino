@@ -7,7 +7,7 @@
 extern float last_temp[];
 
 int room_button[4];
-int but_back, but_up, but_down, pressed_button;
+int but_up, but_down;
 float alarm;
 bool  night_mode;
 
