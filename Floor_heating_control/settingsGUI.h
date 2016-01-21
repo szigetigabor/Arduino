@@ -24,7 +24,7 @@ void showSettingsButtons() {
 
 void showSettingsGUI() {
   //myButtons.deleteAllButtons();
-  showTitle("Be{ll\"t{sok", 70);
+  showTitle("Be{ll\"t{sok");
   showSettingsButtons();
   but_back = showBackButton();
 

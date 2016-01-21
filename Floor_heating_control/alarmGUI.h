@@ -89,9 +89,9 @@ void showAlarmSettingGUI(int sensor_index=0, bool night=false) {
   initAlarmSettingsGUI(sensor_index, night);
 
   if ( night ) {
-    showTitle("\\jszakai h#m|rs|klet be{ll\"t{s", 200);
+    showTitle("\\jszakai h#m|rs|klet be{ll\"t{s");
   } else {
-    showTitle("H#m|rs|klet be{ll\"t{s", 170);
+    showTitle("H#m|rs|klet be{ll\"t{s");
   }
   but_back = showBackButton();
   showRooms(sensor_index);

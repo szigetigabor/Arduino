@@ -128,7 +128,7 @@ void showDateSetting() {
 void showDateTimeSettingGUI() {
   myButtons.deleteAllButtons();
   tmpRTC = {14, 9, 1, 18, 1, 2016};
-  showTitle("D{tum |s id# be{ll\"t{s", 170);
+  showTitle("D{tum |s id# be{ll\"t{s");
   showTime();
   showDateSetting();
   but_back = showBackButton();

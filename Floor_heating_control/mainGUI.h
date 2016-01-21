@@ -24,7 +24,7 @@ void showButtons() {
 }
 
 void showMainGUI() {
-  showTitle("F$t|s szab{lyoz{s", 120);
+  showTitle("F$t|s szab{lyoz{s");
   showDate();
   showOperation();
   showButtons();

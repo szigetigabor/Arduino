@@ -102,7 +102,7 @@ void showTemp() {
 
 void showTemperatures() {
   myButtons.deleteAllButtons();
-  showTitle("H#m|rs|kletek", 100);
+  showTitle("H#m|rs|kletek");
   but_back = showBackButton();
   showLayout();
   showTemp();
