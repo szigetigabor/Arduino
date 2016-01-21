@@ -1,0 +1,117 @@
+#ifndef TEMPERATURE_GUI
+#define TEMPERATURE_GUI
+
+#include "Display_includes.h"
+#define X 10
+#define Y 60
+#define SCALE 3.2
+
+int nappali[2] = {41, 48};
+int halo[2]    = {33, 33};
+int kamra[2]   = {24, 19};
+int konyha[2]  = {24, 27};
+int furdo[2]   = {24, 18};
+int etkezo[2]  = {33, 31};
+int eloter[2]  = {29, 30};
+int eloszoba[2]= {44, 14};
+int wc[2]      = {13, 14};
+
+void showLayout() {
+  int x=X;
+  int y=Y;
+  
+  //nappali
+  myGLCD.drawRect(x, y, x+(nappali[0]*SCALE), y+(nappali[1]*SCALE));
+  //háló
+  x+=nappali[0]*SCALE;
+  myGLCD.drawRect(x, y, x+(halo[0]*SCALE), y+(halo[1]*SCALE));
+  //kamra
+  x+=halo[0]*SCALE;
+  myGLCD.drawRect(x, y, x+(kamra[0]*SCALE), y+(kamra[1]*SCALE));
+  //konyha
+  y+=kamra[1]*SCALE;
+  myGLCD.drawRect(x, y, x+(konyha[0]*SCALE), y+(konyha[1]*SCALE));
+  //fűrdő
+  y+=konyha[1]*SCALE;
+  myGLCD.drawRect(x, y, x+(furdo[0]*SCALE), y+(furdo[1]*SCALE));
+  //étkező
+  x=X+nappali[0]*SCALE;
+  y=Y+halo[1]*SCALE;
+  myGLCD.drawRect(x, y, x+(etkezo[0]*SCALE), y+(etkezo[1]*SCALE));
+  //előtér
+  y=Y+((nappali[1]+eloter[1])*SCALE);
+  myGLCD.drawRect(x, y-(eloter[1]*SCALE), x-(eloter[0]*SCALE), y);
+  //előszoba
+  myGLCD.drawRect(x, y, x+(eloszoba[0]*SCALE), y-(eloszoba[1]*SCALE));
+  //wc
+  x+=(eloszoba[0]*SCALE);
+  myGLCD.drawRect(x, y, x+(wc[0]*SCALE), y-(wc[1]*SCALE));
+  //tetőtér
+  myGLCD.setColor(VGA_RED);
+  x=400;
+  y=100;
+  int delta=55;
+  myGLCD.drawLine(x, y, x+delta, y+delta);
+  myGLCD.drawLine(x, y, x-delta, y+delta);
+  myGLCD.drawLine(x-delta, y+delta, x+delta, y+delta);
+  //garázs
+  myGLCD.setColor(DEFAULT_FONT_COLOR);
+  int high=55;
+  myGLCD.drawLine(x-delta, y+delta, x-delta, y+delta+high);
+  myGLCD.drawLine(x-delta, y+delta+high, x+delta, y+delta+high);
+  myGLCD.drawLine(x+delta, y+delta, x+delta, y+delta+high);
+  //garázs ajtó
+  myGLCD.drawLine(x-delta+10, y+delta+10, x-delta+10, y+delta+high);
+  myGLCD.drawLine(x-delta+10, y+delta+10, x+delta-10, y+delta+10);
+  myGLCD.drawLine(x+delta-10, y+delta+10, x+delta-10, y+delta+high);
+
+}
+
+void putTemp(float value, int x, int y) {
+  myGLCD.printNumF(value, 1, x, y, '.', 4);
+}
+
+void showTemp() {
+  //nappali
+  putTemp(22.2, X+30, Y+(nappali[1]*SCALE/2));
+  //háló
+  putTemp(19.2, X+150, Y+(halo[1]*SCALE/2));
+  //kamra
+  putTemp(17.9, X+244, Y+(kamra[1]*SCALE/2));
+  //konyha
+  putTemp(20.0, X+244, Y+((kamra[1]+(konyha[1]/2))*SCALE));
+  //fűrdő
+  putTemp(24.4, X+244, Y+((kamra[1]+konyha[1]+(furdo[1]/3))*SCALE));
+  //étkező
+  putTemp(21.0, X+150, Y+((halo[1]+(etkezo[1]/2))*SCALE));
+  //előtér
+  putTemp(18.3, X+60, Y+((nappali[1]+(eloter[1]/2))*SCALE));
+  //előszoba
+  putTemp(20.7, X+150, Y+((halo[1]+etkezo[1]+(eloszoba[1]/3))*SCALE));
+  //wc
+  putTemp(23.7, X+273, Y+((halo[1]+etkezo[1]+(eloszoba[1]/3))*SCALE));
+  //garázs
+  putTemp(9.8, 368, 185);
+  //tetőtér
+  putTemp(5.8, 368, 135);
+  //külső
+  putTemp(-5.3, 360, 80);
+
+  myGLCD.setColor(DEFAULT_FONT_COLOR);
+}
+
+void showTemperatures() {
+  myButtons.deleteAllButtons();
+  showTitle("H#m|rs|kletek", 100);
+  but_back = showBackButton();
+  showLayout();
+  showTemp();
+
+  if (myTouch.dataAvailable() == true) {
+    pressed_button = myButtons.checkButtons();
+    if (pressed_button==but_back) {
+      current_page = 1;
+    }
+  }
+}
+#endif
