@@ -23,6 +23,7 @@ int but_back, pressed_button;
 #define PAGE_MODE_TIMING    7
 #define PAGE_DISPLAY        8
 
+#define TITLE_HIGH 35
 const int displayPWM = 2;
 
 #include <UTFT_Buttons.h>
@@ -43,8 +44,9 @@ extern uint8_t hungarian_font_16x16[];
 
 void showTitle( char* title ) {
   myGLCD.setColor(VGA_RED);
-  myGLCD.fillRect(0, 0, 480, 35);
+  myGLCD.fillRect(0, 0, 480, TITLE_HIGH);
   myGLCD.setColor(VGA_WHITE);
+  myGLCD.drawRect(0, 0, 479, TITLE_HIGH);
   myGLCD.setBackColor(VGA_RED);
   myGLCD.print(title, CENTER, 10);
   myGLCD.setColor(VGA_BLUE);
@@ -57,7 +59,7 @@ void showTitle( char* title ) {
 
 int showBackButton() {
   //back button
-  int but_back = myButtons.addButton( 1, 1, 50,  50, "9", BUTTON_SYMBOL);
+  int but_back = myButtons.addButton( 0, 0, 50,  50, "9", BUTTON_SYMBOL);
   myButtons.drawButton(but_back);
   return but_back;  
 }
