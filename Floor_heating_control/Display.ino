@@ -57,28 +57,28 @@ void initDisplay(){
 
 void showGUI(){
   switch( current_page) {
-    case 1:
+    case PAGE_MAIN:
       showMainGUI();
       break;
-    case 2:
+    case PAGE_TEMPERATURE:
       showTemperatures();
       break;
-    case 3:
+    case PAGE_SETTINGS:
       showSettingsGUI();
       break;
-    case 4:
+    case PAGE_DATE:
       showDateTimeSettingGUI();
       break;
-    case 5:
+    case PAGE_REQ_TEMP:
       showAlarmSettingGUI(i);
       break;
-    case 6:
+    case PAGE_REQ_NIGHT_TEMP:
       showAlarmSettingGUI(i,true);
       break;
-    case 7:
+    case PAGE_MODE_TIMING:
       //showScheduleSettingGUI();
       break;
-    case 8:
+    case PAGE_DISPLAY:
       //showDisplaySettingGUI();
       break;
     default:
