@@ -3,6 +3,7 @@
 #include "dateTimeGUI.h"
 #include "alarmGUI.h"
 #include "settingsGUI.h"
+#include "temperatureGUI.h"
 
 int i; //TODO remove
 
@@ -18,6 +19,8 @@ UTFT_Buttons  myButtons(&myGLCD, &myTouch);
 
 
 void initDisplay(){
+  pinMode(displayPWM, OUTPUT);
+  
   myGLCD.InitLCD();//PORTRAIT);
   myGLCD.clrScr();
   myGLCD.setFont(DEFAULT_FONT);
@@ -41,8 +44,7 @@ void initDisplay(){
 
   myGLCD.fillScr(DEFAULT_BACKGROUND);
 
-  myGLCD.setBrightness(1);
-  myGLCD.setContrast(1);
+  displayON();
 
   myTouch.InitTouch(PORTRAIT);
   myTouch.setPrecision(PREC_MEDIUM);
@@ -50,7 +52,7 @@ void initDisplay(){
   myButtons.setTextFont(DEFAULT_FONT);
   myButtons.setSymbolFont(DEFAULT_BUTTON_SYMBOL);
 
-  current_page = 3;
+  current_page = 2;
 }
 
 void showGUI(){
@@ -59,7 +61,7 @@ void showGUI(){
       showMainGUI();
       break;
     case 2:
-      //showTemperatures();
+      showTemperatures();
       break;
     case 3:
       showSettingsGUI();

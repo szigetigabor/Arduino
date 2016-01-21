@@ -23,6 +23,8 @@ int but_back, pressed_button;
 #define PAGE_MODE_TIMING    7
 #define PAGE_DISPLAY        8
 
+const int displayPWM = 2;
+
 #include <UTFT_Buttons.h>
 extern UTFT          myGLCD;
 extern UTFT_Buttons  myButtons;
@@ -61,4 +63,19 @@ int showBackButton() {
 }
 
 
+void displayOFF() {
+  // fade the LED on thisPin from brithstest to off:
+  for (int brightness = 255; brightness >= 0; brightness--) {
+    analogWrite(displayPWM, brightness);
+    delay(20);
+  }
+}
+
+void displayON() {
+  // fade the LED on thisPin from brithstest to off:
+  for (int brightness = 0; brightness >= 255; brightness++) {
+    analogWrite(displayPWM, brightness);
+    delay(20);
+  }
+}
 #endif
