@@ -41,7 +41,7 @@ extern uint8_t GroteskBold32x64[];
 extern uint8_t GroteskBoldOwn32x64[];
 extern uint8_t hungarian_font_16x16[];
 
-void showTitle( char title[20] ) {
+void showTitle( char* title ) {
   myGLCD.setColor(VGA_RED);
   myGLCD.fillRect(0, 0, 480, 35);
   myGLCD.setColor(VGA_WHITE);
