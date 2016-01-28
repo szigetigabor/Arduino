@@ -41,12 +41,9 @@ void setSleep(int value) {
 }
 
 void getHeatingSensor(int index, TempSensorData& sensorData) {
-  //TempSensorData sensorData;  
   if ( i>=0 && i<ROOMS ) {
     int addr = getSensorAddress(index);
-    Serial.println(addr);
     EEPROM.get(addr, sensorData);
-    Serial.println(sensorData.name);
   }
 }
 
@@ -144,21 +141,6 @@ void setAlarm(int index, float value) {
   EEPROM.put(eeAddress, value);
   }
 }
-
-/*
-int getSensorAddress(int index) {
-  int eeAddress = BASE_OFFSET;
-  if ( index < ROOMS ) {
-    eeAddress += index*sizeof(TempSensorData);
-  } else if (index < ALL_SENSORS) {
-    eeAddress += ROOMS*sizeof(TempSensorData);
-    eeAddress += (index-ROOMS)*sizeof(TempSensor);
-  } else if (index == ALL_SENSORS) {
-    eeAddress += ROOMS*sizeof(TempSensorData);
-    eeAddress += (index-ROOMS+1)*sizeof(TempSensor);
-  }
-  return eeAddress;
-}*/
 
 void dataCheck() {
   for(int i=0; i<ALL_SENSORS; i++) {
