@@ -41,7 +41,7 @@ void setSleep(int value) {
 }
 
 void getHeatingSensor(int index, TempSensorData& sensorData) {
-  if ( i>=0 && i<ROOMS ) {
+  if ( index>=0 && index<ROOMS ) {
     int addr = getSensorAddress(index);
     EEPROM.get(addr, sensorData);
   }
@@ -93,6 +93,13 @@ void setHeatingSensors() {
   }
 }
 
+void getExtraSensor(int index, TempSensorData& sensorData) {
+  if ( index>=ROOMS && index<ALL_SENSORS ) {
+    int addr = getSensorAddress(index);
+    EEPROM.get(addr, sensorData);
+  }
+}
+
 void setExtraSensors() {
   int eeAddress;
   int offset = BASE_OFFSET+ROOMS*sizeof(TempSensorData);
@@ -114,6 +121,21 @@ void setExtraSensors() {
           break;
         case 7:
           currentSensor = &sensor7;
+          break;
+        case 8:
+          currentSensor = &sensor8;
+          break;
+        case 9:
+          currentSensor = &sensor9;
+          break;
+        case 10:
+          currentSensor = &sensor10;
+          break;
+        case 11:
+          currentSensor = &sensor11;
+          break;
+        case 12:
+          currentSensor = &sensor12;
           break;
       }
 
