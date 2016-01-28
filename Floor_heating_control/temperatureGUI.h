@@ -64,6 +64,11 @@ void showLayout() {
   myGLCD.drawLine(x-delta+10, y+delta+10, x-delta+10, y+delta+high);
   myGLCD.drawLine(x-delta+10, y+delta+10, x+delta-10, y+delta+10);
   myGLCD.drawLine(x+delta-10, y+delta+10, x+delta-10, y+delta+high);
+  //pince
+  int phigh=30;
+  myGLCD.drawLine(x-delta+10, y+delta+high+phigh, x-delta+10, y+delta+high);
+  myGLCD.drawLine(x-delta+10, y+delta+high+phigh, x+delta-10, y+delta+high+phigh);
+  myGLCD.drawLine(x+delta-10, y+delta+high+phigh, x+delta-10, y+delta+high);
 
 }
 
@@ -90,6 +95,8 @@ void showTemp() {
   putTemp(20.7, X+150, Y+((halo[1]+etkezo[1]+(eloszoba[1]/3))*SCALE));
   //wc
   putTemp(23.7, X+273, Y+((halo[1]+etkezo[1]+(eloszoba[1]/3))*SCALE));
+  //pince
+  putTemp(5.8, 368, 218);
   //garázs
   putTemp(9.8, 368, 185);
   //tetőtér
@@ -108,7 +115,9 @@ void showTemperatures() {
   showTemp();
 
   if (myTouch.dataAvailable() == true) {
+    Serial.println("TOUCHED!!!!!");
     pressed_button = myButtons.checkButtons();
+    Serial.println("checked TOUCHED!!!!!");
     if (pressed_button==but_back) {
       current_page = 1;
     }
