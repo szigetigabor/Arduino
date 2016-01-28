@@ -2,7 +2,7 @@
 #define TEMP_CONFIG
 
 #define ROOMS 4
-#define ALL_SENSORS 12
+#define ALL_SENSORS 13
 
 #define ALARM_OFFSET sizeof(byte[8])+sizeof(char[20])
 #define DELTA_OFFSET ALARM_OFFSET+sizeof(float)
@@ -37,7 +37,7 @@ TempSensorData sensor1 = {
       12.34f,
       0.1f,
       0.00f,
-      0
+      1
 };
 TempSensorData sensor2 = {
       {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
@@ -45,7 +45,7 @@ TempSensorData sensor2 = {
       0.00f,
       0.1f,
       0.00f,
-      0
+      2
 };
 TempSensorData sensor3 = {
       {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
@@ -53,7 +53,7 @@ TempSensorData sensor3 = {
       0.00f,
       0.1f,
       0.00f,
-      0
+      3
 };
 
 TempSensor sensor4 = {
@@ -88,6 +88,10 @@ TempSensor sensor10 = {
 TempSensor sensor11 = {
       {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
       "gar{zs"
+};
+TempSensor sensor12 = {
+      {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
+      "pince"
 };
 
 #endif
