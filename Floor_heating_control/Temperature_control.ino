@@ -69,3 +69,14 @@ void readTemperatures() {
   Serial.println("STOP read temprature!!!!!");
 }
 
+
+void readExtraTemperatures() {
+  Serial.println("START read EXTRA temprature!!!!!");
+  TempSensorData sensor;
+  for (int i=ROOMS; i< ALL_SENSORS; i++) {
+    getExtraSensor(i, sensor);
+    Serial.println(sensor.name);
+    last_temp[i]=sensorRead(sensor.addr);
+  }
+  Serial.println("STOP read EXTRA temprature!!!!!");
+}

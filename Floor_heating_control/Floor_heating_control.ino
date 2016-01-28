@@ -21,13 +21,14 @@ void setup() {
   dataCheck();
 
   initDisplay();
-  Serial.print("End setup function");
+  Serial.println("End setup function");
 
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   readTemperatures();
+  readExtraTemperatures();
   showGUI();
 }
 
