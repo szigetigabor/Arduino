@@ -4,6 +4,7 @@
 
 int ledPin = 13;                 // LED connected to digital pin 13
 float last_temp[ALL_SENSORS];
+bool relay_status[8];
 
 void setup() {
   // put your setup code here, to run once:
@@ -26,6 +27,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+  readTemperatures();
   showGUI();
 }
 
