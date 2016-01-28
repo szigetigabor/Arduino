@@ -40,6 +40,16 @@ void setSleep(int value) {
   Serial.println("stored sleep value");
 }
 
+void getHeatingSensor(int index, TempSensorData& sensorData) {
+  //TempSensorData sensorData;  
+  if ( i>=0 && i<ROOMS ) {
+    int addr = getSensorAddress(index);
+    Serial.println(addr);
+    EEPROM.get(addr, sensorData);
+    Serial.println(sensorData.name);
+  }
+}
+
 void setHeatingSensors() {
   int eeAddress;
   TempSensorData* currentSensor;
@@ -70,7 +80,8 @@ void setHeatingSensors() {
     SensorData.alarm = currentSensor->alarm;
     SensorData.delta = currentSensor->delta;
     strcpy (SensorData.name,currentSensor->name);
-   
+    SensorData.relay = currentSensor->relay;
+
 
     Serial.print(SensorData.addr[0], HEX);
     Serial.print(" ");
