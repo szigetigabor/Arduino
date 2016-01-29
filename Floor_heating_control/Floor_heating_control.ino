@@ -1,5 +1,6 @@
 //#include "EEPROM_control.h"
 #include "Temp_config.h"
+#include "RTC_control.h"
 
 
 int ledPin = 13;                 // LED connected to digital pin 13
@@ -17,8 +18,13 @@ void setup() {
   pinMode(ledPin, OUTPUT);      // sets the digital pin as output
 
   //setReset();
+  setRTC("May 11 2011", "0:1:12");
+  readRTC();
+
+  delay(3000);
+  setRTCatCompilation();
   initEEPROM();
-  dataCheck();
+  //dataCheck();
 
   initDisplay();
   Serial.println("End setup function");
@@ -27,9 +33,11 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+  readRTC();
   readTemperatures();
   readExtraTemperatures();
   showGUI();
+  delay(20000);
 }
 
 
