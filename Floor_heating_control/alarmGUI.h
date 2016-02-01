@@ -6,7 +6,7 @@
 
 extern float last_temp[];
 
-int room_button[4];
+int room_button[ROOMS];
 int but_up, but_down;
 float alarm;
 bool  night_mode;
@@ -32,19 +32,19 @@ void initAlarmSettingsGUI(int sensor_index=0, bool night=false) {
 
 void showRooms(int used) {
   int x = 10;
-  int start = 70;
+  int start = 55;
   TempSensorData value;
   for(int i=0; i<ROOMS; i++) {
     int addr = getSensorAddress(i);
     
     EEPROM.get(addr, value); 
     if ( i == used ) {
-      room_button[i] = myButtons.addButton( x,  start, 180,  50, value.name, BUTTON_DISABLED);
+      room_button[i] = myButtons.addButton( x,  start, 180,  45, value.name, BUTTON_DISABLED);
     } else {
-      room_button[i] = myButtons.addButton( x,  start, 180,  50, value.name);
+      room_button[i] = myButtons.addButton( x,  start, 180,  45, value.name);
     }
     myButtons.drawButton(room_button[i]);
-    start += 65;
+    start += 55;
   }
 }
 

@@ -71,6 +71,9 @@ void setHeatingSensors() {
       case 3:
         currentSensor = &sensor3;
         break;
+      case 4:
+        currentSensor = &sensor4;
+        break;
     }
 
     memcpy ( SensorData.addr, currentSensor->addr, sizeof(currentSensor->addr)+1 );   //SensorData.addr = sensor3.addr;
@@ -110,9 +113,6 @@ void setExtraSensors() {
       TempSensor SensorData; //Variable to store custom object read from EEPROM.
     
       switch (i) {
-        case 4:
-          currentSensor = &sensor4;
-          break;
         case 5:
           currentSensor = &sensor5;
           break;
