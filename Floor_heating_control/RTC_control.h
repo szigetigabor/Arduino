@@ -84,7 +84,7 @@ bool getDate(const char *str,tmElements_t& tm)
     if (strcmp(Month, Mon[monthIndex]) == 0) break;
   }
   if (monthIndex >= 13) return false;
-  tm.Wday = dayOfWeek(now());
+  //tm.Wday = dayOfWeek(now());
   tm.Day = Day;
   tm.Month = monthIndex;
   Serial.println(Year);
@@ -101,6 +101,8 @@ void setRTC(char* _date = "", char* _time = "") {
     parse = true;
     // and configure the RTC with this info
     if (RTC.write(tm)) {
+      tm.Wday = dayOfWeek(RTC.get())-1;
+      RTC.write(tm);  // update only day of week
       config = true;
     }
   }
