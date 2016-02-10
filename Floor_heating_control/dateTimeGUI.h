@@ -34,10 +34,37 @@ int stringHalfOffset (char *myString, bool font=false)               //returns h
   return chLen;
 }
 
+void printHour() {
+  myGLCD.setFont(GroteskBold32x64);
+  char char1[2];
+  char1[0] = '\0';
+  itoa(tmpRTC.tHour, char1, 10);
+  myGLCD.print("  ", TEXT_HOUR_X, TEXT_PLACE_Y);
+  if (tmpRTC.tHour <= 9) {
+    myGLCD.print(char1, TEXT_HOUR_X+stringHalfOffset(char1,LARGE), TEXT_PLACE_Y);
+  } else {
+    myGLCD.print(char1, TEXT_HOUR_X, TEXT_PLACE_Y);
+  }
+  myGLCD.setFont(DEFAULT_FONT);            
+}
+
+void printMinute() {
+  myGLCD.setFont(GroteskBold32x64);
+  char char1[4], tmp[3];
+  char1[0] = '\0';
+  if (tmpRTC.tMinute <= 9) {
+    strcat(char1, "0");
+    itoa(tmpRTC.tMinute, tmp, 10);
+    strcat(char1, tmp);
+  } else { 
+    itoa(tmpRTC.tMinute, char1, 10);
+  }
+  myGLCD.print("   ", TEXT_MIN_X, TEXT_PLACE_Y);
+  myGLCD.print(char1, TEXT_MIN_X, TEXT_PLACE_Y);
+  myGLCD.setFont(DEFAULT_FONT);            
+}
 
 void showTime() {
-  char char1[4], tmp[3];
-
   //myGLCD.print("Id#:", 10, 81);
 
   myButtons.setTextFont(GroteskBoldOwn32x64);
@@ -53,38 +80,47 @@ void showTime() {
   myButtons.drawButton(but_minutes_m);
 
   myButtons.setTextFont(DEFAULT_FONT);
-  myGLCD.setColor(VGA_GRAY);
+  //myGLCD.setColor(VGA_GRAY);
   myGLCD.setFont(GroteskBold32x64);
-  
-  //print hour
-  char1[0] = '\0';
-  itoa(tmpRTC.tHour, char1, 10);
-  myGLCD.print("   ", TEXT_HOUR_X, TEXT_PLACE_Y);
-  if (tmpRTC.tHour <= 9) {
-    myGLCD.print(char1, TEXT_HOUR_X+stringHalfOffset(char1,LARGE), TEXT_PLACE_Y);
-  } else {
-    myGLCD.print(char1, TEXT_HOUR_X, TEXT_PLACE_Y);
-  }
-  myGLCD.print(":", TEXT_HOUR_X+59, TEXT_PLACE_Y);
 
-  //print minutes
-  char1[0] = '\0';
-  if (tmpRTC.tMinute <= 9) {
-    strcat(char1, "0");
-    itoa(tmpRTC.tMinute, tmp, 10);
-    strcat(char1, tmp);
-  } else { 
-    itoa(tmpRTC.tMinute, char1, 10);
-  }
-  myGLCD.print("   ", TEXT_MIN_X, TEXT_PLACE_Y);
-  myGLCD.print(char1, TEXT_MIN_X, TEXT_PLACE_Y);
+  myGLCD.print(":", TEXT_HOUR_X+59, TEXT_PLACE_Y);
+  printHour();
+  printMinute();
+
   myGLCD.setFont(DEFAULT_FONT);
   myGLCD.setColor(DEFAULT_FONT_COLOR);
 }
 
-void showDateSetting() {
-  char char1[4], tmp[3];
+void printYear() {
+  myGLCD.setFont(GroteskBold32x64);
+  char char1[4];
+  char1[0] = '\0';
+  itoa(tmpRTC.tYear, char1, 10);
+  myGLCD.printNumI(tmpRTC.tYear, TEXT_YEAR_X, TEXT_PLACE_Y);
+  myGLCD.setFont(DEFAULT_FONT);            
+}
 
+void printMonth() {
+  myGLCD.setFont(GroteskBold32x64);
+  myGLCD.print(Mon[tmpRTC.tMonth], TEXT_MONTH_X, TEXT_PLACE_Y);
+  myGLCD.setFont(DEFAULT_FONT);            
+}
+
+void printDay() {
+  myGLCD.setFont(GroteskBold32x64);
+  char char1[4];
+  char1[0] = '\0';
+  itoa(tmpRTC.tDay, char1, 10);
+  myGLCD.print("  ", TEXT_DAY_X, TEXT_PLACE_Y);
+  if (tmpRTC.tDay <= 9) {
+    myGLCD.print(char1, TEXT_DAY_X+stringHalfOffset(char1,LARGE), TEXT_PLACE_Y);
+  } else {
+    myGLCD.print(char1, TEXT_DAY_X, TEXT_PLACE_Y);
+  }
+  myGLCD.setFont(DEFAULT_FONT);            
+}
+
+void showDateSetting() {
   //myGLCD.print("D{tum:", 10, 170);
   myButtons.setTextFont(GroteskBoldOwn32x64);
 
@@ -104,40 +140,99 @@ void showDateSetting() {
 
   myButtons.setTextFont(DEFAULT_FONT);
   myGLCD.setFont(GroteskBold32x64);
-  //print year
-  char1[0] = '\0';
-  itoa(tmpRTC.tYear, char1, 10);
-  myGLCD.printNumI(tmpRTC.tYear, TEXT_YEAR_X, TEXT_PLACE_Y);             
 
-  // print month
-  myGLCD.print(Mon[tmpRTC.tMonth], TEXT_MONTH_X, TEXT_PLACE_Y);
-
-  //print day
-  char1[0] = '\0';
-  itoa(tmpRTC.tDay, char1, 10);
-  myGLCD.print("  ", TEXT_DAY_X, TEXT_PLACE_Y);
-  if (tmpRTC.tDay <= 9) {
-    myGLCD.print(char1, TEXT_DAY_X+stringHalfOffset(char1,LARGE), TEXT_PLACE_Y);
-  } else {
-    myGLCD.print(char1, TEXT_DAY_X, TEXT_PLACE_Y);
-  }
+  printYear();         
+  printMonth();
+  printDay();
 
   myGLCD.setFont(DEFAULT_FONT);
 }
 
-void showDateTimeSettingGUI() {
+void initDateTimeSettingGUI() {
+  prev_page = PAGE_DATE;
+  touched = false;
   myButtons.deleteAllButtons();
-  tmpRTC = {14, 9, 1, 18, 1, 2016};
-  showTitle("D{tum |s id# be{ll\"t{s");
-  showTime();
-  showDateSetting();
-  but_back = showBackButton();
+  myGLCD.clrScr();
+}
 
-  
+void showDateTimeSettingGUI() {
+  if ( current_page != prev_page || touched ) {
+    
+ // tmpRTC = {14, 9, 1, 18, 1, 2016};
+    initDateTimeSettingGUI();
+    showTitle("D{tum |s id# be{ll\"t{s");
+    showTime();
+    showDateSetting();
+    but_back = showBackButton();
+  }
+ 
   if (myTouch.dataAvailable() == true) {
     pressed_button = myButtons.checkButtons();
     if (pressed_button==but_back) {
-      current_page = 3;
+      setRTC("May 11 2011", "0:1:12");
+      current_page = PAGE_SETTINGS;
+    } else if (pressed_button==but_year_p) {
+      tmpRTC.tYear +=1; 
+      printYear();
+    } else if (pressed_button==but_year_m) {
+      tmpRTC.tYear -=1; 
+      printYear();
+    } else if (pressed_button==but_month_p) {
+      if (tmpRTC.tMonth == 12 ) {
+        tmpRTC.tMonth = 1;
+      } else {
+        tmpRTC.tMonth +=1; 
+      }
+      printMonth();
+    } else if (pressed_button==but_month_m) {
+      if (tmpRTC.tMonth == 1 ) {
+        tmpRTC.tMonth = 12;
+      } else {
+        tmpRTC.tMonth -=1;
+      }
+      printMonth();
+    } else if (pressed_button==but_day_p) {
+      if (tmpRTC.tDay == 31 ) {
+        tmpRTC.tDay = 1;
+      } else {
+        tmpRTC.tDay +=1; 
+      }
+      printDay();
+    } else if (pressed_button==but_day_m) {
+      if (tmpRTC.tDay == 1 ) {
+        tmpRTC.tDay = 31;
+      } else {
+        tmpRTC.tDay -=1; 
+      } 
+      printDay();
+    } else if (pressed_button==but_hour_p) {
+      if (tmpRTC.tHour == 23 ) {
+        tmpRTC.tHour = 0;
+      } else {
+        tmpRTC.tHour +=1; 
+      }
+      printHour();
+    } else if (pressed_button==but_hour_m) {
+      if (tmpRTC.tHour == 0 ) {
+        tmpRTC.tHour = 23;
+      } else {
+        tmpRTC.tHour -=1; 
+      } 
+      printHour();
+    } else if (pressed_button==but_minutes_p) {
+      if (tmpRTC.tMinute == 31 ) {
+        tmpRTC.tMinute = 1;
+      } else {
+        tmpRTC.tMinute +=1; 
+      }
+      printMinute();
+    } else if (pressed_button==but_minutes_m) {
+      if (tmpRTC.tMinute == 1 ) {
+        tmpRTC.tMinute = 31;
+      } else {
+        tmpRTC.tMinute -=1; 
+      } 
+      printMinute();
     }
   }
 }
