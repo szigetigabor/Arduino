@@ -7,9 +7,18 @@
 
 int i; //TODO remove
 
+/* Update UTouchCD.h for a right touch feeling.
+ * values for my 3.5" TFTLCD (ILI9481) for arduino 2560 from mcufriend.com
+ * #define CAL_X 0x00178F66UL
+ * #define CAL_Y 0x03B440FCUL
+ * #define CAL_S 0x801DF13FUL
+ *  
+ */
+
 //UTFT          myGLCD(HX8357B,38,39,40,41);
 //UTFT          myGLCD(QDM320B,38,39,40,41);
-UTFT          myGLCD(CTE32HR,38,39,40,41);
+//UTFT          myGLCD(CTE32HR,38,39,40,41);
+UTFT          myGLCD(ILI9481,38,39,40,41);
 
 
 UTouch        myTouch(6,5,4,3,2);
@@ -46,13 +55,15 @@ void initDisplay(){
 
   displayON();
 
-  myTouch.InitTouch(PORTRAIT);
-  myTouch.setPrecision(PREC_MEDIUM);
+  myTouch.InitTouch(LANDSCAPE);
+  myTouch.setPrecision(PREC_EXTREME);
   
   myButtons.setTextFont(DEFAULT_FONT);
   myButtons.setSymbolFont(DEFAULT_BUTTON_SYMBOL);
 
-  current_page = 2;
+  current_page = 5;
+  prev_page = 0;
+  touched = false;
 }
 
 void showGUI(){
@@ -70,10 +81,10 @@ void showGUI(){
       showDateTimeSettingGUI();
       break;
     case PAGE_REQ_TEMP:
-      showAlarmSettingGUI(i);
+      showAlarmSettingGUI();
       break;
     case PAGE_REQ_NIGHT_TEMP:
-      showAlarmSettingGUI(i,true);
+      showAlarmSettingGUI(true);
       break;
     case PAGE_MODE_TIMING:
       //showScheduleSettingGUI();
@@ -85,7 +96,7 @@ void showGUI(){
     break;
 
   }
-  delay(20000);
+  //delay(2000);
  // i = (i+1) % 4;
   //Serial.println(i);
 }

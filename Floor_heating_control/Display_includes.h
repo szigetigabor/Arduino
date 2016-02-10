@@ -11,7 +11,8 @@ word DEFAULT_FONT_COLOR = VGA_WHITE;
 #define DEFAULT_FONT hungarian_font_16x16
 #define DEFAULT_BUTTON_SYMBOL Dingbats1_XL
 
-int current_page;
+int current_page, prev_page;
+bool touched;
 int but_back, pressed_button;
 
 #define PAGE_MAIN           1
