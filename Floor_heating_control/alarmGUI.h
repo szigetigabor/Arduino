@@ -60,13 +60,13 @@ void showAlarm(float alarm) {
   int y = 55;
   // show alarm value
   myGLCD.setFont(GroteskBold32x64);
-  x += 30;
+  x += 46;
   y += 120;
-  myGLCD.printNumF(alarm, 2, x, y);
+  myGLCD.printNumF(alarm, 1, x, y);
   myGLCD.setFont(franklingothic_normal);
-  myGLCD.print("O", x+160, y);
+  myGLCD.print("O", x+128, y);
   myGLCD.setFont(GroteskBold32x64);
-  myGLCD.print("C", x+160+16, y);
+  myGLCD.print("C", x+128+16, y);
   myGLCD.setFont(hungarian_font_16x16);  
 }
 
