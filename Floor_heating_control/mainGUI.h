@@ -2,16 +2,73 @@
 #define MAIN_GUI
 
 #include "Display_includes.h"
+#include "RTC_control.h"
+#include "dateTimeGUI.h"
 
 extern int pressed_button;
 int but_temp, but_settings;
 
 void showDate() {
-  myGLCD.print("Date", 100, 50);
+  char char1[4];
+  int size = 16;
+  int x = 100;
+  int y = 50;
+  myGLCD.print("Date", x, y);
+  x+=(5*16);
+
+  //print year
+  char1[0] = '\0';
+  itoa(tmpRTC.tYear, char1, 10);
+  myGLCD.printNumI(tmpRTC.tYear, x, y);
+  x+=(4*size);
+  myGLCD.print(".", x, y);
+  x+=size;
+
+  // print month
+  myGLCD.print(Mon[tmpRTC.tMonth], x, y);
+  x += stringHalfOffset(char1,SMALL);
+  x+=size;
+  myGLCD.print(".", x, y);
+  x+=size;
+
+  //print day
+  char1[0] = '\0';
+  itoa(tmpRTC.tDay, char1, 10);
+  myGLCD.print("  ", x, y);
+  if (tmpRTC.tDay <= 9) {
+    x += stringHalfOffset(char1,SMALL);
+  }
+  myGLCD.print(char1, x, y);
+  x += size;
+  myGLCD.print(".", x, y);
+
+  x = 100 + (6*size);
+  y = 80;
+  //print hour
+  char1[0] = '\0';
+  itoa(tmpRTC.tHour, char1, 10);
+  myGLCD.print("  ", x, y);
+  if (tmpRTC.tHour <= 9) {
+    x += stringHalfOffset(char1,SMALL);
+  }
+  myGLCD.print(char1, x, y);
+  x += size;
+  myGLCD.print(":", x, y);
+  x += size;
+
+  //print minutes
+  char1[0] = '\0';
+  itoa(tmpRTC.tMinute, char1, 10);
+  myGLCD.print("  ", x, y);
+  if (tmpRTC.tMinute <= 9) {
+    x += stringHalfOffset(char1,SMALL);
+  }
+  myGLCD.print(char1, x, y);
+
 }
 
 void showOperation() {
-  myGLCD.print("Opeation informations", 100, 80);
+  myGLCD.print("Operation informations", 100, 120);
 }
 
 void showButtons() {
@@ -23,11 +80,27 @@ void showButtons() {
   myButtons.drawButton(but_settings);  
 }
 
+void initMainGUI() {
+  touched = false;
+  prev_page = PAGE_MAIN;
+  myGLCD.clrScr();
+
+  //only for debug
+  tmpRTC.tYear = 2011;
+  tmpRTC.tMonth = 4;
+  tmpRTC.tDay = 31;
+  tmpRTC.tHour = 1;
+  tmpRTC.tMinute = 3;
+}
+
 void showMainGUI() {
-  showTitle("F$t|s szab{lyoz{s");
-  showDate();
-  showOperation();
-  showButtons();
+  if ( current_page != prev_page || touched) {
+    initMainGUI();
+    showTitle("F$t|s szab{lyoz{s");
+    showDate();
+    showOperation();
+    showButtons();
+  }
 
   //chekck button touching
   if (myTouch.dataAvailable() == true) {
