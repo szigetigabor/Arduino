@@ -107,12 +107,21 @@ void showTemp() {
   myGLCD.setColor(DEFAULT_FONT_COLOR);
 }
 
-void showTemperatures() {
+void initTemperatures() {
+  prev_page = PAGE_TEMPERATURE;
+  touched =  false;
   myButtons.deleteAllButtons();
-  showTitle("H#m|rs|kletek");
-  but_back = showBackButton();
-  showLayout();
-  showTemp();
+  myGLCD.clrScr();
+}
+
+void showTemperatures() {
+  if ( current_page != prev_page || touched) {
+    initTemperatures();
+    showTitle("H#m|rs|kletek");
+    but_back = showBackButton();
+    showLayout();
+    showTemp();
+  }
 
   if (myTouch.dataAvailable() == true) {
     Serial.println("TOUCHED!!!!!");
