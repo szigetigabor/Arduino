@@ -64,7 +64,7 @@ void printMinute() {
   myGLCD.setFont(DEFAULT_FONT);            
 }
 
-void showTime() {
+void showTimeSetting() {
   //myGLCD.print("Id#:", 10, 81);
 
   myButtons.setTextFont(GroteskBoldOwn32x64);
@@ -161,8 +161,8 @@ void showDateTimeSettingGUI() {
  // tmpRTC = {14, 9, 1, 18, 1, 2016};
     initDateTimeSettingGUI();
     showTitle("D{tum |s id# be{ll\"t{s");
-    showTime();
     showDateSetting();
+    showTimeSetting();
     but_back = showBackButton();
   }
  
