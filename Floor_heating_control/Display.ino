@@ -73,7 +73,12 @@ void checkIdle() {
   if ( abs(_now - last_used) > idle_max ) {
     if ( idle ) {
       if (myTouch.dataAvailable() == true) {
+        Serial.println("TOUCHED");
         last_used = millis();
+        idle = false;
+        touched = true;
+        displayON();
+        current_page = PAGE_MAIN;
       }
     } else {
       displayOFF();
@@ -85,7 +90,7 @@ void checkIdle() {
       displayON();
       current_page = PAGE_MAIN;
     }
-  } 
+  }
 }
 
 void showGUI(){

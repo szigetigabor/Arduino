@@ -76,6 +76,7 @@ void displayOFF() {
     delay(20);
   }
   myGLCD.fillScr(DEFAULT_BACKGROUND);
+  myButtons.deleteAllButtons();
 }
 
 void displayON() {
