@@ -167,6 +167,7 @@ void showDateTimeSettingGUI() {
   }
  
   if (myTouch.dataAvailable() == true) {
+    last_used = millis();
     pressed_button = myButtons.checkButtons();
     if (pressed_button==but_back) {
       setRTC("May 11 2011", "0:1:12");

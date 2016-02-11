@@ -61,12 +61,35 @@ void initDisplay(){
   myButtons.setTextFont(DEFAULT_FONT);
   myButtons.setSymbolFont(DEFAULT_BUTTON_SYMBOL);
 
-  current_page = 5;
+  current_page = PAGE_MAIN;
   prev_page = 0;
   touched = false;
+  last_used = millis();
+  idle = false;
+}
+
+void checkIdle() {
+  _now = millis();
+  if ( abs(_now - last_used) > idle_max ) {
+    if ( idle ) {
+      if (myTouch.dataAvailable() == true) {
+        last_used = millis();
+      }
+    } else {
+      displayOFF();
+      idle = true;
+    }
+  } else {
+    if ( idle ) {
+      idle = false;
+      displayON();
+      current_page = PAGE_MAIN;
+    }
+  } 
 }
 
 void showGUI(){
+  checkIdle();
   switch( current_page) {
     case PAGE_MAIN:
       showMainGUI();

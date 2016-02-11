@@ -14,6 +14,9 @@ word DEFAULT_FONT_COLOR = VGA_WHITE;
 int current_page, prev_page;
 bool touched;
 int but_back, pressed_button;
+unsigned long last_used, _now;
+int idle_max = 5000;
+bool idle;
 
 #define PAGE_MAIN           1
 #define PAGE_TEMPERATURE    2
@@ -67,15 +70,16 @@ int showBackButton() {
 
 
 void displayOFF() {
-  // fade the LED on thisPin from brithstest to off:
+  // fade the LED on thisPin from brightnes to off:
   for (int brightness = 255; brightness >= 0; brightness--) {
     analogWrite(displayPWM, brightness);
     delay(20);
   }
+  myGLCD.fillScr(DEFAULT_BACKGROUND);
 }
 
 void displayON() {
-  // fade the LED on thisPin from brithstest to off:
+  // fade the LED on thisPin from brightnest to off:
   for (int brightness = 0; brightness >= 255; brightness++) {
     analogWrite(displayPWM, brightness);
     delay(20);

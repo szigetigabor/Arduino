@@ -125,6 +125,7 @@ void showAlarmSettingGUI(bool night=false) {
   }
 
   if (myTouch.dataAvailable() == true) {
+    last_used = millis();
     pressed_button = myButtons.checkButtons();
     Serial.print(pressed_button);
     if (pressed_button==room_button[0]) {

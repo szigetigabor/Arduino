@@ -124,7 +124,7 @@ void showTemperatures() {
   }
 
   if (myTouch.dataAvailable() == true) {
-    Serial.println("TOUCHED!!!!!");
+    last_used = millis();
     pressed_button = myButtons.checkButtons();
     Serial.println("checked TOUCHED!!!!!");
     if (pressed_button==but_back) {

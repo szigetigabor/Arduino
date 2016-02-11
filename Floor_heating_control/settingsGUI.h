@@ -36,6 +36,7 @@ void showSettingsGUI() {
   }
 
   if (myTouch.dataAvailable() == true) {
+    last_used = millis();
     pressed_button = myButtons.checkButtons();
     if (pressed_button==but_back) {
       current_page = PAGE_MAIN;

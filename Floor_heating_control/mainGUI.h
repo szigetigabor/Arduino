@@ -105,6 +105,7 @@ void showMainGUI() {
 
   //chekck button touching
   if (myTouch.dataAvailable() == true) {
+    last_used = millis();
     pressed_button = myButtons.checkButtons();
     if (pressed_button==but_temp) {
       current_page = PAGE_TEMPERATURE;
