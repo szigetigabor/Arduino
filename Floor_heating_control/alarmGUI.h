@@ -28,7 +28,12 @@ void initAlarmSettingsGUI(int sensor_index=0, bool night=false) {
     }
   }
   Serial.print("ALARM GUI (init):");
-  prev_page=PAGE_REQ_TEMP;
+  if ( night ) {
+    prev_page=PAGE_REQ_NIGHT_TEMP;
+  } else {
+    prev_page=PAGE_REQ_TEMP;
+  }
+  
   myGLCD.clrScr();
 }
 
@@ -163,7 +168,7 @@ void showAlarmSettingGUI(bool night=false) {
     } else if (pressed_button==but_back) {
       Serial.println("BACK");
       saveConfig(current_sensor);
-      current_page = PAGE_MAIN;
+      current_page = PAGE_SETTINGS;
     }
   }
 }
