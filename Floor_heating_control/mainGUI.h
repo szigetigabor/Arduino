@@ -81,6 +81,7 @@ void showButtons() {
 }
 
 void initMainGUI() {
+  myButtons.deleteAllButtons();
   touched = false;
   prev_page = PAGE_MAIN;
   myGLCD.clrScr();
