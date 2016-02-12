@@ -1,6 +1,7 @@
 #include "Display_includes.h"
 #include "mainGUI.h"
 #include "dateTimeGUI.h"
+#include "displayGUI.h"
 #include "alarmGUI.h"
 #include "settingsGUI.h"
 #include "temperatureGUI.h"
@@ -56,7 +57,7 @@ void initDisplay(){
   displayON();
 
   myTouch.InitTouch(LANDSCAPE);
-  myTouch.setPrecision(PREC_EXTREME);
+  myTouch.setPrecision(PREC_MEDIUM);
   
   myButtons.setTextFont(DEFAULT_FONT);
   myButtons.setSymbolFont(DEFAULT_BUTTON_SYMBOL);
@@ -70,6 +71,9 @@ void initDisplay(){
 
 void checkIdle() {
   _now = millis();
+  if ( idle_max == 0) {
+    return;
+  }
   if ( abs(_now - last_used) > idle_max ) {
     if ( idle ) {
       if (myTouch.dataAvailable() == true) {
@@ -77,7 +81,7 @@ void checkIdle() {
         last_used = millis();
         idle = false;
         touched = true;
-        displayON();
+        //displayON();
         current_page = PAGE_MAIN;
       }
     } else {
@@ -87,7 +91,7 @@ void checkIdle() {
   } else {
     if ( idle ) {
       idle = false;
-      displayON();
+      //displayON();
       current_page = PAGE_MAIN;
     }
   }
@@ -118,7 +122,7 @@ void showGUI(){
       //showScheduleSettingGUI();
       break;
     case PAGE_DISPLAY:
-      //showDisplaySettingGUI();
+      showDisplaySettingGUI();
       break;
     default:
     break;
