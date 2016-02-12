@@ -15,7 +15,7 @@ int current_page, prev_page;
 bool touched;
 int but_back, pressed_button;
 unsigned long last_used, _now;
-int idle_max = 5000;
+unsigned int idle_max;
 bool idle;
 
 #define PAGE_MAIN           1
@@ -28,7 +28,7 @@ bool idle;
 #define PAGE_DISPLAY        8
 
 #define TITLE_HIGH 35
-const int displayPWM = 2;
+const int displayPWM = 7;
 
 #include <UTFT_Buttons.h>
 extern UTFT          myGLCD;
@@ -71,10 +71,10 @@ int showBackButton() {
 
 void displayOFF() {
   // fade the LED on thisPin from brightnes to off:
-  for (int brightness = 255; brightness >= 0; brightness--) {
+/*  for (int brightness = 255; brightness >= 0; brightness--) {
     analogWrite(displayPWM, brightness);
     delay(20);
-  }
+  }*/
   myGLCD.fillScr(DEFAULT_BACKGROUND);
   myButtons.deleteAllButtons();
 }
