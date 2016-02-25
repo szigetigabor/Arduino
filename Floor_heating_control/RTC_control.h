@@ -27,6 +27,7 @@ void print2digits(int number) {
 }
 
 void readRTC() {
+  prevRTC = tmpRTC;
   tmElements_t tm;
   if (RTC.read(tm)) {
     Serial.print("Ok, Time = ");

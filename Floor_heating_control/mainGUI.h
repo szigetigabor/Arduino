@@ -11,6 +11,7 @@ int but_temp, but_settings;
 void showDate() {
   char char1[4];
   int size = 16;
+  int charNR = 1;
   int x = 100;
   int y = 50;
   myGLCD.print("Date", x, y);
@@ -35,11 +36,13 @@ void showDate() {
   char1[0] = '\0';
   itoa(tmpRTC.tDay, char1, 10);
   myGLCD.print("  ", x, y);
+  charNR = 2;
   if (tmpRTC.tDay <= 9) {
     x += stringHalfOffset(char1,SMALL);
+    charNR = 1;
   }
   myGLCD.print(char1, x, y);
-  x += size;
+  x += charNR*size;
   myGLCD.print(".", x, y);
 
   x = 100 + (6*size);
@@ -48,11 +51,13 @@ void showDate() {
   char1[0] = '\0';
   itoa(tmpRTC.tHour, char1, 10);
   myGLCD.print("  ", x, y);
+  charNR = 2;
   if (tmpRTC.tHour <= 9) {
     x += stringHalfOffset(char1,SMALL);
+    charNR = 1;
   }
   myGLCD.print(char1, x, y);
-  x += size;
+  x += charNR*size;
   myGLCD.print(":", x, y);
   x += size;
 
@@ -74,8 +79,10 @@ void showOperation() {
 void showButtons() {
   int x = 50;
   int y = 250;
-  but_temp     = myButtons.addButton( x,     y, 180,  60, "e", BUTTON_SYMBOL);
-  but_settings = myButtons.addButton( x+200, y, 180,  60, "w", BUTTON_SYMBOL);
+//  but_temp     = myButtons.addButton( x,     y, 180,  60, "e", BUTTON_SYMBOL);
+//  but_settings = myButtons.addButton( x+200, y, 180,  60, "w", BUTTON_SYMBOL);
+  but_temp     = myButtons.addButton( x,     y, 180,  60, "H#m|rs|kletek");
+  but_settings = myButtons.addButton( x+200, y, 180,  60, "Be{ll\"t{sok");
   myButtons.drawButton(but_temp);
   myButtons.drawButton(but_settings);  
 }
@@ -85,13 +92,6 @@ void initMainGUI() {
   touched = false;
   prev_page = PAGE_MAIN;
   myGLCD.clrScr();
-
-  //only for debug
-  tmpRTC.tYear = 2011;
-  tmpRTC.tMonth = 4;
-  tmpRTC.tDay = 31;
-  tmpRTC.tHour = 1;
-  tmpRTC.tMinute = 3;
 }
 
 void showMainGUI() {
@@ -102,7 +102,9 @@ void showMainGUI() {
     showOperation();
     showButtons();
   }
-
+  if ( prevRTC.tMinute != tmpRTC.tMinute ) {
+    showDate();
+  }
   //chekck button touching
   if (myTouch.dataAvailable() == true) {
     last_used = millis();
