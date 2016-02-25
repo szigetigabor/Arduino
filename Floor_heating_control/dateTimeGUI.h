@@ -157,8 +157,6 @@ void initDateTimeSettingGUI() {
 
 void showDateTimeSettingGUI() {
   if ( current_page != prev_page || touched ) {
-    
- // tmpRTC = {14, 9, 1, 18, 1, 2016};
     initDateTimeSettingGUI();
     showTitle("D{tum |s id# be{ll\"t{s");
     showDateSetting();
@@ -170,7 +168,8 @@ void showDateTimeSettingGUI() {
     last_used = millis();
     pressed_button = myButtons.checkButtons();
     if (pressed_button==but_back) {
-      setRTC("May 11 2011", "0:1:12");
+      // TODO: save date value
+      //setRTC("May 11 2011", "0:1:12");
       current_page = PAGE_SETTINGS;
     } else if (pressed_button==but_year_p) {
       tmpRTC.tYear +=1; 
