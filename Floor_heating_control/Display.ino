@@ -78,11 +78,13 @@ void checkIdle() {
     if ( idle ) {
       if (myTouch.dataAvailable() == true) {
         Serial.println("TOUCHED");
-        last_used = millis();
         idle = false;
         touched = true;
         //displayON();
-        current_page = PAGE_MAIN;
+        if ( abs(_now - last_used) > ONE_MINUTES ) {
+          current_page = PAGE_MAIN;
+        }
+        last_used = millis();
       }
     } else {
       displayOFF();

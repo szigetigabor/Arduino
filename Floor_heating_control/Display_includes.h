@@ -28,6 +28,7 @@ bool idle;
 #define PAGE_DISPLAY        8
 
 #define TITLE_HIGH 35
+#define ONE_MINUTES 60000
 const int displayPWM = 7;
 
 #include <UTFT_Buttons.h>
@@ -77,6 +78,7 @@ void displayOFF() {
   }*/
   myGLCD.fillScr(DEFAULT_BACKGROUND);
   myButtons.deleteAllButtons();
+  Serial.println("Display OFF");
 }
 
 void displayON() {
@@ -85,5 +87,6 @@ void displayON() {
     analogWrite(displayPWM, brightness);
     delay(20);
   }
+  Serial.println("Display ON");
 }
 #endif
