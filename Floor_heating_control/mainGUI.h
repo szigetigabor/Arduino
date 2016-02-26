@@ -66,7 +66,8 @@ void showDate() {
   itoa(tmpRTC.tMinute, char1, 10);
   myGLCD.print("  ", x, y);
   if (tmpRTC.tMinute <= 9) {
-    x += stringHalfOffset(char1,SMALL);
+    myGLCD.print("0", x, y);
+    x += stringHalfOffset(char1,LARGE);
   }
   myGLCD.print(char1, x, y);
 
