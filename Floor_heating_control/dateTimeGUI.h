@@ -220,15 +220,15 @@ void showDateTimeSettingGUI() {
       } 
       printHour();
     } else if (pressed_button==but_minutes_p) {
-      if (tmpRTC.tMinute == 31 ) {
-        tmpRTC.tMinute = 1;
+      if (tmpRTC.tMinute == 59 ) {
+        tmpRTC.tMinute = 0;
       } else {
         tmpRTC.tMinute +=1; 
       }
       printMinute();
     } else if (pressed_button==but_minutes_m) {
-      if (tmpRTC.tMinute == 1 ) {
-        tmpRTC.tMinute = 31;
+      if (tmpRTC.tMinute == 0 ) {
+        tmpRTC.tMinute = 59;
       } else {
         tmpRTC.tMinute -=1; 
       } 
