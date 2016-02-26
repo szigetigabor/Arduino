@@ -16,6 +16,8 @@ void initEEPROM() {
     setSleep(SLEEP);
     setHeatingSensors();
     setExtraSensors();
+  } else {
+    idle_max = getSleep();
   }
 }
 
