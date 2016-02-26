@@ -17,7 +17,7 @@ struct RTC_T
   int tDay;
   int tMonth;
   int tYear;
-} tmpRTC, prevRTC;
+} tmpRTC, prevRTC, modRTC;
 
 void print2digits(int number) {
   if (number >= 0 && number < 10) {
@@ -93,6 +93,27 @@ bool getDate(const char *str,tmElements_t& tm)
   Serial.println(Year);
   tm.Year = CalendarYrToTm(Year);
   return true;
+}
+
+void setRTC(tmElements_t time) {
+  bool config=false;
+  if (RTC.write(time)) {
+    time.Wday = dayOfWeek(RTC.get())-1;
+    RTC.write(time);  // update only day of week
+    config = true;
+  }
+  if (config) {
+    Serial.print("DS1307 configured Time=");
+    //Serial.print(_time);
+    //Serial.print(", Date=");
+    //Serial.println(_date);
+  } else {
+    Serial.print("Could not configure from the GUI, Time=\"");
+    //Serial.print(_time);
+    //Serial.print("\", Date=\"");
+    //Serial.print(_date);
+    //Serial.println("\"");
+  }
 }
 
 void setRTC(char* _date = "", char* _time = "") {

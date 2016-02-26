@@ -38,9 +38,9 @@ void printHour() {
   myGLCD.setFont(GroteskBold32x64);
   char char1[2];
   char1[0] = '\0';
-  itoa(tmpRTC.tHour, char1, 10);
+  itoa(modRTC.tHour, char1, 10);
   myGLCD.print("  ", TEXT_HOUR_X, TEXT_PLACE_Y);
-  if (tmpRTC.tHour <= 9) {
+  if (modRTC.tHour <= 9) {
     myGLCD.print(char1, TEXT_HOUR_X+stringHalfOffset(char1,LARGE), TEXT_PLACE_Y);
   } else {
     myGLCD.print(char1, TEXT_HOUR_X, TEXT_PLACE_Y);
@@ -52,12 +52,12 @@ void printMinute() {
   myGLCD.setFont(GroteskBold32x64);
   char char1[4], tmp[3];
   char1[0] = '\0';
-  if (tmpRTC.tMinute <= 9) {
+  if (modRTC.tMinute <= 9) {
     strcat(char1, "0");
-    itoa(tmpRTC.tMinute, tmp, 10);
+    itoa(modRTC.tMinute, tmp, 10);
     strcat(char1, tmp);
   } else { 
-    itoa(tmpRTC.tMinute, char1, 10);
+    itoa(modRTC.tMinute, char1, 10);
   }
   myGLCD.print("   ", TEXT_MIN_X, TEXT_PLACE_Y);
   myGLCD.print(char1, TEXT_MIN_X, TEXT_PLACE_Y);
@@ -95,14 +95,14 @@ void printYear() {
   myGLCD.setFont(GroteskBold32x64);
   char char1[4];
   char1[0] = '\0';
-  itoa(tmpRTC.tYear, char1, 10);
-  myGLCD.printNumI(tmpRTC.tYear, TEXT_YEAR_X, TEXT_PLACE_Y);
+  itoa(modRTC.tYear, char1, 10);
+  myGLCD.printNumI(modRTC.tYear, TEXT_YEAR_X, TEXT_PLACE_Y);
   myGLCD.setFont(DEFAULT_FONT);            
 }
 
 void printMonth() {
   myGLCD.setFont(GroteskBold32x64);
-  myGLCD.print(Mon[tmpRTC.tMonth], TEXT_MONTH_X, TEXT_PLACE_Y);
+  myGLCD.print(Mon[modRTC.tMonth], TEXT_MONTH_X, TEXT_PLACE_Y);
   myGLCD.setFont(DEFAULT_FONT);            
 }
 
@@ -110,9 +110,9 @@ void printDay() {
   myGLCD.setFont(GroteskBold32x64);
   char char1[4];
   char1[0] = '\0';
-  itoa(tmpRTC.tDay, char1, 10);
+  itoa(modRTC.tDay, char1, 10);
   myGLCD.print("  ", TEXT_DAY_X, TEXT_PLACE_Y);
-  if (tmpRTC.tDay <= 9) {
+  if (modRTC.tDay <= 9) {
     myGLCD.print(char1, TEXT_DAY_X+stringHalfOffset(char1,LARGE), TEXT_PLACE_Y);
   } else {
     myGLCD.print(char1, TEXT_DAY_X, TEXT_PLACE_Y);
@@ -148,7 +148,21 @@ void showDateSetting() {
   myGLCD.setFont(DEFAULT_FONT);
 }
 
+void SaveTime() {
+  tmpRTC = modRTC;
+
+  tmElements_t newtime;
+  newtime.Hour   = tmpRTC.tHour;
+  newtime.Minute = tmpRTC.tMinute;
+  //newtime.Wday   = tmpRTC.tDow;
+  newtime.Day    = tmpRTC.tDay;
+  newtime.Month  = tmpRTC.tMonth;
+  newtime.Year   = CalendarYrToTm(tmpRTC.tYear);
+  setRTC(newtime);
+}
+
 void initDateTimeSettingGUI() {
+  modRTC = tmpRTC;
   prev_page = PAGE_DATE;
   touched = false;
   myButtons.deleteAllButtons();
@@ -168,69 +182,68 @@ void showDateTimeSettingGUI() {
     last_used = millis();
     pressed_button = myButtons.checkButtons();
     if (pressed_button==but_back) {
-      // TODO: save date value
-      //setRTC("May 11 2011", "0:1:12");
+      SaveTime();
       current_page = PAGE_SETTINGS;
     } else if (pressed_button==but_year_p) {
-      tmpRTC.tYear +=1; 
+      modRTC.tYear +=1; 
       printYear();
     } else if (pressed_button==but_year_m) {
-      tmpRTC.tYear -=1; 
+      modRTC.tYear -=1; 
       printYear();
     } else if (pressed_button==but_month_p) {
-      if (tmpRTC.tMonth == 12 ) {
-        tmpRTC.tMonth = 1;
+      if (modRTC.tMonth == 12 ) {
+        modRTC.tMonth = 1;
       } else {
-        tmpRTC.tMonth +=1; 
+        modRTC.tMonth +=1; 
       }
       printMonth();
     } else if (pressed_button==but_month_m) {
-      if (tmpRTC.tMonth == 1 ) {
-        tmpRTC.tMonth = 12;
+      if (modRTC.tMonth == 1 ) {
+        modRTC.tMonth = 12;
       } else {
-        tmpRTC.tMonth -=1;
+        modRTC.tMonth -=1;
       }
       printMonth();
     } else if (pressed_button==but_day_p) {
-      if (tmpRTC.tDay == 31 ) {
-        tmpRTC.tDay = 1;
+      if (modRTC.tDay == 31 ) {
+        modRTC.tDay = 1;
       } else {
-        tmpRTC.tDay +=1; 
+        modRTC.tDay +=1; 
       }
       printDay();
     } else if (pressed_button==but_day_m) {
-      if (tmpRTC.tDay == 1 ) {
-        tmpRTC.tDay = 31;
+      if (modRTC.tDay == 1 ) {
+        modRTC.tDay = 31;
       } else {
-        tmpRTC.tDay -=1; 
+        modRTC.tDay -=1; 
       } 
       printDay();
     } else if (pressed_button==but_hour_p) {
-      if (tmpRTC.tHour == 23 ) {
-        tmpRTC.tHour = 0;
+      if (modRTC.tHour == 23 ) {
+        modRTC.tHour = 0;
       } else {
-        tmpRTC.tHour +=1; 
+        modRTC.tHour +=1; 
       }
       printHour();
     } else if (pressed_button==but_hour_m) {
-      if (tmpRTC.tHour == 0 ) {
-        tmpRTC.tHour = 23;
+      if (modRTC.tHour == 0 ) {
+        modRTC.tHour = 23;
       } else {
-        tmpRTC.tHour -=1; 
+        modRTC.tHour -=1; 
       } 
       printHour();
     } else if (pressed_button==but_minutes_p) {
-      if (tmpRTC.tMinute == 59 ) {
-        tmpRTC.tMinute = 0;
+      if (modRTC.tMinute == 59 ) {
+        modRTC.tMinute = 0;
       } else {
-        tmpRTC.tMinute +=1; 
+        modRTC.tMinute +=1; 
       }
       printMinute();
     } else if (pressed_button==but_minutes_m) {
-      if (tmpRTC.tMinute == 0 ) {
-        tmpRTC.tMinute = 59;
+      if (modRTC.tMinute == 0 ) {
+        modRTC.tMinute = 31;
       } else {
-        tmpRTC.tMinute -=1; 
+        modRTC.tMinute -=1; 
       } 
       printMinute();
     }
