@@ -81,7 +81,7 @@ void showButtons() {
   int y = 250;
 //  but_temp     = myButtons.addButton( x,     y, 180,  60, "e", BUTTON_SYMBOL);
 //  but_settings = myButtons.addButton( x+200, y, 180,  60, "w", BUTTON_SYMBOL);
-  but_temp     = myButtons.addButton( x,     y, 180,  60, "H#m|rs|kletek");
+  but_temp     = myButtons.addButton( x-25,     y, 210,  60, "H#m|rs|kletek");
   but_settings = myButtons.addButton( x+200, y, 180,  60, "Be{ll\"t{sok");
   myButtons.drawButton(but_temp);
   myButtons.drawButton(but_settings);  
@@ -102,7 +102,7 @@ void showMainGUI() {
     showOperation();
     showButtons();
   }
-  if ( prevRTC.tMinute != tmpRTC.tMinute ) {
+  if ( prevRTC.tMinute != tmpRTC.tMinute && !idle ) {
     showDate();
   }
   //chekck button touching
