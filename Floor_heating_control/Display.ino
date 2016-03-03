@@ -14,6 +14,11 @@ int i; //TODO remove
  * #define CAL_Y 0x03B440FCUL
  * #define CAL_S 0x801DF13FUL
  *  
+ * I have add some cabel between arduino board and touch display
+ * #define CAL_X 0x000E47C6UL
+ * #define CAL_Y 0x01D300E1UL
+ * #define CAL_S 0x801DF13FUL
+ * 
  */
 
 //UTFT          myGLCD(HX8357B,38,39,40,41);
