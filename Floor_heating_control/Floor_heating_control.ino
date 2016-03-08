@@ -17,12 +17,11 @@ void setup() {
   
   pinMode(ledPin, OUTPUT);      // sets the digital pin as output
 
+  //setRTCatCompilation();
   //setReset();
-  setRTC("May 11 2011", "0:1:12");
+
   readRTC();
 
-  delay(3000);
-  setRTCatCompilation();
   initEEPROM();
   //dataCheck();
 
@@ -37,7 +36,6 @@ void loop() {
   readTemperatures();
   readExtraTemperatures();
   showGUI();
-  delay(20000);
 }
 
 
