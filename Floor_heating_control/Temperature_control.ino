@@ -60,8 +60,9 @@ void checkTemperature(float current, float required, byte relay) {
 void updateMainPump() {
   bool value = false;
   for (int i=0; i< ROOMS; i++) {
-    value = value & relay_status[i];
+    value = value | relay_status[i];
   }
+  value = value & boilerIsRunning;
   setRelay(MAIN_PUMP, value);
 }
 
