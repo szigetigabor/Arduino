@@ -99,6 +99,7 @@ void checkIdle() {
     if ( idle ) {
       idle = false;
       //displayON();
+      touched = true;
       current_page = PAGE_MAIN;
     }
   }
