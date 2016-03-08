@@ -1,7 +1,7 @@
 #include "Temp_config.h"
 #include "Relay.h"
 #include <OneWire.h>
-#define ONE_WIRE_BUS 2                  // DS18B20 is on P2
+#define ONE_WIRE_BUS 19                  // DS18B20 is on P19
 
 OneWire ds(ONE_WIRE_BUS);
 
@@ -51,21 +51,36 @@ void checkTemperature(float current, float required, byte relay) {
   if ( current < required) {
     output = true;
   }
-  if ( relay_status[relay] != output ) {
+  if ( relay_status[relay % 8] != output ) {
     setRelay(relay, output);
-    relay_status[relay] = output;
+    relay_status[relay % 8] = output;
   }
+}
+
+void updateMainPump() {
+  bool value = false;
+  for (int i=0; i< ROOMS; i++) {
+    value = value & relay_status[i];
+  }
+  setRelay(MAIN_PUMP, value);
 }
 
 void readTemperatures() {
   Serial.println("START read temprature!!!!!");
+  bool night=false;
+  float alarm;
   TempSensorData sensor;
   for (int i=0; i< ROOMS; i++) {
     getHeatingSensor(i, sensor);
     Serial.println(sensor.name);
     last_temp[i]=sensorRead(sensor.addr);
-    checkTemperature(last_temp[i], sensor.alarm, sensor.relay);
+    alarm=sensor.alarm;
+    if ( night ) {
+      alarm=sensor.night;
+    }
+    checkTemperature(last_temp[i], alarm, sensor.relay);
   }
+  updateMainPump();
   Serial.println("STOP read temprature!!!!!");
 }
 
