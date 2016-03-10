@@ -26,6 +26,7 @@ bool idle;
 #define PAGE_REQ_NIGHT_TEMP 6
 #define PAGE_MODE_TIMING    7
 #define PAGE_DISPLAY        8
+#define PAGE_CURRENTS       9
 
 #define TITLE_HIGH 35
 #define ONE_MINUTES 60000

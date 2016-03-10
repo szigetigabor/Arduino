@@ -1,6 +1,7 @@
 //#include "EEPROM_control.h"
 #include "Temp_config.h"
 #include "RTC_control.h"
+#include "sct013.h"
 
 
 int ledPin = 13;                 // LED connected to digital pin 13
@@ -25,6 +26,7 @@ void setup() {
   readRTC();
 
   initEEPROM();
+  initSCT();
   //dataCheck();
 
   initDisplay();

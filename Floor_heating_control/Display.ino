@@ -5,6 +5,7 @@
 #include "alarmGUI.h"
 #include "settingsGUI.h"
 #include "temperatureGUI.h"
+#include "currentsGUI.h"
 
 int i; //TODO remove
 
@@ -131,6 +132,9 @@ void showGUI(){
       break;
     case PAGE_DISPLAY:
       showDisplaySettingGUI();
+      break;
+    case PAGE_CURRENTS:
+      showCurrentsGUI();
       break;
     default:
     break;
