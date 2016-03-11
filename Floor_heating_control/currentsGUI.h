@@ -13,7 +13,9 @@ void initCurrentsGUI() {
 }
 
 void showCurrents() {
-  myGLCD.printNumF(getCurrentPower(),2, 100, 100);
+  float watt = getCurrentPower() / 1000;
+  myGLCD.printNumF(watt,2, 100, 100);
+  myGLCD.print ("W", 180, 100);
   delay(1000);
 }
 
