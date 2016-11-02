@@ -78,31 +78,31 @@ void putTemp(float value, int x, int y) {
 
 void showTemp() {
   //nappali
-  putTemp(22.2, X+30, Y+(nappali[1]*SCALE/2));
+  putTemp(last_temp[5], X+30, Y+(nappali[1]*SCALE/2));
   //háló
-  putTemp(19.2, X+150, Y+(halo[1]*SCALE/2));
+  putTemp(last_temp[6], X+150, Y+(halo[1]*SCALE/2));
   //kamra
-  putTemp(17.9, X+244, Y+(kamra[1]*SCALE/2));
+  putTemp(last_temp[9], X+244, Y+(kamra[1]*SCALE/2));
   //konyha
-  putTemp(20.0, X+244, Y+((kamra[1]+(konyha[1]/2))*SCALE));
-  //fűrdő
-  putTemp(24.4, X+244, Y+((kamra[1]+konyha[1]+(furdo[1]/3))*SCALE));
+  putTemp(last_temp[0], X+244, Y+((kamra[1]+(konyha[1]/2))*SCALE));
+  //fürdő
+  putTemp(last_temp[2], X+244, Y+((kamra[1]+konyha[1]+(furdo[1]/3))*SCALE));
   //étkező
-  putTemp(21.0, X+150, Y+((halo[1]+(etkezo[1]/2))*SCALE));
+  putTemp(last_temp[1], X+150, Y+((halo[1]+(etkezo[1]/2))*SCALE));
   //előtér
-  putTemp(18.3, X+60, Y+((nappali[1]+(eloter[1]/2))*SCALE));
+  putTemp(last_temp[7], X+60, Y+((nappali[1]+(eloter[1]/2))*SCALE));
   //előszoba
-  putTemp(20.7, X+150, Y+((halo[1]+etkezo[1]+(eloszoba[1]/3))*SCALE));
+  putTemp(last_temp[3], X+150, Y+((halo[1]+etkezo[1]+(eloszoba[1]/3))*SCALE));
   //wc
-  putTemp(23.7, X+273, Y+((halo[1]+etkezo[1]+(eloszoba[1]/3))*SCALE));
+  putTemp(last_temp[4], X+273, Y+((halo[1]+etkezo[1]+(eloszoba[1]/3))*SCALE));
   //pince
-  putTemp(5.8, 368, 218);
+  putTemp(last_temp[12], 368, 218);
   //garázs
-  putTemp(9.8, 368, 185);
+  putTemp(last_temp[11], 368, 185);
   //tetőtér
-  putTemp(5.8, 368, 135);
+  putTemp(last_temp[10], 368, 135);
   //külső
-  putTemp(-5.3, 360, 80);
+  putTemp(last_temp[8], 360, 80);
 
   myGLCD.setColor(DEFAULT_FONT_COLOR);
 }
