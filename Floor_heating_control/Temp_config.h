@@ -28,7 +28,7 @@ TempSensorData sensor0 = {
       0.00f,
       0.1f,
       0.00f,
-      0
+      46
 };
 
 TempSensorData sensor1 = {
@@ -37,7 +37,7 @@ TempSensorData sensor1 = {
       12.34f,
       0.1f,
       0.00f,
-      1
+      44
 };
 TempSensorData sensor2 = {
       {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
@@ -45,7 +45,7 @@ TempSensorData sensor2 = {
       0.00f,
       0.1f,
       0.00f,
-      2
+      45
 };
 TempSensorData sensor3 = {
       {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
@@ -53,7 +53,7 @@ TempSensorData sensor3 = {
       0.00f,
       0.1f,
       0.00f,
-      3
+      42
 };
 TempSensorData sensor4 = {
       {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
@@ -61,7 +61,7 @@ TempSensorData sensor4 = {
       0.00f,
       0.1f,
       0.00f,
-      4
+      43
 };
 TempSensor sensor5 = {
       {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
