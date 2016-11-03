@@ -140,6 +140,7 @@ void showGUI(){
     break;
 
   }
+  delay(10);      // must be this delay bacause stop the main looping mechanism
   //delay(2000);
  // i = (i+1) % 4;
   //Serial.println(i);
