@@ -106,7 +106,7 @@ void showMainGUI() {
   if ( prevRTC.tMinute != tmpRTC.tMinute && !idle ) {
     showDate();
   }
-  //chekck button touching
+  //check button touching
   if (myTouch.dataAvailable() == true) {
     last_used = millis();
     pressed_button = myButtons.checkButtons();
