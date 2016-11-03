@@ -8,6 +8,11 @@
 #define DELTA_OFFSET ALARM_OFFSET+sizeof(float)
 #define NIGHT_OFFSET DELTA_OFFSET+sizeof(float)
 
+#define CHECK_INTERVAL 10000
+//#define CHECK_EINTELVAL 20000
+
+unsigned long last_checked, last_checked_extra, _now_temp;
+
 struct TempSensor {
   byte addr[8];
   char name[20];

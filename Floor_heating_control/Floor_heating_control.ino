@@ -6,11 +6,26 @@
 
 int ledPin = 13;                 // LED connected to digital pin 13
 float last_temp[ALL_SENSORS];
-bool relay_status[8];
+bool relay_status[8];            //current status of relay pins
 bool boilerIsRunning;
+
 
 void setup() {
   // put your setup code here, to run once:
+
+  last_temp[0]=20.0;    //only for debug
+  last_temp[1]=21.2;
+  last_temp[2]=24.2;
+  last_temp[3]=20.7;
+  last_temp[4]=23.7;
+  last_temp[5]=22.2;
+  last_temp[6]=19.2;
+  last_temp[7]=18.3;
+  last_temp[8]=-5.3;
+  last_temp[9]=17.9;
+  last_temp[10]=5.8;
+  last_temp[11]=9.8;
+  last_temp[12]=5.8;
   
   Serial.begin(9600);
   while (!Serial) {
@@ -20,13 +35,14 @@ void setup() {
   pinMode(ledPin, OUTPUT);      // sets the digital pin as output
 
   boilerIsRunning = true;
-  //setRTCatCompilation();
+  //setRTCatCompilation();      // set RTC at compilation time
   //setReset();
 
   readRTC();
 
-  initEEPROM();
+  //initEEPROM();               // write default values to eeprom, need only first time
   initSCT();
+  initTemp();
   //dataCheck();
 
   initDisplay();
