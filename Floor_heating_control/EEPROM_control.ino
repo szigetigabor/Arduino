@@ -79,9 +79,10 @@ void setHeatingSensors() {
     }
 
     memcpy ( SensorData.addr, currentSensor->addr, sizeof(currentSensor->addr)+1 );   //SensorData.addr = sensor3.addr;
+    strcpy (SensorData.name,currentSensor->name);
     SensorData.alarm = currentSensor->alarm;
     SensorData.delta = currentSensor->delta;
-    strcpy (SensorData.name,currentSensor->name);
+    SensorData.night = currentSensor->night;
     SensorData.relay = currentSensor->relay;
 
 
@@ -166,6 +167,45 @@ void setAlarm(int index, float value) {
   }
 }
 
+byte* getAddr(int index) {
+  byte sensoraddr[8];
+  if ( index < ROOMS ) {
+    int addr = getSensorAddress(index);
+    EEPROM.get(addr, sensoraddr);
+  }
+  return sensoraddr;
+}
+
+float getAlarm(int index) {
+  float alarm;
+  if ( index < ROOMS ) {
+    int addr = getSensorAddress(index);
+    addr += ALARM_OFFSET;
+    EEPROM.get(addr, alarm);
+  }
+  return alarm;
+}
+
+float getNight(int index) {
+  float night=0;
+  if ( index < ROOMS ) {
+    int addr = getSensorAddress(index);
+    addr += NIGHT_OFFSET;
+    EEPROM.get(addr, night);
+  }
+  return night;
+}
+
+byte getRelay(int index) {
+  byte relay=0;
+  if ( index < ROOMS ) {
+    int addr = getSensorAddress(index);
+    addr += RELAY_OFFSET;
+    EEPROM.get(addr, relay);
+  }
+  return relay;
+}
+
 void dataCheck() {
   for(int i=0; i<ALL_SENSORS; i++) {
     int index = getSensorAddress(i);
@@ -174,6 +214,9 @@ void dataCheck() {
       TempSensorData value;
       EEPROM.get(index, value);
       Serial.println(value.name);
+      Serial.println(value.alarm);
+      Serial.println(value.night);
+      Serial.println(value.relay);
     } else {
       TempSensor value;
       EEPROM.get(index, value);
@@ -194,4 +237,5 @@ void EEPROMUsage() {
   Serial.print(percent, 2);
   Serial.println(" %");
 }
+
 

@@ -8,10 +8,10 @@
 #define SLEEP 2 
 /*
  * EEPROM map:
- *  1. reset
- *  2. blacklight
- *  3. sleep time
- *  4-x. room infos
+ *  0. reset
+ *  1. blacklight
+ *  2. sleep time
+ *  3-x. room infos (39 bytes each info)
  *  x-y. extra temperature sensors
  */
 #define BASE_OFFSET 3
@@ -31,3 +31,4 @@ int getSensorAddress(int index) {
 }
 
 #endif
+
