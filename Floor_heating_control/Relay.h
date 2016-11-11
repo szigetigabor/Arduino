@@ -1,5 +1,8 @@
 
-#define MAIN_PUMP 49    // pin on arduino for main pump
+#define MAIN_PUMP 13    // pin on arduino for main pump
+
+#define OFF false
+#define ON true
 
 void setRelay(byte pin, bool value) {
   digitalWrite(pin, value);
@@ -13,5 +16,6 @@ void setRelay(byte pin, bool value) {
   }
 }
   
+
 
 
