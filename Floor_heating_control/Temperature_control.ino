@@ -46,11 +46,33 @@ float sensorRead(byte* _addr)
   return celsius;
 }
 
+void checkTemperature(int index, boolean isnight) {
+//    Serial.println(index);
+//    Serial.println(last_temp[index]);
+//    Serial.println(alarms[index]);
+//    Serial.println(relays[index]);
+    float req;
+    memcpy ( &req, &alarms[index], sizeof(float) );
+    byte rel;
+    memcpy ( &rel, &relays[index], sizeof(byte) );
+  //checkTemperature(last_temp[index], req, rel);
+    if ( isnight ) {
+      Serial.println("eccaka");
+      checkTemperature(last_temp[index], nights[index], relays[index]);
+    } else {
+      Serial.println("nappal");
+      checkTemperature(last_temp[index], alarms[index], relays[index]);
+    }
+}
+
 void checkTemperature(float current, float required, byte relay) {
-  bool output = false;
+  bool output = OFF;
   if ( current < required) {
-    output = true;
+    output = ON;
   }
+  Serial.print("current: "); Serial.println(current);
+  Serial.print("required: ");Serial.println(required);
+  Serial.print("relay: ");   Serial.println(relay);
   if ( relay_status[relay % 8] != output ) {
     setRelay(relay, output);
     relay_status[relay % 8] = output;
@@ -75,6 +97,7 @@ void initTemp() {
     EEPROM.get(eaddress+ALARM_OFFSET, alarms[i]);//Serial.print(alarms[i]);Serial.println("");
     EEPROM.get(eaddress+NIGHT_OFFSET, nights[i]);//Serial.print(nights[i]);Serial.println("");
     EEPROM.get(eaddress+RELAY_OFFSET, relays[i]);//Serial.print(relays[i]);Serial.println("");
+    pinMode(relays[i], OUTPUT);
   }
   
 }
@@ -95,115 +118,24 @@ void readTemperatures() {
   last_checked = millis();
   Serial.println("START read temprature!!!!!");
   bool isnight=false;
-  //float alarm;
-  float night;
-  //byte relay;
-  bool old=true;
-  old=false;
-  //TempSensorData sensor;
+  float alarm;
+  isnight=true;
   for (int i=0; i< ROOMS; i++) {
-    byte addr;
-    //alarm=0.0f;
-    //night=0.0f;
-    //relay=0;
-    Serial.println("uj szenzor");
-    Serial.println(i);
-    Serial.println(alarms[i]);
-    Serial.println(nights[i]);
-    Serial.println(relays[i]);
-    if ( old ) {
-      TempSensorData sensor;
-      //EEPROM.get(eaddress, sensor);
-      getHeatingSensor(i, sensor);
-      //Serial.println(sensor.name);
-      Serial.println(sensor.alarm);
-      Serial.println(sensor.night);
-      Serial.println(sensor.relay);
-      alarm=sensor.alarm;
-    } else {
-      int eaddress = getSensorAddress(i);
-      Serial.print("    addr: ");
-      EEPROM.get(eaddress, addr);Serial.print(addr, HEX);Serial.print(", ");
-      EEPROM.get(eaddress+1, addr);Serial.print(addr, HEX);Serial.print(", ");
-      EEPROM.get(eaddress+2, addr);Serial.print(addr, HEX);Serial.print(", ");
-      EEPROM.get(eaddress+3, addr);Serial.print(addr, HEX);Serial.print(", ");
-      EEPROM.get(eaddress+4, addr);Serial.print(addr, HEX);Serial.print(", ");
-      EEPROM.get(eaddress+5, addr);Serial.print(addr, HEX);Serial.print(", ");
-      EEPROM.get(eaddress+6, addr);Serial.print(addr, HEX);Serial.print(", ");
-      EEPROM.get(eaddress+7, addr);Serial.print(addr, HEX);Serial.println("");
-      
-/*Serial.print("Starta: ");Serial.println(eaddress);
-Serial.print("Alarma: ");Serial.println(eaddress+ALARM_OFFSET);
-Serial.print("Deltaa: ");Serial.println(eaddress+DELTA_OFFSET);
-Serial.print("Nighta: ");Serial.println(eaddress+NIGHT_OFFSET);
-Serial.print("Relaya: ");Serial.println(eaddress+RELAY_OFFSET);
-*/
-/*Serial.print("    alarm: ");
-EEPROM.get(eaddress+ALARM_OFFSET, addr);Serial.print(addr);Serial.println("");
-byte alarma[4];
-EEPROM.get(eaddress+28, alarma[0]);Serial.print(alarma[0]);Serial.println("");
-EEPROM.get(eaddress+29, alarma[1]);//Serial.print(alarma[1]);Serial.println("");
-EEPROM.get(eaddress+30, alarma[2]);//Serial.print(alarma[2]);Serial.println("");
-EEPROM.get(eaddress+31, alarma[3]);//Serial.print(alarma[3]);Serial.println("");
-
-//Serial.println((float)(alarma[0] << 24 | alarma[1] << 16 | alarma[2] << 8 | alarma[3]));
-      //eaddress += ALARM_OFFSET;
-     // float alarm;
-      
-//EEPROM.get(eaddress+ALARM_OFFSET, alarm);//Serial.print(alarm);Serial.println("");
-      Serial.println(eaddress);
-      //float tmp;
-      // EEPROM.get(eaddress, sensor.addr);
-      // EEPROM.get(eaddress+ALARM_OFFSET, alarm);
-      //EEPROM.get(eaddress, alarm);
-//      EEPROM.get(eaddress, tmp);
-//      EEPROM.get(113, tmp);
-//      Serial.println(tmp);
-//      alarm = tmp;
-//      delay(10);
-//      Serial.print("Alarm:");
-//       Serial.println(tmp);
- */      //Serial.println(alarm);
- /*   //eaddress += sizeof(float);
-       EEPROM.get(eaddress+NIGHT_OFFSET, night);
-    //EEPROM.get(eaddress, night);
-    Serial.print("Night:");
-       Serial.println(night);
-//    eaddress += sizeof(float);
-*/
-      byte relay;
-      EEPROM.get(eaddress+RELAY_OFFSET, relay);
-      // EEPROM.get(eaddress, relay);
-      Serial.print("    Relay:"); Serial.println(relay);
-
-
-
-
-    /*  //  alarm=sensor.alarm;
-    //alarm=getAlarm(i);
-//    Serial.print("Alarm:");
-    Serial.println(alarm);
-    night=getNight(i);
-    Serial.print("Night:");
-    Serial.println(night);
-    relay=getRelay(i);
-    Serial.print("Relay:");
-    Serial.println(relay);*/
-    }
-    
-
+    Serial.print(i);
+    Serial.println(". sensor: ");
+  
+    TempSensorData sensor;
+    getHeatingSensor(i, sensor);
     //last_temp[i]=sensorRead(sensor.addr);
-    //last_temp[i]=sensorRead(getAddr(i));
-
+//    last_temp[i] = 6.0f;
+    alarm=sensor.alarm;
     if ( isnight ) {
-      //alarm=sensor.night;
-     // alarm=night;
+      alarm=sensor.night;
     }
-//    Serial.println(alarm);
-//    Serial.println(night);
-//    Serial.println(relay);
-    //checkTemperature(last_temp[i], alarm, sensor.relay);
-    //checkTemperature(last_temp[i], alarm, relay);
+    //checkTemperature((float)last_temp[i], (float)alarms[i], (byte)relays[i]);
+    //checkTemperature(last_temp[i], alarms[i], relays[i]);
+    //checkTemperature(i, isnight);
+    checkTemperature(last_temp[i], alarm, sensor.relay);
   }
   updateMainPump();
 
@@ -227,3 +159,4 @@ void readExtraTemperatures() {
   }
   Serial.println("STOP read EXTRA temprature!!!!!");
 }
+

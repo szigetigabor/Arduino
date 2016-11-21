@@ -7,11 +7,17 @@
 #define ALARM_OFFSET sizeof(byte[8])+sizeof(char[20])
 #define DELTA_OFFSET ALARM_OFFSET+sizeof(float)
 #define NIGHT_OFFSET DELTA_OFFSET+sizeof(float)
+#define RELAY_OFFSET NIGHT_OFFSET+sizeof(float)
 
-#define CHECK_INTERVAL 10000
+
+#define CHECK_INTERVAL 15000
 //#define CHECK_EINTELVAL 20000
 
 unsigned long last_checked, last_checked_extra, _now_temp;
+float alarms[ROOMS];
+float nights[ROOMS];
+byte relays[ROOMS];
+
 
 struct TempSensor {
   byte addr[8];
@@ -31,18 +37,18 @@ TempSensorData sensor0 = {
       {0x28, 0xFF, 0x7C, 0x89, 0x3D, 0x04, 0x00, 0xBB},
       "konyha",
       0.00f,
-      0.1f,
-      0.00f,
-      46
+      0.10f,
+      1.00f,
+      8//46
 };
 
 TempSensorData sensor1 = {
       {0x28, 0xC0, 0x10, 0x8F, 0x04, 0x00, 0x00, 0x20},
       "|tkez#",
       12.34f,
-      0.1f,
-      0.00f,
-      44
+      0.10f,
+      18.11f,
+      9//44
 };
 TempSensorData sensor2 = {
       {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
@@ -50,23 +56,23 @@ TempSensorData sensor2 = {
       0.00f,
       0.1f,
       0.00f,
-      45
+      10//45
 };
 TempSensorData sensor3 = {
       {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
       "el#szoba",
       0.00f,
-      0.1f,
-      0.00f,
-      42
+      0.10f,
+      5.25f,
+      11//42
 };
 TempSensorData sensor4 = {
       {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
       "wc",
       0.00f,
-      0.1f,
+      0.10f,
       0.00f,
-      43
+      12//43
 };
 TempSensor sensor5 = {
       {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
@@ -104,3 +110,4 @@ TempSensor sensor12 = {
 };
 
 #endif
+
