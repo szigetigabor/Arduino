@@ -130,6 +130,8 @@ void showTemperatures() {
     if (pressed_button==but_back) {
       current_page = 1;
     }
+  } else {
+    showTemp();
   }
 }
 #endif
