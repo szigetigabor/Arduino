@@ -36,11 +36,11 @@ void setup() {
 
   boilerIsRunning = true;
   //setRTCatCompilation();      // set RTC at compilation time
-  //setReset();
+  //setReset();                 // only first time
 
   readRTC();
 
-  //initEEPROM();               // write default values to eeprom, need only first time
+  initEEPROM();               // write default values to eeprom, if setReset is activated (it needs only first time)
   initSCT();
   initTemp();
   //dataCheck();
@@ -57,6 +57,7 @@ void loop() {
   readExtraTemperatures();
   showGUI();
 }
+
 
 
 
