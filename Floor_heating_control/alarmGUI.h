@@ -79,7 +79,6 @@ void showSettings(float alarm, int index) {
   int x = 220;
   int y = 55;
   myGLCD.print("Akt.h#m.:", x, y);
-  last_temp[index] = 23.456;
   myGLCD.printNumF(last_temp[index], 2, x+140, y);
   myGLCD.print("%C", x+220, y);
 
