@@ -99,7 +99,7 @@ void initTemp() {
     EEPROM.get(eaddress+RELAY_OFFSET, relays[i]);//Serial.print(relays[i]);Serial.println("");
     pinMode(relays[i], OUTPUT);
   }
-  
+  pinMode(BUSY_PIN, OUTPUT);
 }
 
 bool needTempCheck(unsigned long last_check, unsigned int waiting_time) {
@@ -117,6 +117,7 @@ void readTemperatures() {
   }
   last_checked = millis();
   Serial.println("START read temprature!!!!!");
+  digitalWrite(BUSY_PIN, ON);
   bool isnight=false;
   float alarm;
   isnight=true;
@@ -126,7 +127,7 @@ void readTemperatures() {
   
     TempSensorData sensor;
     getHeatingSensor(i, sensor);
-    //last_temp[i]=sensorRead(sensor.addr);
+    last_temp[i]=sensorRead(sensor.addr);
 //    last_temp[i] = 6.0f;
     alarm=sensor.alarm;
     if ( isnight ) {
@@ -138,7 +139,7 @@ void readTemperatures() {
     checkTemperature(last_temp[i], alarm, sensor.relay);
   }
   updateMainPump();
-
+  digitalWrite(BUSY_PIN, OFF);
   Serial.println("STOP read temprature!!!!!");
 }
 
@@ -149,6 +150,7 @@ void readExtraTemperatures() {
   }
   last_checked_extra = millis();
   Serial.println("START read EXTRA temprature!!!!!");
+  digitalWrite(BUSY_PIN, ON);
   return;
   TempSensorData sensor;
   for (int i=ROOMS; i< ALL_SENSORS; i++) {
@@ -157,6 +159,7 @@ void readExtraTemperatures() {
     //last_temp[i]=sensorRead(sensor.addr);
     last_temp[i]=sensorRead(getAddr(i));
   }
+  digitalWrite(BUSY_PIN, OFF);
   Serial.println("STOP read EXTRA temprature!!!!!");
 }
 
