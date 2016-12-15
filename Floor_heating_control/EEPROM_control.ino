@@ -167,8 +167,8 @@ void setAlarm(int index, float value) {
   }
 }
 
+byte sensoraddr[8];
 byte* getAddr(int index) {
-  byte sensoraddr[8];
   if ( index < ROOMS ) {
     int addr = getSensorAddress(index);
     EEPROM.get(addr, sensoraddr);
