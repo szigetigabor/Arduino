@@ -13,7 +13,7 @@ word DEFAULT_FONT_COLOR = VGA_WHITE;
 
 int current_page, prev_page;
 bool touched;
-int but_back, pressed_button;
+int but_back, pressed_button, but_start;
 unsigned long last_used, _now;
 unsigned int idle_max;
 bool idle;
@@ -27,6 +27,7 @@ bool idle;
 #define PAGE_MODE_TIMING    7
 #define PAGE_DISPLAY        8
 #define PAGE_CURRENTS       9
+#define PAGE_DISPLAY_TEST   10
 
 #define TITLE_HIGH 35
 #define ONE_MINUTES 60000
@@ -89,5 +90,45 @@ void displayON() {
     delay(20);
   }
   Serial.println("Display ON");
+}
+
+int show_startButton() {
+  int but_id = myButtons.addButton( 0, 0, 200,  50, "Start OK");
+  myButtons.drawButton(but_id);
+  return but_id;
+}
+
+void showTouchPoint(int start_but) {
+  int x,y;
+  //back button
+  bool ok = false;
+
+  while (!ok) {
+    _now = millis();
+    if ( abs(_now - last_used) > idle_max ) {
+      //Serial.println("túl régen indultunk, indít system.");
+      current_page = PAGE_DISPLAY_TEST;
+      last_used = millis();
+      ok = true;                    // only to run normal functionality
+    } else {
+      if (myTouch.dataAvailable() == true) {
+        last_used = millis();
+        myTouch.read();
+        x = myTouch.getX();
+        y = myTouch.getY();
+        //Serial.print("X: ");Serial.print(x);Serial.print(", ");
+        //Serial.print("Y: ");Serial.print(y);Serial.println("");
+        if ((x!=-1) and (y!=-1)) {
+          myGLCD.drawPixel(x,y);
+        }
+        pressed_button = myButtons.checkButtons();
+        if (pressed_button==start_but) {
+          Serial.println("A kijelző OKés!");
+          current_page = PAGE_MAIN;
+          ok = true;
+        }
+      }
+    }
+  }
 }
 #endif

@@ -73,6 +73,10 @@ void initDisplay(){
   touched = false;
   last_used = millis();
   idle = false;
+
+  // Display touch function checking
+  but_start = show_startButton();
+  showTouchPoint( but_start);
 }
 
 void checkIdle() {
@@ -136,13 +140,14 @@ void showGUI(){
     case PAGE_CURRENTS:
       showCurrentsGUI();
       break;
+    case PAGE_DISPLAY_TEST:
+      showTouchPoint(but_start);
+      break;
     default:
     break;
 
   }
-  delay(10);      // must be this delay bacause stop the main looping mechanism
-  //delay(2000);
- // i = (i+1) % 4;
-  //Serial.println(i);
+  delay(10);      // must be this delay because stoping the main looping mechanism
 }
+
 
