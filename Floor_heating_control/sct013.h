@@ -13,10 +13,9 @@ void initSCT()
   emon1.current(PIN, 111.1);       // Current: input pin, calibration.
 }
 
-
+// Get current power consuption
 float getCurrentPower() {
-  emon1.calcVI(20,2000);         // Calculate all. No.of half wavelengths (crossings), time-out
-  return emon1.apparentPower;
+  return emon1.calcIrms(1480)*0.23;
 }
 
 bool boilerRunningCheck() {
