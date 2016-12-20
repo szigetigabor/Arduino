@@ -27,7 +27,7 @@ void initAlarmSettingsGUI(int sensor_index=0, bool night=false) {
       alarm=value.alarm;
     }
   }
-  Serial.print("ALARM GUI (init):");
+  //Serial.print("ALARM GUI (init):");
   if ( night ) {
     prev_page=PAGE_REQ_NIGHT_TEMP;
   } else {
@@ -41,7 +41,7 @@ void showRooms(int used) {
   int x = 10;
   int start = 55;
   TempSensorData value;
-  Serial.println("ROOMS: ");
+  //Serial.println("ROOMS: ");
   for(int i=0; i<ROOMS; i++) {
     int addr = getSensorAddress(i);
     
@@ -53,8 +53,8 @@ void showRooms(int used) {
       myButtons.setButtonColors(VGA_WHITE, VGA_GRAY, VGA_WHITE, VGA_RED, VGA_BLUE);
       room_button[i] = myButtons.addButton( x,  start, 180,  45, value.name);
     }
-    Serial.print(",");
-    Serial.print(room_button[i]);
+    //Serial.print(",");
+    //Serial.print(room_button[i]);
     myButtons.drawButton(room_button[i]);
     start += 55;
   }
@@ -85,10 +85,10 @@ void showSettings(float alarm, int index) {
   // up and down buttons
   but_up   = myButtons.addButton( x,  y+35, 250,  60, "up");
   but_down = myButtons.addButton( x,  y+200, 250,  60, "down");
-  Serial.print("up:");
-  Serial.print(but_up);
-  Serial.print("down:");
-  Serial.print(but_down);
+  //Serial.print("up:");
+  //Serial.print(but_up);
+  //Serial.print("down:");
+  //Serial.print(but_down);
   
   myButtons.drawButton(but_up);
   myButtons.drawButton(but_down);
@@ -126,7 +126,7 @@ void showAlarmSettingGUI(bool night=false) {
   if (myTouch.dataAvailable() == true) {
     last_used = millis();
     pressed_button = myButtons.checkButtons();
-    Serial.print(pressed_button);
+    //Serial.print(pressed_button);
     if (pressed_button==room_button[0]) {
       Serial.println("room 1");
       saveConfig(current_sensor);
@@ -158,11 +158,11 @@ void showAlarmSettingGUI(bool night=false) {
       touched = true;
       initAlarmSettingsGUI(4);
     } else if (pressed_button==but_up) {
-      Serial.println("up");
+      //Serial.println("up");
       alarm += 0.1;
       showAlarm(alarm);
     } else if (pressed_button==but_down) {
-      Serial.println("down");
+      //Serial.println("down");
       alarm -= 0.1;
       showAlarm(alarm);
     } else if (pressed_button==but_back) {
