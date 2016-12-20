@@ -82,10 +82,10 @@ void checkTemperature(float current, float required, byte relay) {
 void updateMainPump() {
   bool value = false;
   for (int i=0; i< ROOMS; i++) {
-    value = value | relay_status[i];
+    value = value | !relay_status[i];
   }
   value = value & boilerIsRunning;
-  setRelay(MAIN_PUMP, value);
+  setRelay(MAIN_PUMP, !value);
 }
 
 void initTemp() {
@@ -118,7 +118,7 @@ void readTemperatures() {
   last_checked = millis();
   boilerIsRunning = boilerRunningCheck();
   Serial.println("START read temprature!!!!!");
-  digitalWrite(BUSY_PIN, OFF); //because active ground wiring
+  digitalWrite(BUSY_PIN, ON);
   bool isnight=false;
   float alarm;
 //  isnight=true;
@@ -140,7 +140,7 @@ void readTemperatures() {
     checkTemperature(last_temp[i], alarm, sensor.relay);
   }
   updateMainPump();
-  digitalWrite(BUSY_PIN, ON); //because active ground wiring
+  digitalWrite(BUSY_PIN, OFF);
   Serial.println("STOP read temprature!!!!!");
 }
 
@@ -151,7 +151,7 @@ void readExtraTemperatures() {
   }
   last_checked_extra = millis();
   Serial.println("START read EXTRA temprature!!!!!");
-  digitalWrite(BUSY_PIN, OFF); //because active ground wiring
+  digitalWrite(BUSY_PIN, ON);
   return;
   TempSensorData sensor;
   for (int i=ROOMS; i< ALL_SENSORS; i++) {
@@ -160,7 +160,7 @@ void readExtraTemperatures() {
     //last_temp[i]=sensorRead(sensor.addr);
     last_temp[i]=sensorRead(getAddr(i));
   }
-  digitalWrite(BUSY_PIN, ON); //because active ground wiring
+  digitalWrite(BUSY_PIN, OFF);
   Serial.println("STOP read EXTRA temprature!!!!!");
 }
 
