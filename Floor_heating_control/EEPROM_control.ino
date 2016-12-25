@@ -54,7 +54,7 @@ void setHeatingSensors() {
   TempSensorData* currentSensor;
   for (int i=0; i<ROOMS; i++) {
   
-    digitalWrite(ledPin, HIGH);   // sets the LED on
+    digitalWrite(BUSY_PIN, HIGH);   // sets the LED on
     
     // get() can be used with custom structures too.
     eeAddress = BASE_OFFSET+i*sizeof(TempSensorData); //Move address to the next byte after float 'f'.
@@ -94,7 +94,7 @@ void setHeatingSensors() {
       
     Serial.println("");
     delay(1000);                  // waits for a second
-    digitalWrite(ledPin, LOW);    // sets the LED off
+    digitalWrite(BUSY_PIN, LOW);    // sets the LED off
     delay(1000);
   }
 }
