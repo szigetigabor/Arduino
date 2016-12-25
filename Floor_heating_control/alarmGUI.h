@@ -85,11 +85,6 @@ void showSettings(float alarm, int index) {
   // up and down buttons
   but_up   = myButtons.addButton( x,  y+35, 250,  60, "up");
   but_down = myButtons.addButton( x,  y+200, 250,  60, "down");
-  //Serial.print("up:");
-  //Serial.print(but_up);
-  //Serial.print("down:");
-  //Serial.print(but_down);
-  
   myButtons.drawButton(but_up);
   myButtons.drawButton(but_down);
 
@@ -120,53 +115,67 @@ void showAlarmSettingGUI(bool night=false) {
     but_back = showBackButton();
     showSettings(alarm, current_sensor);
     showRooms(current_sensor);
-  //  showSettings(alarm, current_sensor);
   }
 
   if (myTouch.dataAvailable() == true) {
     last_used = millis();
     pressed_button = myButtons.checkButtons();
-    //Serial.print(pressed_button);
     if (pressed_button==room_button[0]) {
-      Serial.println("room 1");
+      if ( debug >= DEBUG ) {
+        Serial.println("room 1");
+      }
       saveConfig(current_sensor);
       alarm = 0;
       touched = true;
       initAlarmSettingsGUI(0);
     } else if (pressed_button==room_button[1]) {
-      Serial.println("room 2:");
+      if ( debug >= DEBUG ) {
+        Serial.println("room 2:");
+      }
       saveConfig(current_sensor);
       alarm = 0;
       touched = true;
       initAlarmSettingsGUI(1);
     } else if (pressed_button==room_button[2]) {
-      Serial.println("room 3:");
+      if ( debug >= DEBUG ) {
+        Serial.println("room 3:");
+      }
       saveConfig(current_sensor);
       alarm = 0;
       touched = true;
       initAlarmSettingsGUI(2);
     } else if (pressed_button==room_button[3]) {
-      Serial.println("room 4:");
+      if ( debug >= DEBUG ) {
+        Serial.println("room 4:");
+      }
       saveConfig(current_sensor);
       alarm = 0;
       touched = true;
       initAlarmSettingsGUI(3);
     } else if (pressed_button==room_button[4]) {
-      Serial.println("room 5:");
+      if ( debug >= DEBUG ) {
+        Serial.println("room 5:");
+      }
       saveConfig(current_sensor);
       alarm = 0;
       touched = true;
       initAlarmSettingsGUI(4);
     } else if (pressed_button==but_up) {
-      //Serial.println("up");
+      if ( debug >= DEBUG ) {
+        Serial.println("up");
+      }
       alarm += 0.1;
       showAlarm(alarm);
     } else if (pressed_button==but_down) {
-      //Serial.println("down");
+      if ( debug >= DEBUG ) {
+        Serial.println("down");
+      }
       alarm -= 0.1;
       showAlarm(alarm);
     } else if (pressed_button==but_back) {
-      Serial.println("BACK");
+      if ( debug >= DEBUG ) {
+        Serial.println("BACK");
+      }
       saveConfig(current_sensor);
       current_page = PAGE_SETTINGS;
     }

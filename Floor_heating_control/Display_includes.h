@@ -80,7 +80,9 @@ void displayOFF() {
   }*/
   myGLCD.fillScr(DEFAULT_BACKGROUND);
   myButtons.deleteAllButtons();
-  Serial.println("Display OFF");
+  if (debug >= INFO) {
+    Serial.println("Display OFF");
+  }
 }
 
 void displayON() {
@@ -89,7 +91,9 @@ void displayON() {
     analogWrite(displayPWM, brightness);
     delay(20);
   }
-  Serial.println("Display ON");
+  if (debug >= INFO) {
+    Serial.println("Display ON");
+  }
 }
 
 int show_startButton() {
@@ -116,14 +120,18 @@ void showTouchPoint(int start_but) {
         myTouch.read();
         x = myTouch.getX();
         y = myTouch.getY();
-        //Serial.print("X: ");Serial.print(x);Serial.print(", ");
-        //Serial.print("Y: ");Serial.print(y);Serial.println("");
+        if (debug >= DEBUG) {
+          Serial.print("X: ");Serial.print(x);Serial.print(", ");
+          Serial.print("Y: ");Serial.print(y);Serial.println("");
+        }
         if ((x!=-1) and (y!=-1)) {
           myGLCD.drawPixel(x,y);
         }
         pressed_button = myButtons.checkButtons();
         if (pressed_button==start_but) {
-          Serial.println("A kijelző OKés!");
+          if (debug >= INFO) {
+            Serial.println("Touch display: OK!");
+          }
           current_page = PAGE_MAIN;
           ok = true;
         }

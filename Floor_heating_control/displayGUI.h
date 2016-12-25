@@ -55,32 +55,44 @@ void showDisplaySettingGUI() {
     last_used = millis();
     pressed_button = myButtons.checkButtons();
     if (pressed_button==delay_button[0]) {
-      Serial.println("off");
+      if ( debug >= INFO ) {
+        Serial.println("off");
+      }
       idle_max = values[0];
       setSleep(idle_max);
       touched = true;
     } else if (pressed_button==delay_button[1]) {
-      Serial.println("10s");
+      if ( debug >= INFO ) {
+        Serial.println("10s");
+      }
       idle_max = values[1];
       setSleep(idle_max);
       touched = true;
     } else if (pressed_button==delay_button[2]) {
-      Serial.println("20s");
+      if ( debug >= INFO ) {
+        Serial.println("20s");
+      }
       idle_max = values[2];
       setSleep(idle_max);
       touched = true;
     } else if (pressed_button==delay_button[3]) {
-      Serial.println("30s");
+      if ( debug >= INFO ) {
+        Serial.println("30s");
+      }
       idle_max = values[3];
       setSleep(idle_max);
       touched = true;
     } else if (pressed_button==delay_button[4]) {
-      Serial.println("60s");
+      if ( debug >= INFO ) {
+        Serial.println("60s");
+      }
       idle_max = values[4];
       setSleep(idle_max);
       touched = true;
     } else if (pressed_button==but_back) {
-      Serial.println("BACK");
+      if ( debug >= DEBUG ) {
+        Serial.println("BACK");
+      }
       setSleep(idle_max);
       current_page = PAGE_SETTINGS;
     }

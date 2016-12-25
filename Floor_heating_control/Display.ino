@@ -87,7 +87,9 @@ void checkIdle() {
   if ( abs(_now - last_used) > idle_max ) {
     if ( idle ) {
       if (myTouch.dataAvailable() == true) {
-        Serial.println("TOUCHED");
+        if (debug >= DEBUG) {
+          Serial.println("TOUCHED");
+        }
         idle = false;
         touched = true;
         //displayON();

@@ -57,10 +57,14 @@ void checkTemperature(int index, boolean isnight) {
     memcpy ( &rel, &relays[index], sizeof(byte) );
   //checkTemperature(last_temp[index], req, rel);
     if ( isnight ) {
-      Serial.println("eccaka");
+      if ( debug >= DEBUG ) {
+        Serial.println("night");
+      }
       checkTemperature(last_temp[index], nights[index], relays[index]);
     } else {
-      Serial.println("nappal");
+      if ( debug >= DEBUG ) {
+        Serial.println("day");
+      }
       checkTemperature(last_temp[index], alarms[index], relays[index]);
     }
 }
@@ -70,9 +74,11 @@ void checkTemperature(float current, float required, byte relay) {
   if ( current < required) {
     output = ON;
   }
-  Serial.print(" current: "); Serial.print(current);
-  Serial.print(" required: ");Serial.print(required);
-  Serial.print(" relay: ");   Serial.println(relay);
+  if ( debug >= DEBUG ) {
+    Serial.print(" current: "); Serial.print(current);
+    Serial.print(" required: ");Serial.print(required);
+    Serial.print(" relay: ");   Serial.println(relay);
+  }
   if ( relay_status[relay % 8] != output ) {
     setRelay(relay, output);
     relay_status[relay % 8] = output;
@@ -100,6 +106,7 @@ void initTemp() {
     pinMode(relays[i], OUTPUT);
   }
   pinMode(BUSY_PIN, OUTPUT);
+  digitalWrite(BUSY_PIN, OFF);
 }
 
 bool needTempCheck(unsigned long last_check, unsigned int waiting_time) {
@@ -117,19 +124,22 @@ void readTemperatures() {
   }
   last_checked = millis();
   boilerIsRunning = boilerRunningCheck();
-  Serial.println("START read temprature!!!!!");
+  if ( debug >= INFO ) {
+    Serial.println("START read temprature!!!!!");
+  }
   digitalWrite(BUSY_PIN, ON);
   bool isnight=false;
   float alarm;
-//  isnight=true;
+//  isnight=true;     //TODO: get it from time
   for (int i=0; i< ROOMS; i++) {
-    Serial.print(i);
-    Serial.print(". sensor: ");
+    if ( debug >= DEBUG ) {
+      Serial.print(i);
+      Serial.print(". sensor: ");
+    }
   
     TempSensorData sensor;
     getHeatingSensor(i, sensor);
     last_temp[i]=sensorRead(sensor.addr);
-//    last_temp[i] = 6.0f;
     alarm=sensor.alarm;
     if ( isnight ) {
       alarm=sensor.night;
@@ -141,7 +151,9 @@ void readTemperatures() {
   }
   updateMainPump();
   digitalWrite(BUSY_PIN, OFF);
-  Serial.println("STOP read temprature!!!!!");
+  if ( debug >= DEBUG ) {
+    Serial.println("STOP read temprature!!!!!");
+  }
 }
 
 
@@ -150,7 +162,9 @@ void readExtraTemperatures() {
     return;
   }
   last_checked_extra = millis();
-  Serial.println("START read EXTRA temprature!!!!!");
+  if ( debug >= DEBUG ) {
+    Serial.println("START read EXTRA temprature!!!!!");
+  }
   digitalWrite(BUSY_PIN, ON);
   return;
   TempSensorData sensor;
@@ -161,6 +175,8 @@ void readExtraTemperatures() {
     last_temp[i]=sensorRead(getAddr(i));
   }
   digitalWrite(BUSY_PIN, OFF);
-  Serial.println("STOP read EXTRA temprature!!!!!");
+  if ( debug >= DEBUG ) {
+    Serial.println("STOP read EXTRA temprature!!!!!");
+  }
 }
 

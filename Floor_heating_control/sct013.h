@@ -15,6 +15,7 @@ void initSCT()
 
 // Get current power consuption
 float getCurrentPower() {
+  Serial.print(emon1.calcIrms(1480)*0.23); Serial.println(" W");
   return emon1.calcIrms(1480)*0.23;
 }
 
