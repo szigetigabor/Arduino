@@ -133,7 +133,9 @@ void showTemperatures() {
       current_page = 1;
     }
   } else {
-    showTemp();
+    if (!idle) {
+      showTemp();
+    }
   }
 }
 #endif
