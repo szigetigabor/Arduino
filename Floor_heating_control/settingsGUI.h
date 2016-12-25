@@ -8,11 +8,16 @@
 int but_date, but_alarm, but_night, but_sched, but_disp;
 
 void showSettingsButtons() {
-  but_date  = myButtons.addButton( 30,  80, BUTTON_X_SIZE, BUTTON_Y_SIZE, "W", BUTTON_SYMBOL);
-  but_alarm = myButtons.addButton( 240, 80, BUTTON_X_SIZE, BUTTON_Y_SIZE, "e", BUTTON_SYMBOL);
-  but_sched = myButtons.addButton( 30,  160, BUTTON_X_SIZE, BUTTON_Y_SIZE, "f", BUTTON_SYMBOL);
-  but_night = myButtons.addButton( 240, 160, BUTTON_X_SIZE, BUTTON_Y_SIZE, "|", BUTTON_SYMBOL);
-  but_disp  = myButtons.addButton( 140, 240, BUTTON_X_SIZE, BUTTON_Y_SIZE, "N", BUTTON_SYMBOL);
+//  but_date  = myButtons.addButton( 30,  80, BUTTON_X_SIZE, BUTTON_Y_SIZE, "W", BUTTON_SYMBOL);
+//  but_alarm = myButtons.addButton( 240, 80, BUTTON_X_SIZE, BUTTON_Y_SIZE, "e", BUTTON_SYMBOL);
+//  but_sched = myButtons.addButton( 30,  160, BUTTON_X_SIZE, BUTTON_Y_SIZE, "f", BUTTON_SYMBOL);
+//  but_night = myButtons.addButton( 240, 160, BUTTON_X_SIZE, BUTTON_Y_SIZE, "|", BUTTON_SYMBOL);
+//  but_disp  = myButtons.addButton( 140, 240, BUTTON_X_SIZE, BUTTON_Y_SIZE, "N", BUTTON_SYMBOL);
+  but_date  = myButtons.addButton( 30,  80, BUTTON_X_SIZE, BUTTON_Y_SIZE, "D{tum/Id#");
+  but_alarm = myButtons.addButton( 240, 80, BUTTON_X_SIZE, BUTTON_Y_SIZE, "Nappali h#m.");
+  but_sched = myButtons.addButton( 30,  160, BUTTON_X_SIZE, BUTTON_Y_SIZE, "Id#z\"t|s");
+  but_night = myButtons.addButton( 240, 160, BUTTON_X_SIZE, BUTTON_Y_SIZE, "Esti h#m.");
+  but_disp  = myButtons.addButton( 140, 240, BUTTON_X_SIZE, BUTTON_Y_SIZE, "Kijelz#");
   
   myButtons.drawButton(but_date);
   myButtons.drawButton(but_alarm);
