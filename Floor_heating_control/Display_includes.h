@@ -16,6 +16,7 @@ bool touched;
 int but_back, pressed_button, but_start;
 unsigned long last_used, _now;
 unsigned int idle_max;
+unsigned int values[]   = { 0, 10000, 20000, 30000, 60000};
 bool idle;
 
 #define PAGE_MAIN           1

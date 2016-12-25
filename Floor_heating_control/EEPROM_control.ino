@@ -1,6 +1,7 @@
 
 
 #include "EEPROM_control.h"
+#include "Display_includes.h"
 
 
 void initEEPROM() {
@@ -17,7 +18,7 @@ void initEEPROM() {
     setHeatingSensors();
     setExtraSensors();
   } else {
-    idle_max = getSleep();
+    idle_max = values[getSleep()];
   }
 }
 
@@ -31,13 +32,12 @@ void setBacklight(int value) {
   Serial.println("stored backlight value");
 }
 
-int getSleep() {
-  int value;
-  EEPROM.get( 2, value );
+byte getSleep() {
+  byte value = EEPROM.read(2);
   return value;
 }
 
-void setSleep(int value) {
+void setSleep(byte value) {
   EEPROM.put( 2, value );
   Serial.println("stored sleep value");
 }

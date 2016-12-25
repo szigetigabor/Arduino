@@ -6,9 +6,8 @@
 
 #define OPTIONS 5
 int delay_button[OPTIONS];
-unsigned int values[]   = { 0, 10000, 20000, 30000, 60000};
 char* labels[] = {"Soha", "10mp", "20mp", "30mp", "1 perc"};
-int used=0;
+byte used=0;
 
 void showDelayButtons() {
   int x = 150;
@@ -38,8 +37,8 @@ void initDisplaySettingsGUI() {
   myButtons.deleteAllButtons();
   prev_page=PAGE_DISPLAY;
   myGLCD.clrScr();
-  idle_max = getSleep();
-  used = calculateActual(idle_max);
+  used = getSleep();
+  idle_max = values[used];
   showTitle("Kijelz# els}t|t\"t|s");
   but_back = showBackButton(); 
   showDelayButtons();
@@ -59,41 +58,45 @@ void showDisplaySettingGUI() {
         Serial.println("off");
       }
       idle_max = values[0];
-      setSleep(idle_max);
+      used = 0;
+      setSleep(used);
       touched = true;
     } else if (pressed_button==delay_button[1]) {
       if ( debug >= INFO ) {
         Serial.println("10s");
       }
       idle_max = values[1];
-      setSleep(idle_max);
+      used = 1;
+      setSleep(used);
       touched = true;
     } else if (pressed_button==delay_button[2]) {
       if ( debug >= INFO ) {
         Serial.println("20s");
       }
       idle_max = values[2];
-      setSleep(idle_max);
+      used = 2;
+      setSleep(used);
       touched = true;
     } else if (pressed_button==delay_button[3]) {
       if ( debug >= INFO ) {
         Serial.println("30s");
       }
       idle_max = values[3];
-      setSleep(idle_max);
+      used = 3;
+      setSleep(used);
       touched = true;
     } else if (pressed_button==delay_button[4]) {
       if ( debug >= INFO ) {
         Serial.println("60s");
       }
       idle_max = values[4];
-      setSleep(idle_max);
+      used = 4;
+      setSleep(used);
       touched = true;
     } else if (pressed_button==but_back) {
       if ( debug >= DEBUG ) {
         Serial.println("BACK");
       }
-      setSleep(idle_max);
       current_page = PAGE_SETTINGS;
     }
   }
