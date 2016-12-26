@@ -124,7 +124,7 @@ void readTemperatures() {
   }
   last_checked = millis();
   boilerIsRunning = boilerRunningCheck();
-  if ( debug >= INFO ) {
+  if ( debug >= DEBUG ) {
     Serial.println("START read temprature!!!!!");
   }
   digitalWrite(BUSY_PIN, ON);
