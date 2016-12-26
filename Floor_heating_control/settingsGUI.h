@@ -20,9 +20,11 @@ void showSettingsButtons() {
   but_disp  = myButtons.addButton( 140, 240, BUTTON_X_SIZE, BUTTON_Y_SIZE, "Kijelz#");
   
   myButtons.drawButton(but_date);
+  myButtons.disableButton(but_date);
   myButtons.drawButton(but_alarm);
   myButtons.drawButton(but_night);
   myButtons.drawButton(but_sched);
+  myButtons.disableButton(but_sched);
   myButtons.drawButton(but_disp);
 
 }
