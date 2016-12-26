@@ -12,10 +12,8 @@ void showDate() {
   char char1[4];
   int size = 16;
   int charNR = 1;
-  int x = 100;
+  int x = 70;
   int y = 50;
-  myGLCD.print("Date", x, y);
-  x+=(5*16);
 
   //print year
   char1[0] = '\0';
@@ -44,9 +42,8 @@ void showDate() {
   myGLCD.print(char1, x, y);
   x += charNR*size;
   myGLCD.print(".", x, y);
+  x+=(4*size);
 
-  x = 100 + (6*size);
-  y = 80;
   //print hour
   char1[0] = '\0';
   itoa(tmpRTC.tHour, char1, 10);
