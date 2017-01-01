@@ -11,6 +11,9 @@
 #define NIGHT_OFFSET DELTA_OFFSET+sizeof(float)
 #define RELAY_OFFSET NIGHT_OFFSET+sizeof(float)
 
+#define MODE_OFF         0
+#define MODE_ON          1
+#define MODE_SCHEDULING  2
 
 #define CHECK_INTERVAL 100000  //10mp
 //#define CHECK_EINTELVAL 20000

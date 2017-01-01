@@ -13,7 +13,7 @@ void initEEPROM() {
     EEPROM.put( eeAddress, false );
     Serial.println("reset set to false");
 
-    setBacklight(BACKLIGHT);
+    setMode(MODE_ON);
     setSleep(SLEEP);
     setHeatingSensors();
     setExtraSensors();
