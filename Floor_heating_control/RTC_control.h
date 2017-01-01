@@ -6,7 +6,7 @@
 #include <DS1307RTC.h>
 
 
-char *Day[] = {"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
+char *Day[] = {"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
 char *Mon[] = {"","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
 
 struct RTC_T
