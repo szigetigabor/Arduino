@@ -27,9 +27,14 @@ void setReset() {
   Serial.println("reset set to true");
 }
 
-void setBacklight(int value) {
+byte getMode() {
+  byte value = EEPROM.read(1);
+  return value;
+}
+
+void setMode(byte value) {
   EEPROM.put( 1, value );
-  Serial.println("stored backlight value");
+  Serial.println("stored mode value");
 }
 
 byte getSleep() {

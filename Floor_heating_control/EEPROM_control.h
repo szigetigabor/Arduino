@@ -9,7 +9,7 @@
 /*
  * EEPROM map:
  *  0. reset
- *  1. blacklight
+ *  1. mode
  *  2. sleep time
  *  3-x. room infos (41 bytes each info)
  *  x-y. extra temperature sensors (28 bytes each info)
