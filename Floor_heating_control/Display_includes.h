@@ -29,6 +29,9 @@ bool idle;
 #define PAGE_DISPLAY        8
 #define PAGE_CURRENTS       9
 #define PAGE_DISPLAY_TEST   10
+#define PAGE_SETTINGS2      11
+#define PAGE_MODE           12
+#define PAGE_RESET          13
 
 #define TITLE_HIGH 35
 #define ONE_MINUTES 60000

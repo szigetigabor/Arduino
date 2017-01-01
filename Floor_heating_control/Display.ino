@@ -4,6 +4,7 @@
 #include "displayGUI.h"
 #include "alarmGUI.h"
 #include "settingsGUI.h"
+#include "settings2GUI.h"
 #include "temperatureGUI.h"
 #include "currentsGUI.h"
 
@@ -123,6 +124,9 @@ void showGUI(){
       break;
     case PAGE_SETTINGS:
       showSettingsGUI();
+      break;
+    case PAGE_SETTINGS2:
+      showSettings2GUI();
       break;
     case PAGE_DATE:
       showDateTimeSettingGUI();
