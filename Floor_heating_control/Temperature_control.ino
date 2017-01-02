@@ -71,7 +71,8 @@ void checkTemperature(int index, boolean isnight) {
 
 void checkTemperature(float current, float required, byte relay) {
   bool output = OFF;
-  if ( current < required) {
+  if (  ( current < required && current_mode == MODE_SCHEDULING )
+      || current_mode == MODE_ON) {
     output = ON;
   }
   if ( debug >= DEBUG ) {
@@ -87,10 +88,14 @@ void checkTemperature(float current, float required, byte relay) {
 
 void updateMainPump() {
   bool value = false;
-  for (int i=0; i< ROOMS; i++) {
-    value = value | !relay_status[i];
+  if ( current_mode == MODE_ON ) {
+    value = true;
+  } else if ( current_mode == MODE_SCHEDULING ) {
+    for (int i=0; i< ROOMS; i++) {
+      value = value | !relay_status[i];
+    }
+    value = value & boilerIsRunning;
   }
-  value = value & boilerIsRunning;
   setRelay(MAIN_PUMP, !value);
 }
 
@@ -106,6 +111,7 @@ void initTemp() {
     pinMode(relays[i], OUTPUT);
   }
   current_mode = getMode();
+  pinMode(MAIN_PUMP, OUTPUT);
   pinMode(BUSY_PIN, OUTPUT);
   digitalWrite(BUSY_PIN, OFF);
 }
