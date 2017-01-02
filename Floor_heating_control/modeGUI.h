@@ -40,7 +40,7 @@ void initModeGUI() {
 void showModeGUI() {
   if ( current_page != prev_page || touched) {
     initModeGUI();
-    showTitle("^zemmo'd Be{ll\"t{sok");
+    showTitle("^zemm&d Be{ll\"t{sok");
     showModeButtons();
     but_back = showBackButton();
   }
