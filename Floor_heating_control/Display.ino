@@ -7,6 +7,7 @@
 #include "settings2GUI.h"
 #include "temperatureGUI.h"
 #include "currentsGUI.h"
+#include "modeGUI.h"
 
 int i; //TODO remove
 
@@ -148,6 +149,9 @@ void showGUI(){
       break;
     case PAGE_DISPLAY_TEST:
       showTouchPoint(but_start);
+      break;
+    case PAGE_MODE:
+      showModeGUI();
       break;
     default:
     break;

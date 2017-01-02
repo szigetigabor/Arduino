@@ -105,6 +105,7 @@ void initTemp() {
     EEPROM.get(eaddress+RELAY_OFFSET, relays[i]);//Serial.print(relays[i]);Serial.println("");
     pinMode(relays[i], OUTPUT);
   }
+  current_mode = getMode();
   pinMode(BUSY_PIN, OUTPUT);
   digitalWrite(BUSY_PIN, OFF);
 }

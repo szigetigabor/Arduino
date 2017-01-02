@@ -22,6 +22,7 @@ unsigned long last_checked, last_checked_extra, _now_temp;
 float alarms[ROOMS];
 float nights[ROOMS];
 byte relays[ROOMS];
+byte current_mode;
 
 
 struct TempSensor {
