@@ -8,6 +8,7 @@
 #include "temperatureGUI.h"
 #include "currentsGUI.h"
 #include "modeGUI.h"
+#include "resetGUI.h"
 
 int i; //TODO remove
 
@@ -152,6 +153,9 @@ void showGUI(){
       break;
     case PAGE_MODE:
       showModeGUI();
+      break;
+    case PAGE_RESET:
+      showResetGUI();
       break;
     default:
     break;
