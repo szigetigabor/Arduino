@@ -13,7 +13,7 @@ void showSettingsButtons() {
 //  but_sched = myButtons.addButton( 30,  160, BUTTON_X_SIZE, BUTTON_Y_SIZE, "f", BUTTON_SYMBOL);
 //  but_night = myButtons.addButton( 240, 160, BUTTON_X_SIZE, BUTTON_Y_SIZE, "|", BUTTON_SYMBOL);
 //  but_disp  = myButtons.addButton( 140, 240, BUTTON_X_SIZE, BUTTON_Y_SIZE, "N", BUTTON_SYMBOL);
-  but_mode  = myButtons.addButton( 30,  80, BUTTON_X_SIZE, BUTTON_Y_SIZE, "Üzemmod");
+  but_mode  = myButtons.addButton( 30,  80, BUTTON_X_SIZE, BUTTON_Y_SIZE, "^zemmo'd");
   but_alarm = myButtons.addButton( 240, 80, BUTTON_X_SIZE, BUTTON_Y_SIZE, "Nappali h#m.");
   but_sched = myButtons.addButton( 30,  160, BUTTON_X_SIZE, BUTTON_Y_SIZE, "Id#z\"t|s");
   but_night = myButtons.addButton( 240, 160, BUTTON_X_SIZE, BUTTON_Y_SIZE, "Esti h#m.");
