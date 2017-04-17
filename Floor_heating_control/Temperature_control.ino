@@ -5,6 +5,13 @@
 
 OneWire ds(ONE_WIRE_BUS);
 
+void printArray(byte* addr){
+  for(int i = 0; i < 8; i++)
+  {
+    Serial.print(addr[i], HEX);
+  }
+  Serial.print(", ");
+}
 
 float sensorRead(byte* _addr)
 {
@@ -12,6 +19,9 @@ float sensorRead(byte* _addr)
   byte present = 0;
   byte data[12];
 
+  if ( debug >= DEBUG ) {
+    printArray(_addr);
+  }
   ds.reset();
   ds.select(_addr);
   ds.write(0x44,1);         // start conversion, with parasite power on at the end
@@ -97,6 +107,7 @@ void updateMainPump() {
     value = value & boilerIsRunning;
   }
   setRelay(MAIN_PUMP, !value);
+  relay_status[MAIN_PUMP % 8] = !value;   //only for mainGUI
 }
 
 void initTemp() {
