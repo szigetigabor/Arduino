@@ -32,7 +32,7 @@ void showResetGUI() {
     if (pressed_button==but_back) {
       current_page = PAGE_SETTINGS2;
     } else if (pressed_button==but_greset) {
-      setReset();
+      //setReset();   // not necessary this method, next line is enought to restart a device
       asm volatile ("  jmp 0");
     }
   }
