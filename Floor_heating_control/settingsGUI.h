@@ -24,7 +24,6 @@ void showSettingsButtons() {
   myButtons.drawButton(but_alarm);
   myButtons.drawButton(but_night);
   myButtons.drawButton(but_sched);
-  myButtons.disableButton(but_sched);
   myButtons.drawButton(but_disp);
   myButtons.drawButton(but_sett);
 
@@ -55,7 +54,7 @@ void showSettingsGUI() {
     } else if (pressed_button==but_night) {
       current_page = PAGE_REQ_NIGHT_TEMP;
     } else if (pressed_button==but_sched) {
-      current_page = PAGE_MODE_TIMING;
+      current_page = PAGE_SCHEDULING;
     } else if (pressed_button==but_disp) {
       current_page = PAGE_DISPLAY;
     } else if (pressed_button==but_sett) {

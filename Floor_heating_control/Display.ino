@@ -10,6 +10,7 @@
 #include "modeGUI.h"
 #include "resetGUI.h"
 #include "sctGUI.h"
+#include "SchedulingGUI.h"
 
 int i; //TODO remove
 
@@ -119,6 +120,7 @@ void checkIdle() {
 
 void showGUI(){
   checkIdle();
+  //current_page=PAGE_SCHEDULING;
   switch( current_page) {
     case PAGE_MAIN:
       showMainGUI();
@@ -141,8 +143,8 @@ void showGUI(){
     case PAGE_REQ_NIGHT_TEMP:
       showAlarmSettingGUI(true);
       break;
-    case PAGE_MODE_TIMING:
-      //showScheduleSettingGUI();
+    case PAGE_SCHEDULING:
+      showSchedulingSettingsGUI();
       break;
     case PAGE_DISPLAY:
       showDisplaySettingGUI();
