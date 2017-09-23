@@ -8,6 +8,9 @@
 extern int pressed_button;
 int but_temp, but_settings;
 
+#define RADIUS   15
+#define DISTANCE 45
+
 void showDate() {
   char char1[4];
   int size = 16;
@@ -70,8 +73,85 @@ void showDate() {
 
 }
 
+void drawCircle(int x, int y, int radius) {
+  myGLCD.drawCircle(x, y, radius +2);
+}
+
+void drawfilledCircle(int x, int y, int radius, int color) {
+  myGLCD.setColor(color);
+  myGLCD.fillCircle(x, y, radius);
+  myGLCD.setColor(DEFAULT_FONT_COLOR);
+}
+
+void checkState(int x, int y, bool condition) {
+  if ( condition ) {
+    drawfilledCircle(x, y, RADIUS, VGA_RED);
+  } else {
+    drawfilledCircle(x, y, RADIUS, VGA_BLACK);
+  }
+}
+
+void drawBackground() {
+  //myGLCD.print("Operation informations", 100, 120);
+  int x, y;
+
+  x = 50;
+  y = 180;
+  myGLCD.setColor(VGA_SILVER);
+  //myGLCD.drawRect(x-RADIUS-5, y-RADIUS-5, x+200, y+RADIUS+5);
+  myGLCD.fillRect(x-RADIUS-3, y-RADIUS-3, x+200, y+RADIUS+3);
+  // toilett
+  drawCircle(x, y, RADIUS +1);
+  x+=DISTANCE;
+  // ante-room
+  drawCircle(x, y, RADIUS +1);
+  x+=DISTANCE;
+  // diner
+  drawCircle(x, y, RADIUS +1);
+  x+=DISTANCE;
+  // bath
+  drawCircle(x, y, RADIUS +1);
+  x+=DISTANCE;
+  // kitchen
+  drawCircle(x, y, RADIUS +1);
+  x+=1.8*DISTANCE;
+  //heating pump
+  myGLCD.print("M", x-8, y-33);
+  drawCircle(x, y, RADIUS +1);
+
+  x=415;
+  y=150;
+  //boiler
+  myGLCD.fillRoundRect(x+8, y-50, x+28, y-55);
+  myGLCD.drawRect(x-RADIUS-8, y+RADIUS+8, x+60, y-100);
+  drawCircle(x, y, RADIUS +1);
+}
+
 void showOperation() {
-  myGLCD.print("Operation informations", 100, 120);
+  int x, y;
+  x = 50;
+  y = 180;
+  // toilett
+  checkState(x, y, !relay_status[0]);
+  x+=DISTANCE;
+  // ante-room
+  checkState(x, y, !relay_status[1]);
+  x+=DISTANCE;
+  // diner
+  checkState(x, y, !relay_status[2]);
+  x+=DISTANCE;
+  // bath
+  checkState(x, y, !relay_status[3]);
+  x+=DISTANCE;
+  // kitchen
+  checkState(x, y, !relay_status[4]);
+  x+=1.8*DISTANCE;
+  //heating pump
+  checkState(x, y, !relay_status[5]);
+  
+  x=415;
+  y=150;
+  checkState(x, y, boilerIsRunning);
 }
 
 void showButtons() {
@@ -97,12 +177,17 @@ void showMainGUI() {
     initMainGUI();
     showTitle("F$t|s szab{lyoz{s");
     showDate();
+    drawBackground();
     showOperation();
     showButtons();
   }
   if ( prevRTC.tMinute != tmpRTC.tMinute && !idle ) {
 //    showDate();
   }
+  if ( !idle ) {
+    showOperation();
+  }
+
   //check button touching
   if (myTouch.dataAvailable() == true) {
     last_used = millis();
