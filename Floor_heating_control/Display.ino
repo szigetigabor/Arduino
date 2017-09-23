@@ -9,6 +9,7 @@
 #include "currentsGUI.h"
 #include "modeGUI.h"
 #include "resetGUI.h"
+#include "sctGUI.h"
 
 int i; //TODO remove
 
@@ -31,7 +32,7 @@ int i; //TODO remove
 UTFT          myGLCD(ILI9481,38,39,40,41);
 
 
-UTouch        myTouch(6,5,4,3,2);
+URTouch        myTouch(6,5,4,3,2);
 
 // Finally we set up UTFT_Buttons :)
 UTFT_Buttons  myButtons(&myGLCD, &myTouch);
@@ -80,6 +81,7 @@ void initDisplay(){
   // Display touch function checking
   but_start = show_startButton();
   showTouchPoint( but_start);
+  current_page = PAGE_MAIN;
 }
 
 void checkIdle() {
@@ -156,6 +158,9 @@ void showGUI(){
       break;
     case PAGE_RESET:
       showResetGUI();
+      break;
+    case PAGE_SCT:
+      showSCTGUI();
       break;
     default:
     break;

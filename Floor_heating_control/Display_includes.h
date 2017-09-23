@@ -3,7 +3,7 @@
 
 #include <UTFT.h>
 #include <memorysaver.h>
-#include <UTouch.h>
+#include <URTouch.h>
 #include <UTFT_Buttons.h>
 
 word DEFAULT_BACKGROUND = VGA_BLACK;
@@ -32,6 +32,7 @@ bool idle;
 #define PAGE_SETTINGS2      11
 #define PAGE_MODE           12
 #define PAGE_RESET          13
+#define PAGE_SCT            14
 
 #define TITLE_HIGH 35
 #define ONE_MINUTES 60000
@@ -40,7 +41,7 @@ const int displayPWM = 7;
 #include <UTFT_Buttons.h>
 extern UTFT          myGLCD;
 extern UTFT_Buttons  myButtons;
-extern UTouch        myTouch;
+extern URTouch       myTouch;
 
 // Declare which fonts we will be using
 extern uint8_t SmallFont[];
