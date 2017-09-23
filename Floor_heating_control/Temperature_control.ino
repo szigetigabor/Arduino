@@ -1,5 +1,6 @@
 #include "Temp_config.h"
 #include "Relay.h"
+#include "Scheduling.h"
 #include <OneWire.h>
 #define ONE_WIRE_BUS 19                  // DS18B20 is on P19
 
@@ -148,7 +149,7 @@ void readTemperatures() {
   digitalWrite(BUSY_PIN, ON);
   bool isnight=false;
   float alarm;
-//  isnight=true;     //TODO: get it from time
+  isnight=isNight();
   for (int i=0; i< ROOMS; i++) {
     if ( debug >= DEBUG ) {
       Serial.print(i);
