@@ -126,6 +126,7 @@ void initTemp() {
   pinMode(MAIN_PUMP, OUTPUT);
   pinMode(BUSY_PIN, OUTPUT);
   digitalWrite(BUSY_PIN, OFF);
+  initScheduling();
 }
 
 bool needTempCheck(unsigned long last_check, unsigned int waiting_time) {

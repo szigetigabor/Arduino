@@ -5,13 +5,38 @@
 #define NIGHT_HOUR   20
 #define NIGHT_MINUTE 30
 
+int day_hour, day_minute, night_hour, night_minute;
+
+void initScheduling() {
+  // get values from EEPROM or use default values
+  day_hour = getDayHour();
+  if (day_hour == 0) {
+    day_hour = DAY_HOUR;
+  }
+  
+  day_minute = getDayMinute();
+  if (day_minute == 0) {
+    day_minute = DAY_MINUTE;
+  }
+  
+  night_hour = getNightHour();
+  if (night_hour == 0) {
+    night_hour = NIGHT_HOUR;
+  }
+  
+  night_minute = getNightMinute();
+  if (night_minute == 0) {
+    night_minute = NIGHT_MINUTE;
+  }
+}
+
 bool isDay() {
   bool retval = false;
-  int Hour = (int)tmpRTC.tHour;
-  int Minute = (int)tmpRTC.tMinute;
-  if ( ( Hour == DAY_HOUR && Minute >= DAY_MINUTE ) ||
-       ( Hour > DAY_HOUR && Hour < NIGHT_HOUR ) ||
-       ( Hour == NIGHT_HOUR && Minute < NIGHT_MINUTE ) ) {
+  int cHour = (int)tmpRTC.tHour;
+  int cMinute = (int)tmpRTC.tMinute;
+  if ( ( cHour == day_hour   && cMinute >= day_minute ) ||
+       ( cHour > day_hour    && cHour < day_minute ) ||
+       ( cHour == day_minute && cMinute < night_minute ) ) {
     retval = true;
   }
   return retval;

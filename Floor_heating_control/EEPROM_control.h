@@ -13,10 +13,15 @@
  *  2. sleep time
  *  3-x. room infos (41 bytes each info)
  *  x-y. extra temperature sensors (28 bytes each info)
- *  y-499. empty space
- *  500-z. scheduling
+ *  y-999. empty space
+ *  1000. scheduling day hour
+ *  1001. scheduling day minute
+ *  1002. scheduling night hour
+ *  1003. scheduling night minute
+ *  1004-4096. empty space
  */
 #define BASE_OFFSET 3
+#define SCHEDULING_OFFSET 1000
 
 int getSensorAddress(int index) {
   int eeAddress = BASE_OFFSET;

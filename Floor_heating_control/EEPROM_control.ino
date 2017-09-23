@@ -243,4 +243,42 @@ void EEPROMUsage() {
   Serial.println(" %");
 }
 
+byte getDayHour() {
+  byte value = EEPROM.read(SCHEDULING_OFFSET);
+  return value;
+}
 
+void setDayHour(byte value) {
+  EEPROM.put( SCHEDULING_OFFSET, value );
+  Serial.println("stored scheduling day hour value");
+}
+
+byte getDayMinute() {
+  byte value = EEPROM.read(SCHEDULING_OFFSET+1);
+  return value;
+}
+
+void setDayMinute(byte value) {
+  EEPROM.put( SCHEDULING_OFFSET+1, value );
+  Serial.println("stored scheduling day minute value");
+}
+
+byte getNightHour() {
+  byte value = EEPROM.read(SCHEDULING_OFFSET+2);
+  return value;
+}
+
+void setNightHour(byte value) {
+  EEPROM.put( SCHEDULING_OFFSET+2, value );
+  Serial.println("stored scheduling night hour value");
+}
+
+byte getNightMinute() {
+  byte value = EEPROM.read(SCHEDULING_OFFSET+3);
+  return value;
+}
+
+void setNightMinute(byte value) {
+  EEPROM.put( SCHEDULING_OFFSET+3, value );
+  Serial.println("stored scheduling night minute value");
+}
