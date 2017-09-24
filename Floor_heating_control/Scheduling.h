@@ -38,8 +38,8 @@ bool isDay() {
   int cHour = (int)tmpRTC.tHour;
   int cMinute = (int)tmpRTC.tMinute;
   if ( ( cHour == day_hour   && cMinute >= day_minute ) ||
-       ( cHour > day_hour    && cHour < day_minute ) ||
-       ( cHour == day_minute && cMinute < night_minute ) ) {
+       ( cHour > day_hour    && cHour < night_hour ) ||
+       ( cHour == night_hour && cMinute < night_minute ) ) {
     retval = true;
   }
   return retval;
