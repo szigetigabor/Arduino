@@ -107,6 +107,16 @@ void updateMainPump() {
     }
     value = value & boilerIsRunning;
   }
+  // safety protection
+  if ( debug >= DEBUG ) {
+    Serial.print("main pump:");Serial.println(!relay_status[MAIN_PUMP % 8]);
+    Serial.print("new value:");Serial.println(!value);
+  }
+  if (relay_status[MAIN_PUMP % 8] && value) {   //inverse logic
+    // wait a few seconds until an "Electrothermal actuators" to open a pipes
+    Serial.println("Waiting for a pipe opening...");
+    delay(45000);  //45 seconds
+  }
   setRelay(MAIN_PUMP, !value);
   relay_status[MAIN_PUMP % 8] = !value;   //only for mainGUI
 }
@@ -124,6 +134,9 @@ void initTemp() {
   }
   current_mode = getMode();
   pinMode(MAIN_PUMP, OUTPUT);
+  // initialy turn off the main pump
+  relay_status[MAIN_PUMP % 8]=1;
+  setRelay(MAIN_PUMP, true);
   pinMode(BUSY_PIN, OUTPUT);
   digitalWrite(BUSY_PIN, OFF);
   initScheduling();
