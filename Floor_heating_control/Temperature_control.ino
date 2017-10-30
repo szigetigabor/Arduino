@@ -82,7 +82,7 @@ void checkTemperature(int index, boolean isnight) {
 
 void checkTemperature(float current, float required, byte relay) {
   bool output = OFF;
-  if (  ( current < required && current_mode == MODE_SCHEDULING )
+  if (  ( current < required && current_mode == MODE_SCHEDULING && boilerIsRunning )
       || current_mode == MODE_ON) {
     output = ON;
   }
