@@ -128,22 +128,23 @@ void initSchedulingSettingsGUI() {
 
 void SaveScheduling() {
   if (tmp_dh != day_hour) {
-    setDayHour(tmp_dh);
     day_hour = tmp_dh;
+    setDayHour(day_hour);
   }
   if (tmp_dm != day_minute) {
-    setDayMinute(tmp_dm);
     day_minute = tmp_dm;
+    setDayMinute(day_minute);
   }
   if (tmp_nh != night_hour) {
-    setNightHour(tmp_nh);
     night_hour = tmp_nh;
+    setNightHour(night_hour);
   }
   if (tmp_nm != night_minute) {
-    setNightMinute(tmp_nm);
     night_minute = tmp_nm;
+    setNightMinute(night_minute);
   }
 
+  delay(500);
   // necessary to restart the device because something goes to wrong by the cyclically temperature checking when loaded this GUI. 
   asm volatile ("  jmp 0");
 }

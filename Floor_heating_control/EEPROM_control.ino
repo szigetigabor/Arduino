@@ -250,10 +250,11 @@ byte getDayHour() {
 }
 
 void setDayHour(byte value) {
-  byte tmp = value;
   int eeAddress = SCHEDULING_OFFSET;
-  EEPROM.put( eeAddress, tmp );
-  Serial.println("stored scheduling day hour value");
+  EEPROM.write( eeAddress, value );
+  if ( debug >= DEBUG ) {
+    Serial.print("stored scheduling day hour value ");Serial.println(value);
+  }
 }
 
 byte getDayMinute() {
@@ -263,10 +264,11 @@ byte getDayMinute() {
 }
 
 void setDayMinute(byte value) {
-  byte tmp = value;
   int eeAddress = SCHEDULING_OFFSET+1;
-  EEPROM.put( eeAddress, tmp );
-  Serial.println("stored scheduling day minute value");
+  EEPROM.write( eeAddress, value );
+  if ( debug >= DEBUG ) {
+    Serial.print("stored scheduling day minute value ");Serial.println(value);
+  }
 }
 
 byte getNightHour() {
@@ -276,10 +278,11 @@ byte getNightHour() {
 }
 
 void setNightHour(byte value) {
-  byte tmp = value;
   int eeAddress = SCHEDULING_OFFSET+2;
-  EEPROM.put( eeAddress, tmp );
-  Serial.println("stored scheduling night hour value");
+  EEPROM.write( eeAddress, value );
+  if ( debug >= DEBUG ) {
+    Serial.print("stored scheduling night hour value ");Serial.println(value);
+  }
 }
 
 byte getNightMinute() {
@@ -289,8 +292,9 @@ byte getNightMinute() {
 }
 
 void setNightMinute(byte value) {
-  byte tmp = value;
   int eeAddress = SCHEDULING_OFFSET+3;
-  EEPROM.put( eeAddress, tmp );
-  Serial.println("stored scheduling night minute value");
+  EEPROM.write( eeAddress, value );
+  if ( debug >= DEBUG ) {
+    Serial.print("stored scheduling night minute value ");Serial.println(value);
+  }
 }
