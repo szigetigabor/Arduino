@@ -2,7 +2,7 @@
 #define SCT013
 
 #define PIN 0
-#define POWERLIMIT 30
+#define POWERLIMIT 10
 #include "EmonLib.h"  
 EnergyMonitor emon1;             // Create an instance
 
