@@ -41,7 +41,10 @@ void handleScheduler();
 void handleUpdateStartTime();
 void handleZoneEnable();
 void handleZoneDisable();
-
+void handlePoolScheduler();
+void handlePoolUpdateStartTime();
+void handlePoolEnable();
+void handlePoolDisable();
 
 void WifiInit() {
   WiFi.begin(WIFI_SSID, WIFI_PASSWD);
@@ -79,6 +82,11 @@ void webServerInit() {
   server.on("/scheduler", HTTP_POST, handleUpdateStartTime);
   server.on("/scheduler_enable", handleZoneEnable);
   server.on("/scheduler_disable", handleZoneDisable);
+
+  server.on("/poolscheduler", HTTP_GET, handlePoolScheduler);
+  server.on("/poolscheduler", HTTP_POST, handlePoolUpdateStartTime);
+  server.on("/poolscheduler_enable", handlePoolEnable);
+  server.on("/poolscheduler_disable", handlePoolDisable);
 
 
   server.on("/inline", []() {
@@ -270,39 +278,73 @@ void handleSIGNAL() {
   server.send(200, "text/plain", HTMLMessage);
 }
 
-void handleScheduler() {
+void handleSchedulerTemplate(bool pool = false) {
   String HTMLMessage = "Zones scheduler configuration!<br>";
   // scheduler enable/disable
   bool enabled = scheduler.isAlarmsEnabled();
-  HTMLMessage += "<form action=\"/scheduler_enable\" method=\"POST\">";
+  String prefix = "";
+  if (pool) {
+    enabled = scheduler.isPoolAlarmsEnabled();
+    prefix = "pool";
+  }
+  HTMLMessage += "<form action=\"/"+prefix+"scheduler_enable\" method=\"POST\">";
   HTMLMessage += "<input type=\"submit\" value=\"Enable\"";
   if (enabled) HTMLMessage += "disabled";
   HTMLMessage += "></form>";
-  HTMLMessage += "<form action=\"/scheduler_disable\" method=\"POST\">";
+  HTMLMessage += "<form action=\"/"+prefix+"scheduler_disable\" method=\"POST\">";
   HTMLMessage += "<input type=\"submit\" value=\"Disable\"";
   if (!enabled) HTMLMessage += "disabled";
   HTMLMessage += "></form>";
   
   // Start time set
   HTMLMessage += "Start time!<br>";
-  HTMLMessage += "<form action=\"/scheduler\" method=\"POST\">";
-  HTMLMessage += "<input type=\"text\" name=\"hour\" value=\"" + String(scheduler.getStartHour()) + "\" maxlength=\"2\" size=\"2\">";
-  HTMLMessage += ":";
-  HTMLMessage += "<input type=\"text\" name=\"minute\" value=\"" + String(scheduler.getStartMinute()) + "\" maxlength=\"2\" size=\"2\">";
+  HTMLMessage += "<form action=\"/"+prefix+"scheduler\" method=\"POST\">";
+  if (pool){
+    HTMLMessage += "<input type=\"text\" name=\"hour\" value=\"" + String(scheduler.getPoolStartHour()) + "\" maxlength=\"2\" size=\"2\">";
+    HTMLMessage += ":";
+    HTMLMessage += "<input type=\"text\" name=\"minute\" value=\"" + String(scheduler.getPoolStartMinute()) + "\" maxlength=\"2\" size=\"2\">";    
+  } else {
+    HTMLMessage += "<input type=\"text\" name=\"hour\" value=\"" + String(scheduler.getStartHour()) + "\" maxlength=\"2\" size=\"2\">";
+    HTMLMessage += ":";
+    HTMLMessage += "<input type=\"text\" name=\"minute\" value=\"" + String(scheduler.getStartMinute()) + "\" maxlength=\"2\" size=\"2\">";
+  }
   HTMLMessage += "<input type=\"submit\" value=\"Update Start Time\"></form>";
   server.send(200, "text/html", HTMLMessage);
 }
 
-void handleUpdateStartTime() { // If a POST request is made to URI /scheduler
+void handleScheduler() {
+  handleSchedulerTemplate();
+}
+
+void handlePoolScheduler() {
+  handleSchedulerTemplate(true);
+}
+
+void handleUpdateStartTimeTemplate(bool pool = false) { // If a POST request is made to URI /scheduler
   if( ! server.hasArg("hour") || ! server.hasArg("minute") 
       || server.arg("hour") == NULL || server.arg("minute") == NULL) { // If the POST request doesn't have hour and minute data
     server.send(400, "text/plain", "400: Invalid Request");         // The request is invalid, so send HTTP status 400
     return;
   }
-  scheduler.setStartHour(server.arg("hour").toInt());
-  scheduler.setStartMinute(server.arg("minute").toInt());
-  server.sendHeader("Location","/scheduler");
+  if (pool) {
+    scheduler.setPoolStartHour(server.arg("hour").toInt());
+    scheduler.setPoolStartMinute(server.arg("minute").toInt());
+    server.sendHeader("Location","/poolscheduler");
+    
+  } else {
+    scheduler.setStartHour(server.arg("hour").toInt());
+    scheduler.setStartMinute(server.arg("minute").toInt());
+    server.sendHeader("Location","/scheduler");
+  }
   server.send(303);
+}
+
+void handleUpdateStartTime() {
+  handleUpdateStartTimeTemplate();
+}
+
+void handlePoolUpdateStartTime() {
+  handleUpdateStartTimeTemplate(true);
 }
 
 void handleZoneEnable() {
@@ -314,6 +356,18 @@ void handleZoneEnable() {
 void handleZoneDisable() {
   scheduler.DisableZoneAlarms();
   server.sendHeader("Location","/scheduler");
+  server.send(303);
+}
+
+void handlePoolEnable() {
+  scheduler.EnablePoolAlarms();
+  server.sendHeader("Location","/poolscheduler");
+  server.send(303);
+}
+
+void handlePoolDisable() {
+  scheduler.DisablePoolAlarms();
+  server.sendHeader("Location","/poolscheduler");
   server.send(303);
 }
 

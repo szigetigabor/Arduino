@@ -19,7 +19,8 @@ void EveningAlarm() {
 MCPManagement McpMan;
 void setDigitalOutput(int zoneID, int value) {
   int index = zoneID-1;
-  if ( 0 <= index && index < DEFAULT_ACTIVE_TIME_ZONE ) {
+  if ( (0 <= index && index < DEFAULT_ACTIVE_TIME_ZONE)   // zone update
+        || zoneID == POOL_PORT) {   // Pool trigger
     int pin = zonePortMap[index];
     digitalWrite(pin, value);  // 0: ON; 1: OFF
     McpMan.setOutput(index, value);
@@ -67,7 +68,16 @@ typedef void (*FuncPtr)(void);  //typedef 'return type' (*FuncPtr)('arguments')
 FuncPtr ZoneONFunctions[] = {&Zone1ON, &Zone2ON, &Zone3ON};//, &Zone4ON, &Zone5ON};
 FuncPtr ZoneOFFFunctions[] = {&Zone1OFF, &Zone2OFF, &Zone3OFF};//, &Zone4OFF, &Zone5OFF};
 
+// pool alarm
+void PoolPumpTrigger() {
+  Serial.println("Pool pump trigger");
+  setDigitalOutput(POOL_PORT, LOW);  // turn ON
+  delay(1000);
+  setDigitalOutput(POOL_PORT, HIGH);  // turn OFF
+}
 
+
+// example alarms
 void WeeklyAlarm() {
   Serial.println("Alarm: - its Monday Morning");
 }
@@ -111,6 +121,9 @@ SchedulerLogic::SchedulerLogic(int NTPSyncPeriod)
   startHour   = DEFAULT_START_HOUR;
   startMinute = DEFAULT_START_MINUTE;
   enabled     = true;
+  poolStartHour   = DEFAULT_POOL_START_HOUR;
+  poolStartMinute = DEFAULT_POOL_START_MINUTE;
+  poolEnabled = true;
   Serial.begin(115200);
   while (!Serial) ; // wait for Arduino Serial Monitor
 
@@ -192,6 +205,50 @@ void SchedulerLogic::DisableZoneAlarms() {
   enabled = false;
 }
 
+
+int SchedulerLogic::getPoolStartHour() {
+  return poolStartHour;
+}
+
+void SchedulerLogic::setPoolStartHour(int hour) {
+  if ( hour >= 0 && hour <= 23) {
+    poolStartHour = hour;
+    PoolAlarmsReInit();
+  }
+}
+
+int SchedulerLogic::getPoolStartMinute() {
+  return poolStartMinute;
+}
+
+void SchedulerLogic::setPoolStartMinute(int minute) {
+  if ( minute >= 0 && minute <= 59) {
+    poolStartMinute = minute;
+    PoolAlarmsReInit();
+  }
+}
+
+
+bool SchedulerLogic::isPoolAlarmsEnabled() {
+  return poolEnabled;
+}
+
+void SchedulerLogic::EnablePoolAlarms() {
+  Serial.println("Pool alarms are enabled.");
+  for (int i = 0; i < NR_OF_POOL_ALARMS; i++) {
+    Alarm.enable(PoolIds[i]);
+  }
+  poolEnabled = true;
+}
+
+void SchedulerLogic::DisablePoolAlarms() {
+  Serial.println("Pool alarms are disabled.");
+  for (int i = 0; i < NR_OF_POOL_ALARMS; i++) {
+    Alarm.disable(PoolIds[i]);
+  }
+  poolEnabled = false;
+}
+
   
 //**************************************************************
 //* Protected Methods
@@ -202,7 +259,11 @@ void SchedulerLogic::AlarmsInit()
 
   // create the alarms, to trigger at specific times
   ZoneAlarmsInit();
-  
+
+  // Pool circular pump
+  PoolAlarmsInit();
+
+  // extra alarm examples
   Alarm.alarmRepeat(8,30,0, MorningAlarm);  // 8:30am every day
   Alarm.alarmRepeat(17,45,0,EveningAlarm);  // 5:45pm every day
   // Alarm.alarmRepeat(dowSaturday,8,30,30,WeeklyAlarm);  // 8:30:30 every Saturday
@@ -214,6 +275,7 @@ void SchedulerLogic::AlarmsInit()
   Alarm.timerOnce(10, OnceOnly);            // called once after 10 seconds
 }
 
+// ZONE methods
 void SchedulerLogic::ZoneAlarmsReInit()
 {
   Serial.println("ZoneAlarms Reinitialization...");
@@ -259,6 +321,54 @@ void SchedulerLogic::ZoneAlarmsReset()
     ZoneOFFIds[i] = dtINVALID_ALARM_ID;
   }
 }
+// end of ZONE methods
+
+// POOL methods
+void SchedulerLogic::PoolAlarmsReInit()
+{
+  Serial.println("PoolAlarms Reinitialization...");
+  PoolAlarmsReset();
+  PoolAlarmsInit();
+}
+
+void SchedulerLogic::PoolAlarmsInit()
+{
+  Serial.println("PoolAlarms Initialization...");
+  time_t alarm = poolStartHour * 3600 + poolStartMinute * 60;
+
+  //PoolIds[0] = Alarm.alarmRepeat(18,00,0, PoolPumpTrigger);  // 18:00pm every day
+  //PoolIds[1] = Alarm.alarmRepeat(0,01,0,PoolPumpTrigger);  // 0:01am every day
+  int hour;
+  int minute;
+  for (int i = 0; i < NR_OF_POOL_ALARMS/2; i++) {
+
+    hour = (alarm / 3600) % 24;
+    minute = (alarm / 60) % 60;
+
+    // create the alarms, to trigger at specific times
+    AlarmId id = Alarm.alarmRepeat(hour, minute, 0, PoolPumpTrigger);
+    PoolIds[i] = id;
+
+    int duration = getPoolDuration();
+    alarm += duration * 60;
+    hour = (alarm / 3600) % 24;
+    minute = (alarm / 60) % 60;
+    id = Alarm.alarmRepeat(hour, minute, 0, PoolPumpTrigger);
+    
+    PoolIds[i+1] = id;
+  }
+}
+
+void SchedulerLogic::PoolAlarmsReset()
+{
+  Serial.println("PoolAlarms Reseting...");
+  for (int i = 0; i < NR_OF_POOL_ALARMS; i++) {
+    Alarm.free(PoolIds[i]);
+    // optional, but safest to "forget" the ID after memory recycled
+    PoolIds[i] = dtINVALID_ALARM_ID;
+  }
+}
+// end of POOL methods
 
 void SchedulerLogic::NTP_Init()
 {
@@ -305,6 +415,14 @@ int SchedulerLogic::getZoneDuration(int i) {
   }
   Serial.print("duration: ");
   Serial.print(duration);
-  Serial.println(" seconds");
+  Serial.println(" minutes");
+  return duration;
+}
+
+int SchedulerLogic::getPoolDuration() {
+  int duration = DEFAULT_ACTIVE_TIME_POOL;
+  Serial.print("duration: ");
+  Serial.print(duration);
+  Serial.println(" minutes");
   return duration;
 }
