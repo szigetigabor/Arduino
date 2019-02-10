@@ -1,12 +1,14 @@
 #include "commonFunctions.h"
 #include "WebServerLogic.h"
 //#include "SchedulerLogic.h"
+#include "MCPManagement.h"
 
-#include "Adafruit_MCP23017.h"
 
 
 //SchedulerLogic scheduler;
-Adafruit_MCP23017 mcp;
+MCPManagement* buttons;
+
+
 
 void setup(void){
   pinMode(led, OUTPUT);
@@ -25,13 +27,8 @@ void setup(void){
 
   scheduler.init();
 
+  buttons = new MCPManagement();
 
-  mcp.begin(0); // use default address 0
-  
-  mcp.pinMode(8, OUTPUT);
-  mcp.pullUp(8, HIGH);  // turn on a 100K pullup internally
-  mcp.pinMode(10, OUTPUT);
-  mcp.pullUp(10, HIGH);  // turn on a 100K pullup internally
 }
 
 void loop(void){
@@ -41,15 +38,6 @@ void loop(void){
 //  Serial.println(schedulerWebAdapter.getStartTime());
 
 
-  delay(1000);
+  buttons->buttonPushTriggerCheck();
 
-  ledON();
-  mcp.digitalWrite(10, HIGH);
-  mcp.digitalWrite(8, HIGH);
-
-  delay(1000);
-
-  ledOFF();
-  mcp.digitalWrite(10, LOW);
-  mcp.digitalWrite(8, LOW);
 }
