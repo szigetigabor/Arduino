@@ -1,5 +1,6 @@
 #include "SchedulerLogic.h"
 #include <time.h>       /* time_t, struct tm, time, localtime */
+#include "MCPManagement.h"
 
 
 //**************************************************************
@@ -15,11 +16,13 @@ void EveningAlarm() {
   Serial.println("Alarm: - turn lights on");
 }
 
+MCPManagement McpMan;
 void setDigitalOutput(int zoneID, int value) {
   int index = zoneID-1;
   if ( 0 <= index && index < DEFAULT_ACTIVE_TIME_ZONE ) {
     int pin = zonePortMap[index];
     digitalWrite(pin, value);  // 0: ON; 1: OFF
+    McpMan.setOutput(index, value);
   } 
 }
 
