@@ -58,6 +58,7 @@ private:
   AlarmId ZoneONIds[NR_OF_ZONES];
   AlarmId ZoneOFFIds[NR_OF_ZONES];
 
+  int getPoolTriggerFrequency();
   int getPoolDuration();
   bool poolEnabled;
   int poolStartHour;

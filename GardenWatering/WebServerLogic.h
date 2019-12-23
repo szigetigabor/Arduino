@@ -210,7 +210,7 @@ void handleTemp() {
   ledON();
   Temperature = bmp.readTemperature();
   Serial.print("Temperature = ");
-  Serial.print(Temperature);
+  Serial.print(Temperature/100);
   Serial.println(" °C");
 
   Pressure = bmp.readPressure();
@@ -302,7 +302,7 @@ void handleSchedulerTemplate(bool pool = false) {
   if (pool){
     HTMLMessage += "<input type=\"text\" name=\"hour\" value=\"" + String(scheduler.getPoolStartHour()) + "\" maxlength=\"2\" size=\"2\">";
     HTMLMessage += ":";
-    HTMLMessage += "<input type=\"text\" name=\"minute\" value=\"" + String(scheduler.getPoolStartMinute()) + "\" maxlength=\"2\" size=\"2\">";    
+    HTMLMessage += "<input type=\"text\" name=\"minute\" value=\"" + String(scheduler.getPoolStartMinute()) + "\" maxlength=\"2\" size=\"2\">";
   } else {
     HTMLMessage += "<input type=\"text\" name=\"hour\" value=\"" + String(scheduler.getStartHour()) + "\" maxlength=\"2\" size=\"2\">";
     HTMLMessage += ":";

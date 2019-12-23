@@ -30,6 +30,7 @@ protected:
     void oneButtonCheck(int port);
 private:
     Adafruit_MCP23017 mcp;
+    int  mI2CAddr;
     bool zoneInput[NR_OF_PORTS];
     bool zoneOutput[NR_OF_PORTS];
 };

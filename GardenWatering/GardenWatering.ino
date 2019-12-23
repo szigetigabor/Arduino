@@ -3,14 +3,10 @@
 //#include "SchedulerLogic.h"
 #include "MCPManagement.h"
 
-
-
 //SchedulerLogic scheduler;
 MCPManagement* buttons;
 
-
-
-void setup(void){
+void setup(void) {
   pinMode(led, OUTPUT);
   ledON();
   Serial.begin(115200);
@@ -31,13 +27,13 @@ void setup(void){
 
 }
 
-void loop(void){
+void loop(void) {
   server.handleClient();
   scheduler.execute();
   //printDB();
 //  Serial.println(schedulerWebAdapter.getStartTime());
 
 
-  buttons->buttonPushTriggerCheck();
 
+  buttons->buttonPushTriggerCheck();
 }

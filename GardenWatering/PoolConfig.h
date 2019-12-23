@@ -3,13 +3,16 @@
 #define POOL_CONFIG_H
 
 #define POOL_PORT 8
-#define NR_OF_POOL_ALARMS 2
+#define NR_OF_POOL_ALARMS 16    // 24h / DEFAULT_POOL_TRIGGER_FREQUENCY * 2
 
 #define DEFAULT_POOL_START_HOUR   18
 #define DEFAULT_POOL_START_MINUTE 0
 
-// Time duration in minutes for each zone
-#define DEFAULT_ACTIVE_TIME_POOL 3600
+// Frequency of pool triggers in hour
+#define DEFAULT_POOL_TRIGGER_FREQUENCY 3
+
+// Active pool time duration in minutes for each period
+#define DEFAULT_ACTIVE_TIME_POOL 60
 
 
 

@@ -2,7 +2,8 @@
 #include <Arduino.h>
 
 MCPManagement::MCPManagement(int I2CAddr) {
-  mcp.begin(0); // use default address 0
+  mI2CAddr=I2CAddr;
+  mcp.begin(mI2CAddr); // use default address 0
 
   for(int i=0; i<NR_OF_PORTS; i++) {
       //outputs
@@ -48,8 +49,11 @@ void MCPManagement::oneButtonCheck(int port) {
   }
 
   bool currentState = getInput(port);
+
   if (zoneInput[port] != currentState) {
      zoneInput[port] = currentState;  // store the current state
+     Serial.print(mI2CAddr);
+     Serial.print(". MCP device: ");
      Serial.print(port+1);
      Serial.print(". Input button state changed: ");
      Serial.println(zoneInput[port] ? "RELEASED" : "PUSHED");

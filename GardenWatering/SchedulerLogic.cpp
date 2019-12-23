@@ -16,13 +16,15 @@ void EveningAlarm() {
   Serial.println("Alarm: - turn lights on");
 }
 
-MCPManagement McpMan;
+MCPManagement McpMan(1);
 void setDigitalOutput(int zoneID, int value) {
   int index = zoneID-1;
   if ( (0 <= index && index < DEFAULT_ACTIVE_TIME_ZONE)   // zone update
         || zoneID == POOL_PORT) {   // Pool trigger
     int pin = zonePortMap[index];
-    digitalWrite(pin, value);  // 0: ON; 1: OFF
+ //TODO   digitalWrite(pin, value);  // 0: ON; 1: OFF
+//  Serial.print("digitalWrite, pin: ");
+//  Serial.println(value);
     McpMan.setOutput(index, value);
   } 
 }
@@ -199,6 +201,7 @@ void SchedulerLogic::EnableZoneAlarms() {
 void SchedulerLogic::DisableZoneAlarms() {
   Serial.println("Zone alarms are disabled.");
   for (int i = 0; i < NR_OF_ZONES; i++) {
+    ZoneOFF(i);
     Alarm.disable(ZoneONIds[i]);
     Alarm.disable(ZoneOFFIds[i]);
   }
@@ -262,7 +265,9 @@ void SchedulerLogic::AlarmsInit()
 
   // Pool circular pump
   PoolAlarmsInit();
+ // Alarm.timerRepeat(15, Repeats);           // timer for every 15 seconds
 
+/*
   // extra alarm examples
   Alarm.alarmRepeat(8,30,0, MorningAlarm);  // 8:30am every day
   Alarm.alarmRepeat(17,45,0,EveningAlarm);  // 5:45pm every day
@@ -273,6 +278,7 @@ void SchedulerLogic::AlarmsInit()
   Alarm.timerRepeat(3600, HourlyEvent);           // timer for every hours
   id = Alarm.timerRepeat(2, Repeats2);      // timer for every 2 seconds
   Alarm.timerOnce(10, OnceOnly);            // called once after 10 seconds
+  */
 }
 
 // ZONE methods
@@ -314,6 +320,7 @@ void SchedulerLogic::ZoneAlarmsReset()
 {
   Serial.println("ZoneAlarms Reseting...");
   for (int i = 0; i < NR_OF_ZONES; i++) {
+    ZoneOFF(i);
     Alarm.free(ZoneONIds[i]);
     Alarm.free(ZoneOFFIds[i]);
     // optional, but safest to "forget" the ID after memory recycled
@@ -340,22 +347,32 @@ void SchedulerLogic::PoolAlarmsInit()
   //PoolIds[1] = Alarm.alarmRepeat(0,01,0,PoolPumpTrigger);  // 0:01am every day
   int hour;
   int minute;
-  for (int i = 0; i < NR_OF_POOL_ALARMS/2; i++) {
+
+  int duration = getPoolDuration();
+  int frequency = getPoolTriggerFrequency();
+  for (int i = 0; i < NR_OF_POOL_ALARMS; i=i+2) {
 
     hour = (alarm / 3600) % 24;
     minute = (alarm / 60) % 60;
-
+    Serial.print(hour);
+    Serial.print(":");
+    Serial.println(minute);
     // create the alarms, to trigger at specific times
     AlarmId id = Alarm.alarmRepeat(hour, minute, 0, PoolPumpTrigger);
     PoolIds[i] = id;
 
-    int duration = getPoolDuration();
-    alarm += duration * 60;
-    hour = (alarm / 3600) % 24;
-    minute = (alarm / 60) % 60;
+    time_t Offalarm(alarm);
+    Offalarm += duration * 60;
+    hour = (Offalarm / 3600) % 24;
+    minute = (Offalarm / 60) % 60;
+    Serial.print(hour);
+    Serial.print(":");
+    Serial.println(minute);
     id = Alarm.alarmRepeat(hour, minute, 0, PoolPumpTrigger);
     
     PoolIds[i+1] = id;
+
+    alarm += frequency * 3600;
   }
 }
 
@@ -417,6 +434,14 @@ int SchedulerLogic::getZoneDuration(int i) {
   Serial.print(duration);
   Serial.println(" minutes");
   return duration;
+}
+
+int SchedulerLogic::getPoolTriggerFrequency() {
+  int frequency = DEFAULT_POOL_TRIGGER_FREQUENCY;
+  Serial.print("trigger frequency: ");
+  Serial.print(frequency);
+  Serial.println(" hours");
+  return frequency;
 }
 
 int SchedulerLogic::getPoolDuration() {
