@@ -16,6 +16,8 @@
 
 static const int zonePortMap[DEFAULT_ACTIVE_TIME_ZONE] = {D3, D4, D0};
 
+static int ActiveZone = 0;
+
 
 
 #endif //ZONE_CONFIG_H

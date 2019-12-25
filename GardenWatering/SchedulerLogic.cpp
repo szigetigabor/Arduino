@@ -32,11 +32,13 @@ void setDigitalOutput(int zoneID, int value) {
 void ZoneON(int i) {
   Serial.println("Alarm: - Zone" + String(i) + " turn on");
   setDigitalOutput(i, LOW);  // turn ON
+  ActiveZone = i;
 }
 
 void ZoneOFF(int i) {
   Serial.println("Alarm: - Zone" + String(i) + " turn off");
   setDigitalOutput(i, HIGH);  // turn OFF
+  ActiveZone = 0;
 }
 
 // Zone 1
@@ -76,6 +78,7 @@ void PoolPumpTrigger() {
   setDigitalOutput(POOL_PORT, LOW);  // turn ON
   delay(1000);
   setDigitalOutput(POOL_PORT, HIGH);  // turn OFF
+  bPoolActive = !bPoolActive;
 }
 
 
@@ -123,9 +126,11 @@ SchedulerLogic::SchedulerLogic(int NTPSyncPeriod)
   startHour   = DEFAULT_START_HOUR;
   startMinute = DEFAULT_START_MINUTE;
   enabled     = true;
+  ActiveZone  = 0;
   poolStartHour   = DEFAULT_POOL_START_HOUR;
   poolStartMinute = DEFAULT_POOL_START_MINUTE;
   poolEnabled = true;
+  bPoolActive = false;
   Serial.begin(115200);
   while (!Serial) ; // wait for Arduino Serial Monitor
 
@@ -162,6 +167,13 @@ void SchedulerLogic::printDigits(int digits) {
   Serial.print(digits);
 }
 
+bool SchedulerLogic::isZoneActive() {
+  return getActiveZone() != 0;
+}
+
+int SchedulerLogic::getActiveZone() {
+  return ActiveZone;
+}
 
 int SchedulerLogic::getStartHour() {
   return startHour;
@@ -208,6 +220,9 @@ void SchedulerLogic::DisableZoneAlarms() {
   enabled = false;
 }
 
+bool SchedulerLogic::isPoolActive() {
+  return bPoolActive;
+}
 
 int SchedulerLogic::getPoolStartHour() {
   return poolStartHour;
@@ -327,6 +342,7 @@ void SchedulerLogic::ZoneAlarmsReset()
     ZoneONIds[i] = dtINVALID_ALARM_ID;
     ZoneOFFIds[i] = dtINVALID_ALARM_ID;
   }
+  ActiveZone = 0;
 }
 // end of ZONE methods
 
@@ -369,7 +385,6 @@ void SchedulerLogic::PoolAlarmsInit()
     Serial.print(":");
     Serial.println(minute);
     id = Alarm.alarmRepeat(hour, minute, 0, PoolPumpTrigger);
-    
     PoolIds[i+1] = id;
 
     alarm += frequency * 3600;
@@ -384,6 +399,7 @@ void SchedulerLogic::PoolAlarmsReset()
     // optional, but safest to "forget" the ID after memory recycled
     PoolIds[i] = dtINVALID_ALARM_ID;
   }
+  bPoolActive = false;
 }
 // end of POOL methods
 

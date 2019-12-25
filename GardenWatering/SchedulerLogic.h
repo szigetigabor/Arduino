@@ -20,6 +20,8 @@ public:
   void digitalClockDisplay();
   void printDigits(int digits);
 
+  bool isZoneActive();
+  int getActiveZone();
   int getStartHour();
   void setStartHour(int hour);
   int getStartMinute();
@@ -28,6 +30,7 @@ public:
   void EnableZoneAlarms();
   void DisableZoneAlarms();
 
+  bool isPoolActive();
   int getPoolStartHour();
   void setPoolStartHour(int hour);
   int getPoolStartMinute();
@@ -54,7 +57,6 @@ private:
   bool enabled;
   int startHour;
   int startMinute;
-
   AlarmId ZoneONIds[NR_OF_ZONES];
   AlarmId ZoneOFFIds[NR_OF_ZONES];
 

@@ -14,7 +14,7 @@
 // Active pool time duration in minutes for each period
 #define DEFAULT_ACTIVE_TIME_POOL 60
 
-
+static bool bPoolActive = false;
 
 
 

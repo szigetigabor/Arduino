@@ -37,6 +37,7 @@ void handleNTPClient();
 void handleTemp();
 void printDB();
 void handleSIGNAL();
+void handleSTATUS();
 void handleScheduler();
 void handleUpdateStartTime();
 void handleZoneEnable();
@@ -92,6 +93,7 @@ void webServerInit() {
   server.on("/ntpclient", handleNTPClient);
   
   server.on("/signal", handleSIGNAL);
+  server.on("/status", handleSTATUS);
   server.on("/scheduler", HTTP_GET, handleScheduler);
   server.on("/scheduler", HTTP_POST, handleUpdateStartTime);
   server.on("/scheduler_enable", handleZoneEnable);
@@ -139,7 +141,9 @@ void handleRoot() {
   HTMLMessage += generateButton("Temperature", "/temp");
   HTMLMessage += generateButton("NTP", "/ntpclient");
   HTMLMessage += generateButton("Wifi signal level", "/signal");
-  HTMLMessage += generateButton("Scheduling", "/scheduler");
+  HTMLMessage += generateButton("Zone Scheduling", "/scheduler");
+  HTMLMessage += generateButton("Pool Scheduling", "/poolscheduler");
+  HTMLMessage += generateButton("Status", "/status");
   server.send(200, "text/html", HTMLMessage);
   delay(500);
   digitalWrite(led, 0);
@@ -294,6 +298,22 @@ void handleSIGNAL() {
   HTMLMessage += "\nlevel = ";
   HTMLMessage += rssi;
   HTMLMessage += " dB\n";
+
+  server.send(200, "text/plain", HTMLMessage);
+}
+
+void handleSTATUS() {
+  String HTMLMessage = "System status!\n";
+  HTMLMessage += "Zone = ";
+  HTMLMessage += scheduler.isZoneActive() ? "ON" : "OFF";
+  if (scheduler.isZoneActive()) {
+    HTMLMessage += " (Active: ";
+    HTMLMessage += scheduler.getActiveZone();
+    HTMLMessage += " )";
+  }
+  HTMLMessage += "\nPool = ";
+  HTMLMessage += scheduler.isPoolActive() ? "ON" : "OFF";
+  HTMLMessage += "\n";
 
   server.send(200, "text/plain", HTMLMessage);
 }
