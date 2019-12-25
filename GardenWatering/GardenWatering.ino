@@ -28,6 +28,7 @@ void setup(void) {
 }
 
 void loop(void) {
+  WifiConnectionCheck();
   server.handleClient();
   scheduler.execute();
   //printDB();

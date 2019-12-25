@@ -46,23 +46,37 @@ void handlePoolUpdateStartTime();
 void handlePoolEnable();
 void handlePoolDisable();
 
-void WifiInit() {
-  WiFi.begin(WIFI_SSID, WIFI_PASSWD);
+void WifiInit(int maxRetry = WIFI_CONNECTION_RETRY_COUNT) {
   Serial.println("");
+  Serial.print("Connecttion to ");
+  Serial.print(WIFI_SSID);
+  Serial.println(" network is started...");
+  WiFi.begin(WIFI_SSID, WIFI_PASSWD);
 
   // Wait for connection
+  int retry = 0;
   while (WiFi.status() != WL_CONNECTED) {
+    if (retry == maxRetry) {
+      Serial.println("");
+      Serial.print("Could not connect to the ");
+      Serial.print(WIFI_SSID);
+      Serial.println(" network.");
+      break;
+    }
     digitalWrite(led, 1);  //ledOFF();
     delay(200);
     digitalWrite(led, 0);  //ledON();
     delay(300);
     Serial.print(".");
+    retry++;
   }
-  Serial.println("");
-  Serial.print("Connected to ");
-  Serial.println(WIFI_SSID);
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
+  if (WiFi.status() == WL_CONNECTED) {
+    Serial.println("");
+    Serial.print("Connected to ");
+    Serial.println(WIFI_SSID);
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
+  }
 }
 
 void webServerInit() {
@@ -97,6 +111,12 @@ void webServerInit() {
 
   server.begin();
   Serial.println("HTTP server started");
+}
+
+void WifiConnectionCheck() {
+  if (WiFi.status() != WL_CONNECTED) {
+    WifiInit();
+  }
 }
 
 ///////////////////////////////////
