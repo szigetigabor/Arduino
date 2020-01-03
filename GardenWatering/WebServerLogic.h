@@ -7,6 +7,7 @@
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
+#include "FS.h"
 
 #include "WifiConfig.h"
 #include "SchedulerLogic.h"
@@ -235,7 +236,7 @@ void handleTemp() {
   Temperature = bmp.readTemperature();
   Serial.print("Temperature = ");
   Serial.print(Temperature/100);
-  Serial.println(" °C");
+  Serial.println(" Ă‚Â°C");
 
   Pressure = bmp.readPressure();
   Serial.print("Pressure = ");
@@ -303,7 +304,31 @@ void handleSIGNAL() {
 }
 
 void handleSTATUS() {
-  String HTMLMessage = "System status!\n";
+  bool bPoolActive = scheduler.isPoolActive();
+  String PoolText = "Pool Pump: ";
+  PoolText += "    <div class=\"";
+  PoolText += bPoolActive ? "on" : "off";
+  PoolText += "\">";
+  PoolText += bPoolActive ? "ON" : "OFF";
+  PoolText += "    </div>";
+
+  String TempIntakeText = "24.3";
+  TempIntakeText += "°C";
+  String TempPoolText = "122.9";
+  TempPoolText += "°C";
+  
+  String HTMLMessage = "<!DOCTYPE html><html>";
+  HTMLMessage += "<head><meta charset=\"UTF-8\">";
+  HTMLMessage += "<style>";
+  HTMLMessage += "   .container {  position: relative;  text-align: center;  color: black; font-weight: bold; font-size: 150%}";
+  HTMLMessage += "   .pump {  position: absolute;  bottom: 8px;  left: 16px;}";
+  HTMLMessage += "   .tempIntake {  position: absolute;  top: 50%;  right: 35px;}";
+  HTMLMessage += "   .tempPool   {  position: absolute;  top: 25%;  left: 25%; color: white;}";
+  HTMLMessage += "   .on   {  color: green;}";
+  HTMLMessage += "   .off  {  color: red;}";
+  HTMLMessage += "</style></head>";
+  HTMLMessage += "<body>";
+  HTMLMessage += "System status!\n<p>";
   HTMLMessage += "Zone = ";
   HTMLMessage += scheduler.isZoneActive() ? "ON" : "OFF";
   if (scheduler.isZoneActive()) {
@@ -311,11 +336,25 @@ void handleSTATUS() {
     HTMLMessage += scheduler.getActiveZone();
     HTMLMessage += " )";
   }
-  HTMLMessage += "\nPool = ";
-  HTMLMessage += scheduler.isPoolActive() ? "ON" : "OFF";
+  HTMLMessage += "\n<p>";
+  HTMLMessage += PoolText;
   HTMLMessage += "\n";
+  HTMLMessage += "<p><div class=\"container\">";
+  HTMLMessage += "    <img src=\"https://static.spacecrafted.com/fe5d391b3ce44129984e44bcd18d549d/i/dfe2fa81e8474d71bdff6fb30e75f960/1/4SoifmQp45JMgBnHp7ed2/Figure-5-Electric-Swimming-Pool-Heater.png\" alt=\"Smiley face\" style=\"width:100%;\">";
+  HTMLMessage += "    <div class=\"pump\">";
+  HTMLMessage +=        PoolText;
+  HTMLMessage += "    </div>";
+  HTMLMessage += "    <div class=\"tempIntake\">";
+  HTMLMessage +=        TempIntakeText;
+  HTMLMessage += "    </div>";
+  HTMLMessage += "    <div class=\"tempPool\">";
+  HTMLMessage +=        TempPoolText;
+  HTMLMessage += "    </div>";
+  HTMLMessage += "</div>";
+  HTMLMessage += "<p><img src=\"data:Electric-Swimming-Pool-Heater.png\" alt=\"Smiley face\" >";//height=\"42\" width=\"42\"> ";
+  HTMLMessage += "</body></html>";
 
-  server.send(200, "text/plain", HTMLMessage);
+  server.send(200, "text/html", HTMLMessage);
 }
 
 void handleSchedulerTemplate(bool pool = false) {
