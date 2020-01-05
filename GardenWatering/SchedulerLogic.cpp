@@ -73,11 +73,17 @@ FuncPtr ZoneONFunctions[] = {&Zone1ON, &Zone2ON, &Zone3ON};//, &Zone4ON, &Zone5O
 FuncPtr ZoneOFFFunctions[] = {&Zone1OFF, &Zone2OFF, &Zone3OFF};//, &Zone4OFF, &Zone5OFF};
 
 // pool alarm
+bool momentary = false;
 void PoolPumpTrigger() {
   Serial.println("Pool pump trigger");
-  setDigitalOutput(POOL_PORT, LOW);  // turn ON
-  delay(1000);
-  setDigitalOutput(POOL_PORT, HIGH);  // turn OFF
+  if (momentary) {
+    setDigitalOutput(POOL_PORT, LOW);  // turn ON
+    delay(1000);
+    setDigitalOutput(POOL_PORT, HIGH);  // turn OFF
+  }
+  else {
+    setDigitalOutput(POOL_PORT, bPoolActive);
+  }
   bPoolActive = !bPoolActive;
 }
 
