@@ -6,7 +6,8 @@
 
 DS18B20Temp::DS18B20Temp(int pin, byte* _addr): ds(pin)
 {
-  memcpy(addr, _addr, sizeof(_addr));
+  //memcpy(addr, _addr, sizeof(_addr));
+  memcpy(addr, _addr, 8);
 }
 
 
@@ -30,11 +31,7 @@ void DS18B20Temp::PrintSensorValue(bool debug)
   }
 
   if(debug) {
-    Serial.print("ROM =");
-    for( i = 0; i < 8; i++) {
-      Serial.write(' ');
-      Serial.print(addr[i], HEX);
-    }
+    PrintSensorAddress();
   }
   
   if (OneWire::crc8(addr, 7) != addr[7]) {
@@ -46,15 +43,21 @@ void DS18B20Temp::PrintSensorValue(bool debug)
   // the first ROM byte indicates which chip
   switch (addr[0]) {
     case 0x10:
-      Serial.println("  Chip = DS18S20");  // or old DS1820
+      if (debug) {
+        Serial.println("  Chip = DS18S20");  // or old DS1820
+      }
       type_s = 1;
       break;
     case 0x28:
-      Serial.println("  Chip = DS18B20");
+      if (debug) {
+        Serial.println("  Chip = DS18B20");
+      }
       type_s = 0;
       break;
     case 0x22:
-      Serial.println("  Chip = DS1822");
+      if (debug) {
+        Serial.println("  Chip = DS1822");
+      }
       type_s = 0;
       break;
     default:
@@ -160,13 +163,23 @@ float DS18B20Temp::getSensorValue()
   return celsius;
 }
 
+void DS18B20Temp::PrintSensorAddress()
+{
+  Serial.print("ROM =");
+  for( byte i = 0; i < 8; i++) {
+    Serial.write(' ');
+    Serial.print(addr[i], HEX);
+  }
+  Serial.println("");
+}
 
 //**************************************************************
 //* DS18B20TempCollection Class Constructor
 
 DS18B20TempCollection::DS18B20TempCollection()
 {
-  for (int index = 0; index < NR_OF_SENSORS; index++) {
+  sensorCount = NR_OF_SENSORS;
+  for (int index = 0; index < sensorCount; index++) {
     sensors[index] = new DS18B20Temp(ONEWIRE_PIN, sensorAddresses[index]);
   }
 }
@@ -187,8 +200,8 @@ void DS18B20TempCollection::PrintSensorValue(int index, bool debug)
 
 void DS18B20TempCollection::PrintAllSensorValue(bool debug)
 {
-  for (int index = 0; index < NR_OF_SENSORS; index++) {
-    sensors[index]->PrintSensorValue(debug);
+  for (int index = 0; index < sensorCount; index++) {
+    PrintSensorValue(index, debug);
   }
 }
 
@@ -200,7 +213,7 @@ float DS18B20TempCollection::getSensorValue(int index)
 String DS18B20TempCollection::getAllSensorValue()
 {
   String JSONmsg = "{";
-  for (int index = 0; index < NR_OF_SENSORS; index++) {
+  for (int index = 0; index < sensorCount; index++) {
     if (index > 0) {
       JSONmsg += ", ";
     }

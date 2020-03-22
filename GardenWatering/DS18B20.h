@@ -20,6 +20,8 @@ class DS18B20Temp
 
     void PrintSensorValue(bool debug);
     float getSensorValue();
+
+    void PrintSensorAddress();
     
   private:
     OneWire ds;
