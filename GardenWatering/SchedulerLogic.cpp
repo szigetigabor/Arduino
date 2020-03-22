@@ -41,7 +41,9 @@ void setMomentaryDigitalOutput(int zoneID) {
 void ZoneON(int i) {
   Serial.println("Alarm: - Zone" + String(i) + " turn on");
   if (bZoneButtonMomentary) {
-    setMomentaryDigitalOutput(i);
+    if ( ActiveZone != i) {
+      setMomentaryDigitalOutput(i);
+    }
   }
   else {
     setDigitalOutput(i, LOW);  // turn ON
@@ -52,12 +54,14 @@ void ZoneON(int i) {
 void ZoneOFF(int i) {
   Serial.println("Alarm: - Zone" + String(i) + " turn off");
   if (bZoneButtonMomentary) {
-    setMomentaryDigitalOutput(i);
+    if ( ActiveZone == i) {
+      setMomentaryDigitalOutput(i);
+    }
   }
   else {
     setDigitalOutput(i, HIGH);  // turn OFF
   }
-  ActiveZone = 0;
+  ActiveZone = -1;
 }
 
 // Zone 1
@@ -168,7 +172,7 @@ SchedulerLogic::SchedulerLogic(int NTPSyncPeriod)
   startHour   = DEFAULT_START_HOUR;
   startMinute = DEFAULT_START_MINUTE;
   enabled     = true;
-  ActiveZone  = 0;
+  ActiveZone  = -1;
   poolStartHour   = DEFAULT_POOL_START_HOUR;
   poolStartMinute = DEFAULT_POOL_START_MINUTE;
   poolEnabled = true;
@@ -210,7 +214,7 @@ void SchedulerLogic::printDigits(int digits) {
 }
 
 bool SchedulerLogic::isZoneActive() {
-  return getActiveZone() != 0;
+  return getActiveZone() != -1;
 }
 
 int SchedulerLogic::getActiveZone() {
@@ -255,7 +259,7 @@ void SchedulerLogic::EnableZoneAlarms() {
 void SchedulerLogic::DisableZoneAlarms() {
   Serial.println("Zone alarms are disabled.");
   for (int i = 0; i < NR_OF_ZONES; i++) {
-    ZoneOFF(i);
+      ZoneOFF(i);
     Alarm.disable(ZoneONIds[i]);
     Alarm.disable(ZoneOFFIds[i]);
   }
@@ -384,7 +388,7 @@ void SchedulerLogic::ZoneAlarmsReset()
     ZoneONIds[i] = dtINVALID_ALARM_ID;
     ZoneOFFIds[i] = dtINVALID_ALARM_ID;
   }
-  ActiveZone = 0;
+  ActiveZone = -1;
 }
 // end of ZONE methods
 

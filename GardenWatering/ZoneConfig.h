@@ -16,7 +16,7 @@
 
 //static const int zonePortMap[NR_OF_ZONES] = {D3, D4, D0};
 
-static int ActiveZone = 0;
+static int ActiveZone = -1;
 static bool bZoneButtonMomentary = true;
 
 
