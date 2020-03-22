@@ -13,6 +13,7 @@
 #include "SchedulerLogic.h"
 //#include "SchedulerWebAdapter.h"
 #include "commonFunctions.h"
+#include "DS18B20.h"
 
 #include <Adafruit_BMP085.h>
 #include <NtpClientLib.h>
@@ -26,6 +27,8 @@ Adafruit_BMP085 bmp;
 float Temperature = 0;
 int32_t Pressure = 0;
 float Altitude = 0;
+
+DS18B20TempCollection OneWireTempCollection;
 
 //const int led = BUILTIN_LED; //13;
 
@@ -312,9 +315,9 @@ void handleSTATUS() {
   PoolText += bPoolActive ? "ON" : "OFF";
   PoolText += "    </div>";
 
-  String TempIntakeText = "24.3";
+  String TempIntakeText = String(OneWireTempCollection.getSensorValue(IN));
   TempIntakeText += "°C";
-  String TempPoolText = "122.9";
+  String TempPoolText = String(OneWireTempCollection.getSensorValue(POOL));
   TempPoolText += "°C";
   
   String HTMLMessage = "<!DOCTYPE html><html>";

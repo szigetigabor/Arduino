@@ -3,13 +3,13 @@
 #define TEMP_CONFIG_H
 
 #define NR_OF_SENSORS 3
-#define ONEWIRE_PIN D4
+#define ONEWIRE_PIN D5
 
 // define index for a sensors
-#define INTAKE 1
-#define POOL   2
-#define IN     3
-#define OUT    4
+#define INTAKE 0
+#define POOL   1
+#define IN     2
+#define OUT    3
 
 static byte addr1[8]={0x28, 0x35, 0x49, 0x79, 0x97, 0x10, 0x03, 0x65};
 static byte addr2[8]={0x28, 0xD8, 0x68, 0x79, 0x97, 0x10, 0x03, 0x33};
