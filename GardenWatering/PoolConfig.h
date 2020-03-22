@@ -15,6 +15,7 @@
 #define DEFAULT_ACTIVE_TIME_POOL 60
 
 static bool bPoolActive = false;
+static bool bPoolButtonMomentary = false;
 
 
 

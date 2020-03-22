@@ -16,28 +16,47 @@ void EveningAlarm() {
   Serial.println("Alarm: - turn lights on");
 }
 
-MCPManagement McpMan(1);
+//*********************************
+//* MCP management
+//* 
+//* It is manage a Zones and Pool
+//*
+MCPManagement McpMan(1); //TODO set to 0
 void setDigitalOutput(int zoneID, int value) {
   int index = zoneID-1;
-  if ( (0 <= index && index < DEFAULT_ACTIVE_TIME_ZONE)   // zone update
+  if ( (0 <= index && index < NR_OF_ZONES)   // zone update
         || zoneID == POOL_PORT) {   // Pool trigger
-    int pin = zonePortMap[index];
- //TODO   digitalWrite(pin, value);  // 0: ON; 1: OFF
-//  Serial.print("digitalWrite, pin: ");
-//  Serial.println(value);
     McpMan.setOutput(index, value);
   } 
 }
 
+void setMomentaryDigitalOutput(int zoneID) {
+  setDigitalOutput(zoneID, LOW);  // turn ON
+  delay(1000);
+  setDigitalOutput(zoneID, HIGH);  // turn OFF  
+}
+//*********************************
+//* Zone functions
+//*  MCP port 1-5
 void ZoneON(int i) {
   Serial.println("Alarm: - Zone" + String(i) + " turn on");
-  setDigitalOutput(i, LOW);  // turn ON
+  if (bZoneButtonMomentary) {
+    setMomentaryDigitalOutput(i);
+  }
+  else {
+    setDigitalOutput(i, LOW);  // turn ON
+  }
   ActiveZone = i;
 }
 
 void ZoneOFF(int i) {
   Serial.println("Alarm: - Zone" + String(i) + " turn off");
-  setDigitalOutput(i, HIGH);  // turn OFF
+  if (bZoneButtonMomentary) {
+    setMomentaryDigitalOutput(i);
+  }
+  else {
+    setDigitalOutput(i, HIGH);  // turn OFF
+  }
   ActiveZone = 0;
 }
 
@@ -68,18 +87,35 @@ void Zone3OFF() {
   ZoneOFF(3);
 }
 
-typedef void (*FuncPtr)(void);  //typedef 'return type' (*FuncPtr)('arguments')
-FuncPtr ZoneONFunctions[] = {&Zone1ON, &Zone2ON, &Zone3ON};//, &Zone4ON, &Zone5ON};
-FuncPtr ZoneOFFFunctions[] = {&Zone1OFF, &Zone2OFF, &Zone3OFF};//, &Zone4OFF, &Zone5OFF};
+// Zone 4
+void Zone4ON() {
+  ZoneON(4);
+}
 
-// pool alarm
-bool momentary = false;
+void Zone4OFF() {
+  ZoneOFF(4);
+}
+
+// Zone 5
+void Zone5ON() {
+  ZoneON(5);
+}
+
+void Zone5OFF() {
+  ZoneOFF(5);
+}
+
+typedef void (*FuncPtr)(void);  //typedef 'return type' (*FuncPtr)('arguments')
+FuncPtr ZoneONFunctions[] = {&Zone1ON, &Zone2ON, &Zone3ON, &Zone4ON, &Zone5ON};
+FuncPtr ZoneOFFFunctions[] = {&Zone1OFF, &Zone2OFF, &Zone3OFF, &Zone4OFF, &Zone5OFF};
+
+//*********************************
+//* Pool alarm functions
+//*
 void PoolPumpTrigger() {
   Serial.println("Pool pump trigger");
-  if (momentary) {
-    setDigitalOutput(POOL_PORT, LOW);  // turn ON
-    delay(1000);
-    setDigitalOutput(POOL_PORT, HIGH);  // turn OFF
+  if (bPoolButtonMomentary) {
+    setMomentaryDigitalOutput(POOL_PORT);
   }
   else {
     setDigitalOutput(POOL_PORT, bPoolActive);
