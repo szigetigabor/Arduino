@@ -25,6 +25,7 @@ public:
 
     void buttonPushTriggerCheck();
     bool getInput(int port);
+    bool getOutput(int port);
     void setOutput(int port, bool value);
 protected:
     void oneButtonCheck(int port);

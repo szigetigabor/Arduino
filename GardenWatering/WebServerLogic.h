@@ -14,6 +14,7 @@
 //#include "SchedulerWebAdapter.h"
 #include "commonFunctions.h"
 #include "DS18B20.h"
+#include "MCPManagement.h"
 
 #include <Adafruit_BMP085.h>
 #include <NtpClientLib.h>
@@ -22,6 +23,7 @@ SchedulerLogic scheduler;
 //SchedulerWebAdapter schedulerWebAdapter(&scheduler);
 
 ESP8266WebServer server(80);
+int32_t WifiConnectionNr = 0;
 
 Adafruit_BMP085 bmp;
 float Temperature = 0;
@@ -30,6 +32,9 @@ float Altitude = 0;
 
 DS18B20TempCollection OneWireTempCollection;
 
+
+MCPManagement momentary;
+MCPManagement buttons(1);
 //const int led = BUILTIN_LED; //13;
 
 // function prototypes for HTTP handlers
@@ -50,6 +55,10 @@ void handlePoolScheduler();
 void handlePoolUpdateStartTime();
 void handlePoolEnable();
 void handlePoolDisable();
+
+void handleMCPManual();
+void handleMCPManualButtonUpdate();
+void handleMCPManualZoneUpdate();
 
 void WifiInit(int maxRetry = WIFI_CONNECTION_RETRY_COUNT) {
   Serial.println("");
@@ -81,6 +90,7 @@ void WifiInit(int maxRetry = WIFI_CONNECTION_RETRY_COUNT) {
     Serial.println(WIFI_SSID);
     Serial.print("IP address: ");
     Serial.println(WiFi.localIP());
+    WifiConnectionNr += 1;
   }
 }
 
@@ -108,6 +118,9 @@ void webServerInit() {
   server.on("/poolscheduler_enable", handlePoolEnable);
   server.on("/poolscheduler_disable", handlePoolDisable);
 
+  server.on("/mcpmanual", handleMCPManual);
+  server.on("/mcpmanualbutton_update", HTTP_GET, handleMCPManualButtonUpdate);
+  server.on("/mcpmanualzone_update", HTTP_GET, handleMCPManualZoneUpdate);
 
   server.on("/inline", []() {
     server.send(200, "text/plain", "this works as well");
@@ -230,6 +243,8 @@ void handleNTPClient() {
   HTMLMessage += NTP.getUptimeString();
   HTMLMessage += " since ";
   HTMLMessage += NTP.getTimeDateString(NTP.getFirstSync()).c_str();
+  HTMLMessage += "<br> Wifi network connection nr: ";
+  HTMLMessage += String(WifiConnectionNr);
 
   server.send(200, "text/html", HTMLMessage);
 }
@@ -275,8 +290,28 @@ void handleTemp() {
   HTMLMessage += " Pa\n";
   HTMLMessage += "Altitude = ";
   HTMLMessage += Altitude;
-  HTMLMessage += " meters";
+  HTMLMessage += " meters\n";
 
+
+  String TempIntakeText = String(OneWireTempCollection.getSensorValue(INTAKE));
+  TempIntakeText += "°C";
+  String TempPoolText = String(OneWireTempCollection.getSensorValue(POOL));
+  TempPoolText += "°C";
+  String TempInText = String(OneWireTempCollection.getSensorValue(IN));
+  TempInText += "°C";
+  String TempOutText = String(OneWireTempCollection.getSensorValue(OUT));
+  TempOutText += "°C";
+
+  HTMLMessage += "\n Intake Temperature = ";
+  HTMLMessage += TempIntakeText;
+  HTMLMessage += "\n Pool Temperature = ";
+  HTMLMessage += TempPoolText;
+  HTMLMessage += "\n In Temperature = ";
+  HTMLMessage += TempInText;
+  HTMLMessage += "\n Out Temperature = ";
+  HTMLMessage += TempOutText;
+
+  
   server.send(200, "text/plain", HTMLMessage);
   //delay(500);
   ledOFF();
@@ -451,6 +486,141 @@ void handlePoolDisable() {
   scheduler.DisablePoolAlarms();
   server.sendHeader("Location","/poolscheduler");
   server.send(303);
+}
+
+
+/*
+ *  MCP manual update
+ */
+
+void handleMCPManualUpdate(MCPManagement& MCP) {
+  for (uint8_t i = 0; i < server.args(); i++) {
+    int port = server.argName(i).toInt();
+    int value = server.arg(i).toInt();
+    MCP.setOutput(port, value);
+    break;
+  }
+  server.sendHeader("Location","/mcpmanual");
+  server.send(303);
+}
+
+void handleMCPManualButtonUpdate() {
+  handleMCPManualUpdate(buttons);
+}
+
+
+void handleMCPManualMomentaryUpdate(MCPManagement& MCP) {
+  for (uint8_t i = 0; i < server.args(); i++) {
+    int port = server.argName(i).toInt();
+    int value = server.arg(i).toInt();
+    MCP.setOutput(port, 0);
+    delay(1000);
+    MCP.setOutput(port, 1);
+    break;
+  }
+  server.sendHeader("Location","/mcpmanual");
+  server.send(303);
+}
+
+void handleMCPManualZoneUpdate() {
+  handleMCPManualMomentaryUpdate(momentary);
+}
+
+String generateTable(MCPManagement& MCP, String action, String title) {
+  String HTMLMessage = "<div class=\"center\">\n";
+  HTMLMessage += "  <p><b>"+title+"</b></p>\n";
+  HTMLMessage += "  <table>\n";
+  HTMLMessage += "    <tr>\n";
+  HTMLMessage += "      <th>Port</th>\n";
+  HTMLMessage += "      <th>Status</th>\n";
+  HTMLMessage += "    </tr>\n";
+  for( int i=0; i<NR_OF_PORTS; i++) {
+    HTMLMessage += "    <tr>\n";
+    HTMLMessage += "      <th>" + String(i+1) + "</th>\n";
+    HTMLMessage += "      <th>\n";
+    HTMLMessage += "          <form method=\"get\" action=\"/"+action+"\">";
+    String value = "1";
+    String type = "ON";
+    if ( MCP.getOutput(i)) {
+      value = "0";
+      type = "OFF";
+    }
+    HTMLMessage += "           <button type=\"submit\" name=\""+ String(i)+"\" value=\""+value+"\" class=\"button button"+type+"\"> </button>";
+    HTMLMessage += "         </form>\n";
+    HTMLMessage += "     </th>\n";
+    HTMLMessage += "    </tr>\n";     
+  }
+  HTMLMessage += "  </table>\n";
+  HTMLMessage += "</div>\n";
+
+  return HTMLMessage;
+}
+void handleMCPManual() {
+  String HTMLMessage = "<!DOCTYPE html><html>";
+  HTMLMessage += "<head><meta charset=\"UTF-8\">";
+  HTMLMessage += "<style>";
+  HTMLMessage += "   .center {";
+  HTMLMessage += "     margin: auto;";
+  HTMLMessage += "     width: 60%;";
+  HTMLMessage += "     border: 3px solid #73AD21;";
+  HTMLMessage += "     padding: 10px;";
+  HTMLMessage += "     text-align: center;";
+  HTMLMessage += "   }";
+  /*HTMLMessage += "   table, th, td {";
+  HTMLMessage += "     border: 1px solid black;";
+  HTMLMessage += "   }";*/
+
+
+  HTMLMessage += "   table {";
+  HTMLMessage += "     border-collapse: collapse;";
+  HTMLMessage += "     width: 100%;";
+  HTMLMessage += "   }";
+  
+  HTMLMessage += "   th, td {";
+  HTMLMessage += "     text-align: center;";
+  HTMLMessage += "     padding: 8px;";
+  HTMLMessage += "   }";
+
+  HTMLMessage += "   .button {";
+  HTMLMessage += "     background-color: #4CAF50; /* Green */";
+  HTMLMessage += "     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);";
+  HTMLMessage += "     border: none;";
+  HTMLMessage += "     color: white;";
+  HTMLMessage += "     padding: 16px 32px;";
+  HTMLMessage += "     text-align: center;";
+  HTMLMessage += "     text-decoration: none;";
+  HTMLMessage += "     display: inline-block;";
+  HTMLMessage += "     font-size: 16px;";
+  HTMLMessage += "     margin: 4px 2px;";
+  HTMLMessage += "     transition-duration: 0.4s;";
+  HTMLMessage += "     cursor: pointer;";
+  HTMLMessage += "   }";
+
+  HTMLMessage += "   .buttonOFF:hover {";
+  HTMLMessage += "     background-color: #e7e7e7;";
+  HTMLMessage += "   }";
+
+  HTMLMessage += "   .buttonOFF {";
+  HTMLMessage += "     background-color: white; ";
+  HTMLMessage += "     color: black;";
+  HTMLMessage += "     border: 2px solid #4CAF50;";
+  HTMLMessage += "   }";
+
+  HTMLMessage += "   .buttonON {";
+  HTMLMessage += "     background-color: #4CAF50;";
+  HTMLMessage += "     color: white;";
+  HTMLMessage += "   }";
+
+  HTMLMessage += "   tr:nth-child(even) {background-color: #f2f2f2;}";
+  HTMLMessage += "</style></head>";
+
+  HTMLMessage += "<body>";
+  HTMLMessage += generateTable(buttons, "mcpmanualbutton_update", "MCP manual Buttons managenment!");
+  HTMLMessage += "  <p>";
+  //HTMLMessage += generateTable(momentary, "mcpmanualzone_update", "MCP manual Zones managenment!");
+  HTMLMessage += "</body></html>";
+
+  server.send(200, "text/html", HTMLMessage);
 }
 
 #endif //WEB_SERVER_LOGIC_H

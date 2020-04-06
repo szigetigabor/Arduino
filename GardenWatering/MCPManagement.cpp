@@ -42,6 +42,14 @@ void MCPManagement::setOutput(int port, bool value) {
   zoneOutput[port]=value;
 }
 
+bool MCPManagement::getOutput(int port) {
+  if ( port < 0 || port >=NR_OF_PORTS) {
+    Serial.println("Wrong port nr is given. Valid values: 0-7");
+    return false;
+  }
+  return zoneOutput[port];
+}
+
 void MCPManagement::oneButtonCheck(int port) {
   if ( port < 0 || port >=NR_OF_PORTS) {
     Serial.println("Wrong port nr is given.");
