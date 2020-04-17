@@ -10,14 +10,14 @@
 // Time duration in minutes for each zone
 #define DEFAULT_ACTIVE_TIME_ZONE 3
 
-#define ACTIVE_TIME_ZONE1 1
-#define ACTIVE_TIME_ZONE2 2
-#define ACTIVE_TIME_ZONE3 30
+#define ACTIVE_TIME_ZONE1 5
+#define ACTIVE_TIME_ZONE2 10
+#define ACTIVE_TIME_ZONE3 4
 
 //static const int zonePortMap[NR_OF_ZONES] = {D3, D4, D0};
 
 static int ActiveZone = -1;
-static bool bZoneButtonMomentary = true;
+static bool bZoneButtonMomentary = false;
 
 
 

@@ -50,6 +50,28 @@ bool MCPManagement::getOutput(int port) {
   return zoneOutput[port];
 }
 
+String MCPManagement::getIdentifier(int port) {
+  if ( port < 0 || port >=NR_OF_PORTS) {
+    Serial.println("Wrong port nr is given. Valid values: 0-7");
+    return String("");
+  }
+  return identifier[port];
+}
+
+void MCPManagement::setIdentifier(int port, String value) {
+  if ( port < 0 || port >=NR_OF_PORTS) {
+    Serial.println("Wrong port nr is given. Valid values: 0-7");
+    return;
+  }
+  identifier[port]=value;
+}
+
+void MCPManagement::setIdentifier(String value[NR_OF_PORTS]) {
+  for(int i=0; i<NR_OF_PORTS; i++) {
+    identifier[i]=value[i];
+  } 
+}
+
 void MCPManagement::oneButtonCheck(int port) {
   if ( port < 0 || port >=NR_OF_PORTS) {
     Serial.println("Wrong port nr is given.");
@@ -60,14 +82,44 @@ void MCPManagement::oneButtonCheck(int port) {
 
   if (zoneInput[port] != currentState) {
      zoneInput[port] = currentState;  // store the current state
-     Serial.print(mI2CAddr);
-     Serial.print(". MCP device: ");
-     Serial.print(port+1);
-     Serial.print(". Input button state changed: ");
-     Serial.println(zoneInput[port] ? "RELEASED" : "PUSHED");
+     printDebugMessage(port, true);
      if ( !currentState ) {
        // button is pushed
        setOutput(port, !zoneOutput[port]);
     }
+  }
+}
+
+void MCPManagement::printDebugMessage(int port, bool isInput, String ExtraText) {
+  Serial.print(mI2CAddr);
+  Serial.print(". MCP ");
+  Serial.print(ExtraText);
+  Serial.print(" device: ");
+  Serial.print(port+1);
+  Serial.print(". Input button state changed: ");
+  if (isInput){
+    Serial.println(zoneInput[port] ? "RELEASED" : "PUSHED");  
+  } else {
+    Serial.println(zoneOutput[port] ? "RELEASED" : "PUSHED");  
+  }
+}
+
+/*
+ * class MCPMomentaryManagement methods
+ */
+MCPMomentaryManagement::MCPMomentaryManagement(int I2CAddr) : MCPManagement(I2CAddr) { }
+
+void MCPMomentaryManagement::setOutput(int port, bool value) {
+  if ( port < 0 || port >=NR_OF_PORTS) {
+    Serial.println("Wrong port nr is given. Valid values: 0-7");
+    return;
+  }
+  if ( zoneOutput[port] != value ) {
+    mcp.digitalWrite(port+NR_OF_PORTS, LOW);  // turn ON
+    delay(1000);
+    mcp.digitalWrite(port+NR_OF_PORTS, HIGH);  // turn OFF
+    zoneOutput[port]=value;
+
+    printDebugMessage(port, false, "Momentary");
   }
 }

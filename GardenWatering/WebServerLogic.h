@@ -15,6 +15,7 @@
 #include "commonFunctions.h"
 #include "DS18B20.h"
 #include "MCPManagement.h"
+#include "MCPConfig.h"
 
 #include <Adafruit_BMP085.h>
 #include <NtpClientLib.h>
@@ -32,9 +33,12 @@ float Altitude = 0;
 
 DS18B20TempCollection OneWireTempCollection;
 
+extern MCPMomentaryManagement momentary;
+extern MCPManagement buttons;
 
-MCPManagement momentary;
-MCPManagement buttons(1);
+extern String momentaryLabels[NR_OF_PORTS] = { "1. zóna", "2. zóna", "3. zóna", "4. zóna", "5. zóna", "Zuhany", "", "Medence világítás" };
+
+
 //const int led = BUILTIN_LED; //13;
 
 // function prototypes for HTTP handlers
@@ -45,6 +49,7 @@ void handleON();
 void handleNTPClient();
 void handleTemp();
 void printDB();
+void handleBATTERY();
 void handleSIGNAL();
 void handleSTATUS();
 void handleScheduler();
@@ -105,7 +110,7 @@ void webServerInit() {
   server.on("/off", handleOFF);
   //server.on("/ntp", handleNTP);
   server.on("/ntpclient", handleNTPClient);
-  
+  server.on("/battery", handleBATTERY);
   server.on("/signal", handleSIGNAL);
   server.on("/status", handleSTATUS);
   server.on("/scheduler", HTTP_GET, handleScheduler);
@@ -121,6 +126,7 @@ void webServerInit() {
   server.on("/mcpmanual", handleMCPManual);
   server.on("/mcpmanualbutton_update", HTTP_GET, handleMCPManualButtonUpdate);
   server.on("/mcpmanualzone_update", HTTP_GET, handleMCPManualZoneUpdate);
+  momentary.setIdentifier(momentaryLabels);
 
   server.on("/inline", []() {
     server.send(200, "text/plain", "this works as well");
@@ -157,6 +163,7 @@ void handleRoot() {
   String HTMLMessage = "hello from esp8266!\n";
   HTMLMessage += generateButton("Temperature", "/temp");
   HTMLMessage += generateButton("NTP", "/ntpclient");
+  HTMLMessage += generateButton("Battery level", "/battery");
   HTMLMessage += generateButton("Wifi signal level", "/signal");
   HTMLMessage += generateButton("Zone Scheduling", "/scheduler");
   HTMLMessage += generateButton("Pool Scheduling", "/poolscheduler");
@@ -325,6 +332,15 @@ void printDB() {
     //serviceAlarms();
     yield();
   } while (millis() - start  <= 1000 /*ms*/);
+}
+
+void handleBATTERY() {
+  String HTMLMessage = "Battery level!\n";
+  HTMLMessage += "\nlevel = ";
+  HTMLMessage += getBatteryVoltage();
+  HTMLMessage += " V\n";
+
+  server.send(200, "text/plain", HTMLMessage);
 }
 
 void handleSIGNAL() {
@@ -509,13 +525,11 @@ void handleMCPManualButtonUpdate() {
 }
 
 
-void handleMCPManualMomentaryUpdate(MCPManagement& MCP) {
+void handleMCPManualMomentaryUpdate(MCPMomentaryManagement& MCP) {
   for (uint8_t i = 0; i < server.args(); i++) {
     int port = server.argName(i).toInt();
     int value = server.arg(i).toInt();
-    MCP.setOutput(port, 0);
-    delay(1000);
-    MCP.setOutput(port, 1);
+    MCP.setOutput(port, value);
     break;
   }
   server.sendHeader("Location","/mcpmanual");
@@ -526,7 +540,7 @@ void handleMCPManualZoneUpdate() {
   handleMCPManualMomentaryUpdate(momentary);
 }
 
-String generateTable(MCPManagement& MCP, String action, String title) {
+String generateTable(MCPMomentaryManagement& MCP, String action, String title) {
   String HTMLMessage = "<div class=\"center\">\n";
   HTMLMessage += "  <p><b>"+title+"</b></p>\n";
   HTMLMessage += "  <table>\n";
@@ -535,8 +549,13 @@ String generateTable(MCPManagement& MCP, String action, String title) {
   HTMLMessage += "      <th>Status</th>\n";
   HTMLMessage += "    </tr>\n";
   for( int i=0; i<NR_OF_PORTS; i++) {
+    String label = MCP.getIdentifier(i);
+    if (label == "") {
+      label = String(i+1);
+    }
+    
     HTMLMessage += "    <tr>\n";
-    HTMLMessage += "      <th>" + String(i+1) + "</th>\n";
+    HTMLMessage += "      <th>" + label + "</th>\n";
     HTMLMessage += "      <th>\n";
     HTMLMessage += "          <form method=\"get\" action=\"/"+action+"\">";
     String value = "1";
@@ -615,9 +634,9 @@ void handleMCPManual() {
   HTMLMessage += "</style></head>";
 
   HTMLMessage += "<body>";
-  HTMLMessage += generateTable(buttons, "mcpmanualbutton_update", "MCP manual Buttons managenment!");
+  //HTMLMessage += generateTable(buttons, "mcpmanualbutton_update", "MCP manual Buttons managenment!");
   HTMLMessage += "  <p>";
-  //HTMLMessage += generateTable(momentary, "mcpmanualzone_update", "MCP manual Zones managenment!");
+  HTMLMessage += generateTable(momentary, "mcpmanualzone_update", "MCP manual Zones managenment!");
   HTMLMessage += "</body></html>";
 
   server.send(200, "text/html", HTMLMessage);

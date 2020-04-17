@@ -27,13 +27,31 @@ public:
     bool getInput(int port);
     bool getOutput(int port);
     void setOutput(int port, bool value);
+
+    String getIdentifier(int port);
+    void setIdentifier(int port, String value);
+    void setIdentifier(String value[NR_OF_PORTS]);
+ 
 protected:
     void oneButtonCheck(int port);
-private:
+    void printDebugMessage(int port, bool isInput, String ExtraText="");
+//private:
     Adafruit_MCP23017 mcp;
     int  mI2CAddr;
     bool zoneInput[NR_OF_PORTS];
     bool zoneOutput[NR_OF_PORTS];
+
+    String identifier[NR_OF_PORTS];
+};
+
+class MCPMomentaryManagement: public MCPManagement  {
+public:
+    /**
+    * Construct MCP management.
+    */
+    MCPMomentaryManagement(int I2CAddr=0);   //I2C address is between 0 and 7
+
+    void setOutput(int port, bool value);
 };
 
 #endif // _McpManagement_h
