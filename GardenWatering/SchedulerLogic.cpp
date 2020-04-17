@@ -1,6 +1,7 @@
 #include "SchedulerLogic.h"
 #include <time.h>       /* time_t, struct tm, time, localtime */
 #include "MCPManagement.h"
+#include "MCPConfig.h"
 
 
 //**************************************************************
@@ -19,14 +20,16 @@ void EveningAlarm() {
 //*********************************
 //* MCP management
 //* 
-//* It is manage a Zones and Pool
+//* It manages all Zones and Pool
 //*
-MCPManagement McpMan(1); //TODO set to 0
+//extern MCPManagement buttons;
+extern MCPMomentaryManagement momentary;
+
 void setDigitalOutput(int zoneID, int value) {
   int index = zoneID-1;
   if ( (0 <= index && index < NR_OF_ZONES)   // zone update
         || zoneID == POOL_PORT) {   // Pool trigger
-    McpMan.setOutput(index, value);
+    momentary.setOutput(index, value);
   } 
 }
 
@@ -35,9 +38,11 @@ void setMomentaryDigitalOutput(int zoneID) {
   delay(1000);
   setDigitalOutput(zoneID, HIGH);  // turn OFF  
 }
+
 //*********************************
 //* Zone functions
 //*  MCP port 1-5
+//*
 void ZoneON(int i) {
   Serial.println("Alarm: - Zone" + String(i) + " turn on");
   if (bZoneButtonMomentary) {
@@ -49,6 +54,7 @@ void ZoneON(int i) {
     setDigitalOutput(i, LOW);  // turn ON
   }
   ActiveZone = i;
+  delay(500);
 }
 
 void ZoneOFF(int i) {
@@ -62,6 +68,7 @@ void ZoneOFF(int i) {
     setDigitalOutput(i, HIGH);  // turn OFF
   }
   ActiveZone = -1;
+  delay(500);
 }
 
 // Zone 1
@@ -452,7 +459,7 @@ void SchedulerLogic::PoolAlarmsReset()
 void SchedulerLogic::NTP_Init()
 {
   Serial.println("NTP Client initialization...");
-  NTP.begin (NTP_SERVER_NAME, TIMEZONE, false, MINUTES_TIMEZONE);
+  NTP.begin (NTP_SERVER_NAME, TIMEZONE, NTP_DAYLIGHT_SAVING, MINUTES_TIMEZONE);
   NTP.setInterval (syncPeriod);   // sync period in seconds
 }
 
