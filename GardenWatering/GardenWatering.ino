@@ -1,10 +1,6 @@
 #include "commonFunctions.h"
 #include "WebServerLogic.h"
-//#include "SchedulerLogic.h"
-#include "MCPManagement.h"
 
-//SchedulerLogic scheduler;
-MCPManagement* buttons;
 
 void setup(void) {
   pinMode(led, OUTPUT);
@@ -22,19 +18,13 @@ void setup(void) {
   ledOFF();
 
   scheduler.init();
-
-  buttons = new MCPManagement();
-
+  initBatteryChecking();
 }
 
 void loop(void) {
   WifiConnectionCheck();
   server.handleClient();
   scheduler.execute();
-  //printDB();
-//  Serial.println(schedulerWebAdapter.getStartTime());
 
-
-
-  buttons->buttonPushTriggerCheck();
+  buttons.buttonPushTriggerCheck();
 }
