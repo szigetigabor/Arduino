@@ -2,6 +2,9 @@
 #ifndef COMMON_FUNCTIONS_H
 #define COMMON_FUNCTIONS_H
 
+/*
+ * LED methods
+ */
 const int led = BUILTIN_LED; //13;
 
 void ledOFF(){
@@ -14,6 +17,10 @@ void ledON(){
   Serial.println("Led turn On.");
 }
 
+
+/*
+ * Battery management functions
+ */
 #define BATTERY_PORT A0
 
 void initBatteryChecking() {
