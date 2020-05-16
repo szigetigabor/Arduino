@@ -11,8 +11,6 @@
 
 #include "WifiConfig.h"
 #include "SchedulerLogic.h"
-//#include "SchedulerWebAdapter.h"
-#include "commonFunctions.h"
 #include "DS18B20.h"
 #include "MCPManagement.h"
 #include "MCPConfig.h"
@@ -33,10 +31,11 @@ float Altitude = 0;
 
 DS18B20TempCollection OneWireTempCollection;
 
-extern MCPMomentaryManagement momentary;
-extern MCPManagement buttons;
+extern MCPMomentaryManagement* momentary = getMomentaryButtonPtr();
+extern MCPManagement* buttons = getButtonPtr();
 
-extern String momentaryLabels[NR_OF_PORTS] = { "1. zóna", "2. zóna", "3. zóna", "4. zóna", "5. zóna", "Zuhany", "", "Medence világítás" };
+extern String momentaryLabels[NR_OF_PORTS] = { "1. zóna", "2. zóna", "3. zóna", "4. zóna", "5. zóna", "Zuhany", "Medence világítás", "Keringtetés" };
+extern String buttonLabels[NR_OF_PORTS] = { "", "", "", "", "", "", "", "Töltés" };
 
 
 //const int led = BUILTIN_LED; //13;
@@ -126,7 +125,8 @@ void webServerInit() {
   server.on("/mcpmanual", handleMCPManual);
   server.on("/mcpmanualbutton_update", HTTP_GET, handleMCPManualButtonUpdate);
   server.on("/mcpmanualzone_update", HTTP_GET, handleMCPManualZoneUpdate);
-  momentary.setIdentifier(momentaryLabels);
+  momentary->setIdentifier(momentaryLabels);
+  buttons->setIdentifier(buttonLabels);
 
   server.on("/inline", []() {
     server.send(200, "text/plain", "this works as well");
@@ -145,7 +145,7 @@ void WifiConnectionCheck() {
 }
 
 ///////////////////////////////////
-//     http handler funstions    //
+//     http handler functions    //
 ///////////////////////////////////
 String generateButton(String text, String link) {
   String message;
@@ -366,7 +366,7 @@ void handleSTATUS() {
   PoolText += bPoolActive ? "ON" : "OFF";
   PoolText += "    </div>";
 
-  String TempIntakeText = String(OneWireTempCollection.getSensorValue(IN));
+  String TempIntakeText = String(OneWireTempCollection.getSensorValue(INTAKE));
   TempIntakeText += "°C";
   String TempPoolText = String(OneWireTempCollection.getSensorValue(POOL));
   TempPoolText += "°C";
@@ -509,11 +509,11 @@ void handlePoolDisable() {
  *  MCP manual update
  */
 
-void handleMCPManualUpdate(MCPManagement& MCP) {
+void handleMCPManualUpdate(MCPManagement* MCP) {
   for (uint8_t i = 0; i < server.args(); i++) {
     int port = server.argName(i).toInt();
     int value = server.arg(i).toInt();
-    MCP.setOutput(port, value);
+    MCP->setOutput(port, value);
     break;
   }
   server.sendHeader("Location","/mcpmanual");
@@ -525,11 +525,11 @@ void handleMCPManualButtonUpdate() {
 }
 
 
-void handleMCPManualMomentaryUpdate(MCPMomentaryManagement& MCP) {
+void handleMCPManualMomentaryUpdate(MCPMomentaryManagement* MCP) {
   for (uint8_t i = 0; i < server.args(); i++) {
     int port = server.argName(i).toInt();
     int value = server.arg(i).toInt();
-    MCP.setOutput(port, value);
+    MCP->setOutput(port, value);
     break;
   }
   server.sendHeader("Location","/mcpmanual");
@@ -540,7 +540,7 @@ void handleMCPManualZoneUpdate() {
   handleMCPManualMomentaryUpdate(momentary);
 }
 
-String generateTable(MCPMomentaryManagement& MCP, String action, String title) {
+String generateTable(MCPManagement* MCP, String action, String title) {
   String HTMLMessage = "<div class=\"center\">\n";
   HTMLMessage += "  <p><b>"+title+"</b></p>\n";
   HTMLMessage += "  <table>\n";
@@ -549,7 +549,7 @@ String generateTable(MCPMomentaryManagement& MCP, String action, String title) {
   HTMLMessage += "      <th>Status</th>\n";
   HTMLMessage += "    </tr>\n";
   for( int i=0; i<NR_OF_PORTS; i++) {
-    String label = MCP.getIdentifier(i);
+    String label = MCP->getIdentifier(i);
     if (label == "") {
       label = String(i+1);
     }
@@ -560,7 +560,7 @@ String generateTable(MCPMomentaryManagement& MCP, String action, String title) {
     HTMLMessage += "          <form method=\"get\" action=\"/"+action+"\">";
     String value = "1";
     String type = "ON";
-    if ( MCP.getOutput(i)) {
+    if ( MCP->getOutput(i)) {
       value = "0";
       type = "OFF";
     }
@@ -634,9 +634,9 @@ void handleMCPManual() {
   HTMLMessage += "</style></head>";
 
   HTMLMessage += "<body>";
-  //HTMLMessage += generateTable(buttons, "mcpmanualbutton_update", "MCP manual Buttons managenment!");
-  HTMLMessage += "  <p>";
   HTMLMessage += generateTable(momentary, "mcpmanualzone_update", "MCP manual Zones managenment!");
+  HTMLMessage += "  <p>";
+  HTMLMessage += generateTable(buttons, "mcpmanualbutton_update", "MCP manual Buttons managenment!");
   HTMLMessage += "</body></html>";
 
   server.send(200, "text/html", HTMLMessage);

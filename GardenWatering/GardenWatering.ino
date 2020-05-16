@@ -1,7 +1,6 @@
 #include "commonFunctions.h"
 #include "WebServerLogic.h"
 
-
 void setup(void) {
   pinMode(led, OUTPUT);
   ledON();
@@ -26,5 +25,6 @@ void loop(void) {
   server.handleClient();
   scheduler.execute();
 
-  buttons.buttonPushTriggerCheck();
+  getButtonPtr()->buttonPushTriggerCheck();
+  getMomentaryButtonPtr()->buttonPushTriggerCheck();
 }
