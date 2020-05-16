@@ -7,7 +7,4 @@
 
 #define WIFI_CONNECTION_RETRY_COUNT 10
 
-#define WIFI_SSID "bigdurancifent"
-#define WIFI_PASSWD "bigduranci"
-
 #endif //WIFI_CONFIG_H
