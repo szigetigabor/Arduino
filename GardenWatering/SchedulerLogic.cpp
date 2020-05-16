@@ -23,13 +23,14 @@ void EveningAlarm() {
 //* It manages all Zones and Pool
 //*
 //extern MCPManagement buttons;
-extern MCPMomentaryManagement momentary;
-
+//extern MCPMomentaryManagement momentary;
+//MCPManagement* MCP = &momentary;
+MCPMomentaryManagement* MCP = getMomentaryButtonPtr();
 void setDigitalOutput(int zoneID, int value) {
   int index = zoneID-1;
   if ( (0 <= index && index < NR_OF_ZONES)   // zone update
         || zoneID == POOL_PORT) {   // Pool trigger
-    momentary.setOutput(index, value);
+    MCP->setOutput(index, value);
   } 
 }
 
@@ -134,6 +135,33 @@ void PoolPumpTrigger() {
   bPoolActive = !bPoolActive;
 }
 
+//*********************************
+//* Battery functions
+//*
+#define BATTERY_CHARGING_PORT 7
+#define BATTERY_MIN_V  3.8
+#define BATTERY_MAX_V  4.05
+
+float getBatteryVoltage();
+
+void BatteryChargeCheck() {
+  Serial.println("Battery Charging Check...");
+  float currentVoltage = getBatteryVoltage();
+  Serial.print("  Current voltage: ");
+  Serial.print(currentVoltage);
+  Serial.println(" V.");
+  if ( currentVoltage > BATTERY_MAX_V ) {
+    // Battery Full, charging OFF
+    getButtonPtr()->setOutput(BATTERY_CHARGING_PORT, true);
+    Serial.println("   Charging OFF.");
+  }
+  if ( currentVoltage < BATTERY_MIN_V ) {
+    // Battery Empty, charging ON
+
+    getButtonPtr()->setOutput(BATTERY_CHARGING_PORT, false);
+    Serial.println("   Charging ON.");
+  }
+}
 
 // example alarms
 void WeeklyAlarm() {
@@ -327,6 +355,10 @@ void SchedulerLogic::DisablePoolAlarms() {
 void SchedulerLogic::AlarmsInit()
 {
   Serial.println("Alarms initialization...");
+
+
+  // Battery chargeing check
+  Alarm.timerRepeat(300, BatteryChargeCheck);           // timer for every 5 minutes
 
   // create the alarms, to trigger at specific times
   ZoneAlarmsInit();
