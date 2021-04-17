@@ -54,7 +54,7 @@ private:
   int syncPeriod;   // NTP syncronization period in seconds
 
   int getZoneDuration(int i);
-  bool enabled;
+  bool zonesEnabled;
   int startHour;
   int startMinute;
   AlarmId ZoneONIds[NR_OF_ZONES];

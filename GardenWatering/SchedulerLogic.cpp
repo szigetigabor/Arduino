@@ -206,7 +206,7 @@ SchedulerLogic::SchedulerLogic(int NTPSyncPeriod)
   syncPeriod  = NTPSyncPeriod;
   startHour   = DEFAULT_START_HOUR;
   startMinute = DEFAULT_START_MINUTE;
-  enabled     = true;
+  zonesEnabled= true;
   ActiveZone  = -1;
   poolStartHour   = DEFAULT_POOL_START_HOUR;
   poolStartMinute = DEFAULT_POOL_START_MINUTE;
@@ -279,7 +279,7 @@ void SchedulerLogic::setStartMinute(int minute) {
 }
 
 bool SchedulerLogic::isAlarmsEnabled() {
-  return enabled;
+  return zonesEnabled;
 }
 
 void SchedulerLogic::EnableZoneAlarms() {
@@ -288,7 +288,7 @@ void SchedulerLogic::EnableZoneAlarms() {
     Alarm.enable(ZoneONIds[i]);
     Alarm.enable(ZoneOFFIds[i]);
   }
-  enabled = true;
+  zonesEnabled = true;
 }
 
 void SchedulerLogic::DisableZoneAlarms() {
@@ -298,7 +298,7 @@ void SchedulerLogic::DisableZoneAlarms() {
     Alarm.disable(ZoneONIds[i]);
     Alarm.disable(ZoneOFFIds[i]);
   }
-  enabled = false;
+  zonesEnabled = false;
 }
 
 bool SchedulerLogic::isPoolActive() {
