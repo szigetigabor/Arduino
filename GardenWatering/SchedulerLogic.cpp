@@ -149,9 +149,6 @@ void PoolPumpTrigger() {
 //*********************************
 //* Battery functions
 //*
-#define BATTERY_CHARGING_PORT 7
-#define BATTERY_MIN_V  3.5
-#define BATTERY_MAX_V  3.95
 
 float getBatteryVoltage();
 

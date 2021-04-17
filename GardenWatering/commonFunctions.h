@@ -23,6 +23,12 @@ static void ledON(){
  */
 #define BATTERY_PORT A0
 
+#define BATTERY_CHARGING_PORT 7
+#define BATTERY_MIN_V  3.5
+#define BATTERY_MAX_V  3.95
+#define BATTERY_WARNING_LEVEL 25
+#define BATTERY_ALERT_LEVEL   10
+
 static void initBatteryChecking() {
   pinMode(BATTERY_PORT, INPUT);
 }
