@@ -402,7 +402,7 @@ void SchedulerLogic::ZoneAlarmsInit()
     minute = (alarm / 60) % 60;
 
     // create the alarms, to trigger at specific times
-    AlarmId id = Alarm.alarmRepeat(hour, minute, 1, ZoneONFunctions[i]);
+    AlarmId id = Alarm.alarmRepeat(hour, minute, DEFAULT_START_SECOND, ZoneONFunctions[i]);
     ZoneONIds[i] = id;
 
     int duration = getZoneDuration(i);
@@ -410,7 +410,7 @@ void SchedulerLogic::ZoneAlarmsInit()
     hour = (alarm / 3600) % 24;
     minute = (alarm / 60) % 60;
     //id = Alarm.alarmRepeat(hour, minute, 0, Zone1OFF);
-    id = Alarm.alarmRepeat(hour, minute, 0, ZoneOFFFunctions[i]);
+    id = Alarm.alarmRepeat(hour, minute, DEFAULT_START_SECOND + END_SHIFTING_TIME, ZoneOFFFunctions[i]);
     
     ZoneOFFIds[i] = id;
   }

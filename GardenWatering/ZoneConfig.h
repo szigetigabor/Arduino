@@ -6,6 +6,9 @@
 
 #define DEFAULT_START_HOUR   1
 #define DEFAULT_START_MINUTE 0
+#define DEFAULT_START_SECOND 1
+
+#define END_SHIFTING_TIME 2
 
 // Time duration in minutes for each zone
 #define DEFAULT_ACTIVE_TIME_ZONE 3
