@@ -383,6 +383,9 @@ void handleSTATUS() {
   HTMLMessage += "</style></head>";
   HTMLMessage += "<body>";
   HTMLMessage += "System status!\n<p>";
+  HTMLMessage += "Zone enabled by RainSensor = ";
+  HTMLMessage += scheduler.isZonesEnabledFromRainSensor() ? "YES" : "NO";
+  HTMLMessage += "\n<p>";
   HTMLMessage += "Zone = ";
   HTMLMessage += scheduler.isZoneActive() ? "ON" : "OFF";
   if (scheduler.isZoneActive()) {

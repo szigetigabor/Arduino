@@ -2,6 +2,7 @@
 #include <time.h>       /* time_t, struct tm, time, localtime */
 #include "MCPManagement.h"
 #include "MCPConfig.h"
+#include "commonFunctions.h"
 
 
 //**************************************************************
@@ -44,36 +45,46 @@ void setMomentaryDigitalOutput(int zoneID) {
 //* Zone functions
 //*  MCP port 1-5
 //*
+bool needToUseZones;
 void ZoneON(int i) {
-  Serial.println("Alarm: - Zone" + String(i) + " turn on");
-  if (bZoneButtonMomentary) {
-    if ( ActiveZone != i) {
-      setMomentaryDigitalOutput(i);
+  if(needToUseZones) {
+    Serial.println("Alarm: - Zone" + String(i) + " turn on");
+    if (bZoneButtonMomentary) {
+      if ( ActiveZone != i) {
+        setMomentaryDigitalOutput(i);
+      }
     }
+    else {
+      setDigitalOutput(i, LOW);  // turn ON
+    }
+    ActiveZone = i;
+    delay(500);
+  } else {
+    Serial.println("Alarm: - Zone" + String(i) + " turn on is disabled by RainSensor");
   }
-  else {
-    setDigitalOutput(i, LOW);  // turn ON
-  }
-  ActiveZone = i;
-  delay(500);
 }
 
 void ZoneOFF(int i) {
-  Serial.println("Alarm: - Zone" + String(i) + " turn off");
-  if (bZoneButtonMomentary) {
-    if ( ActiveZone == i) {
-      setMomentaryDigitalOutput(i);
+  if(needToUseZones) {
+    Serial.println("Alarm: - Zone" + String(i) + " turn off");
+    if (bZoneButtonMomentary) {
+      if ( ActiveZone == i) {
+        setMomentaryDigitalOutput(i);
+      }
     }
+    else {
+      setDigitalOutput(i, HIGH);  // turn OFF
+    }
+    ActiveZone = -1;
+    delay(500);
+  } else {
+    Serial.println("Alarm: - Zone" + String(i) + " turn off is disabled by RainSensor");
   }
-  else {
-    setDigitalOutput(i, HIGH);  // turn OFF
-  }
-  ActiveZone = -1;
-  delay(500);
 }
 
 // Zone 1
 void Zone1ON() {
+  needToUseZones = SchedulerLogic::isZonesEnabledFromRainSensor();
   ZoneON(1);
 }
 
@@ -140,7 +151,7 @@ void PoolPumpTrigger() {
 //*
 #define BATTERY_CHARGING_PORT 7
 #define BATTERY_MIN_V  3.5
-#define BATTERY_MAX_V  4.05
+#define BATTERY_MAX_V  3.95
 
 float getBatteryVoltage();
 
@@ -246,6 +257,10 @@ void SchedulerLogic::printDigits(int digits) {
   if (digits < 10)
     Serial.print('0');
   Serial.print(digits);
+}
+
+bool SchedulerLogic::isZonesEnabledFromRainSensor() {
+  return enableZonesFromSensor();  
 }
 
 bool SchedulerLogic::isZoneActive() {

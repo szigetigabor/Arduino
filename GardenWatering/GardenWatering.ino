@@ -2,6 +2,7 @@
 #include "WebServerLogic.h"
 
 void setup(void) {
+  pinMode(RainSensor, INPUT_PULLUP);
   pinMode(led, OUTPUT);
   ledON();
   Serial.begin(115200);

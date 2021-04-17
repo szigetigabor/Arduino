@@ -20,6 +20,8 @@ public:
   void digitalClockDisplay();
   void printDigits(int digits);
 
+  static bool isZonesEnabledFromRainSensor();
+
   bool isZoneActive();
   int getActiveZone();
   int getStartHour();
