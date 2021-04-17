@@ -139,7 +139,7 @@ void PoolPumpTrigger() {
 //* Battery functions
 //*
 #define BATTERY_CHARGING_PORT 7
-#define BATTERY_MIN_V  3.8
+#define BATTERY_MIN_V  3.5
 #define BATTERY_MAX_V  4.05
 
 float getBatteryVoltage();
@@ -442,37 +442,49 @@ void SchedulerLogic::PoolAlarmsReInit()
 void SchedulerLogic::PoolAlarmsInit()
 {
   Serial.println("PoolAlarms Initialization...");
-  time_t alarm = poolStartHour * 3600 + poolStartMinute * 60;
+  if (FIX_SCHEDULING) {
+      PoolIds[0] = Alarm.alarmRepeat(6, 0, 0, PoolPumpTrigger);
+      PoolIds[1] = Alarm.alarmRepeat(9, 0, 0, PoolPumpTrigger);
 
-  //PoolIds[0] = Alarm.alarmRepeat(18,00,0, PoolPumpTrigger);  // 18:00pm every day
-  //PoolIds[1] = Alarm.alarmRepeat(0,01,0,PoolPumpTrigger);  // 0:01am every day
-  int hour;
-  int minute;
+      PoolIds[2] = Alarm.alarmRepeat(12,0, 0, PoolPumpTrigger);
+      PoolIds[3] = Alarm.alarmRepeat(12,30, 0, PoolPumpTrigger);
 
-  int duration = getPoolDuration();
-  int frequency = getPoolTriggerFrequency();
-  for (int i = 0; i < NR_OF_POOL_ALARMS; i=i+2) {
-
-    hour = (alarm / 3600) % 24;
-    minute = (alarm / 60) % 60;
-    Serial.print(hour);
-    Serial.print(":");
-    Serial.println(minute);
-    // create the alarms, to trigger at specific times
-    AlarmId id = Alarm.alarmRepeat(hour, minute, 0, PoolPumpTrigger);
-    PoolIds[i] = id;
-
-    time_t Offalarm(alarm);
-    Offalarm += duration * 60;
-    hour = (Offalarm / 3600) % 24;
-    minute = (Offalarm / 60) % 60;
-    Serial.print(hour);
-    Serial.print(":");
-    Serial.println(minute);
-    id = Alarm.alarmRepeat(hour, minute, 0, PoolPumpTrigger);
-    PoolIds[i+1] = id;
-
-    alarm += frequency * 3600;
+      PoolIds[4] = Alarm.alarmRepeat(16, 0, 0, PoolPumpTrigger);
+      PoolIds[5] = Alarm.alarmRepeat(18, 30, 0, PoolPumpTrigger);
+  }
+  else {
+      time_t alarm = poolStartHour * 3600 + poolStartMinute * 60;
+    
+      //PoolIds[0] = Alarm.alarmRepeat(18,00,0, PoolPumpTrigger);  // 18:00pm every day
+      //PoolIds[1] = Alarm.alarmRepeat(0,01,0,PoolPumpTrigger);  // 0:01am every day
+      int hour;
+      int minute;
+    
+      int duration = getPoolDuration();
+      int frequency = getPoolTriggerFrequency();
+      for (int i = 0; i < NR_OF_POOL_ALARMS; i=i+2) {
+    
+        hour = (alarm / 3600) % 24;
+        minute = (alarm / 60) % 60;
+        Serial.print(hour);
+        Serial.print(":");
+        Serial.println(minute);
+        // create the alarms, to trigger at specific times
+        AlarmId id = Alarm.alarmRepeat(hour, minute, 0, PoolPumpTrigger);
+        PoolIds[i] = id;
+    
+        time_t Offalarm(alarm);
+        Offalarm += duration * 60;
+        hour = (Offalarm / 3600) % 24;
+        minute = (Offalarm / 60) % 60;
+        Serial.print(hour);
+        Serial.print(":");
+        Serial.println(minute);
+        id = Alarm.alarmRepeat(hour, minute, 0, PoolPumpTrigger);
+        PoolIds[i+1] = id;
+    
+        alarm += frequency * 3600;
+      }
   }
 }
 
