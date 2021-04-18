@@ -1,5 +1,6 @@
 #include "commonFunctions.h"
 #include "WebServerLogic.h"
+#include "Cayenne.h"
 
 void setup(void) {
   pinMode(RainSensor, INPUT_PULLUP);
@@ -19,6 +20,7 @@ void setup(void) {
 
   scheduler.init();
   initBatteryChecking();
+  CayenneInit();
 }
 
 void loop(void) {
@@ -28,4 +30,6 @@ void loop(void) {
 
   getButtonPtr()->buttonPushTriggerCheck();
   getMomentaryButtonPtr()->buttonPushTriggerCheck();
+
+  CayenneRun();
 }
