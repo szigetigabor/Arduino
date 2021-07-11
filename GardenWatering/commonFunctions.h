@@ -24,8 +24,9 @@ static void ledON(){
 #define BATTERY_PORT A0
 
 #define BATTERY_CHARGING_PORT 7
-#define BATTERY_MIN_V  3.5
-#define BATTERY_MAX_V  3.95
+static bool BATTERY_CHARGING_OFF_ENABLE = false;
+#define BATTERY_MIN_V  3.6
+#define BATTERY_MAX_V  4.1
 #define BATTERY_WARNING_LEVEL 25
 #define BATTERY_ALERT_LEVEL   10
 
@@ -42,6 +43,10 @@ static float getBatteryVoltage() {
   return volt;
 }
 
+static float getBatteryPercentage() {
+  float percentage = ((getBatteryVoltage() - BATTERY_MIN_V) / (BATTERY_MAX_V - BATTERY_MIN_V)) * 100;
+  return percentage;
+}
 
 /*
  * Rain Sensor functions

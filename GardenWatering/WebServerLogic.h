@@ -336,7 +336,7 @@ void printDB() {
 
 void handleBATTERY() {
   float batteryVoltage = getBatteryVoltage();
-  float percentage = ((batteryVoltage - BATTERY_MIN_V) / (BATTERY_MAX_V - BATTERY_MIN_V)) * 100;
+  float percentage = getBatteryPercentage();
   String HTMLMessage = "<!DOCTYPE html>";
   HTMLMessage += "<html>";
   HTMLMessage += "<head>";

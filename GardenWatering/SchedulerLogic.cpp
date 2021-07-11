@@ -158,12 +158,12 @@ void BatteryChargeCheck() {
   Serial.print("  Current voltage: ");
   Serial.print(currentVoltage);
   Serial.println(" V.");
-  if ( currentVoltage > BATTERY_MAX_V ) {
+  if ( BATTERY_CHARGING_OFF_ENABLE && currentVoltage > BATTERY_MAX_V ) {
     // Battery Full, charging OFF
     getButtonPtr()->setOutput(BATTERY_CHARGING_PORT, true);
     Serial.println("   Charging OFF.");
   }
-  if ( currentVoltage < BATTERY_MIN_V ) {
+  if (currentVoltage < BATTERY_MIN_V ) {
     // Battery Empty, charging ON
 
     getButtonPtr()->setOutput(BATTERY_CHARGING_PORT, false);
